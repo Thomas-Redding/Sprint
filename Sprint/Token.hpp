@@ -21,12 +21,16 @@ class Token {
 public:
 	Token() {
 	}
-	Token(TokenType ty, std::string st) {
+	Token(TokenType ty, std::string st, long ln, long cn) {
 		type = ty;
 		str = st;
+		lineNum = ln;
+		charNum = cn;
 	}
 	TokenType type;
 	std::string str;
+	long lineNum;
+	long charNum;
 };
 
 #endif /* Token_cpp */

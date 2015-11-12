@@ -98,20 +98,30 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			if(indents[i-1] < indents[i]) {
 				Token token;
 				token.type = INDENT;
-				for(int j=indents[i-1]; j<indents[i]; j++)
+				token.str = "";
+				token.lineNum = i;
+				for(int j=indents[i-1]; j<indents[i]; j++) {
+					token.charNum = j;
 					rtn.push_back(token);
+				}
 			}
 			else if(indents[i-1] > indents[i]) {
 				Token token;
 				token.type = DEDENT;
-				for(int j=indents[i]; j<indents[i-1]; j++)
+				token.str = "";
+				token.lineNum = i;
+				for(int j=indents[i]; j<indents[i-1]; j++) {
+					token.charNum = 0;
 					rtn.push_back(token);
+				}
 			}
 		}
-		tokenizeLine(lines[i], &rtn, i+1);
+		tokenizeLine(lines[i], &rtn, i+1, indents[i]);
 		Token token;
 		token.type = NEWLINE;
 		token.str = "\n";
+		token.lineNum = i;
+		token.charNum = lines[i].size();
 		rtn.push_back(token);
 	}
 	
@@ -121,6 +131,17 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			rtn.erase(rtn.begin()+i);
 			i --;
 		}
+	}
+	
+	int finalIndentLevel = 0;
+	for(int i=0; i<rtn.size(); i++) {
+		if(rtn[i].type == INDENT)
+			finalIndentLevel++;
+		if(rtn[i].type == DEDENT)
+			finalIndentLevel--;
+	}
+	for(int i=0; i<finalIndentLevel; i++) {
+		rtn.push_back(Token(DEDENT, "", lines.size(), 0));
 	}
 	
 	return rtn;
@@ -199,7 +220,7 @@ std::string Tokenizer::removeComents(std::string str) {
 	return rtn;
 }
 
-void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineNum) {
+void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineNum, int tabs) {
 	Token token;
 	token.type = UNKNOWN;
 	str += " ";
@@ -208,37 +229,60 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 			if(isdigit(str[i])) {
 				token.type = INTEGER_LITERAL;
 				token.str = str[i];
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(str[i] == '\"') {
 				token.type = STRING_LITERAL;
 				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(str[i] == '\'') {
 				token.type = CHARACTER_LITERAL;
+				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(isStartOfIdentifierLetter(str[i])) {
 				token.type = IDENTIFIER;
 				token.str = str[i];
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(isStartOfIdentifierLetter(str[i])) {
 				token.type = IDENTIFIER;
 				token.str = str[i];
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(str[i] == ';') {
 				token.type = NEWLINE;
 				token.str = ";";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 				rtn->push_back(token);
 				token.type = UNKNOWN;
+				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(brackets.find(str[i]) != brackets.end()) {
 				token.type = BRACKET;
 				token.str = str[i];
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 				rtn->push_back(token);
 				token.type = UNKNOWN;
+				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else if(punctuation.find(str[i]) != punctuation.end()) {
 				token.type = PUNCTUATION;
 				token.str = str[i];
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 		}
 		else if(token.type == INTEGER_LITERAL) {
@@ -262,6 +306,8 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 				rtn->push_back(token);
 				token.type = UNKNOWN;
 				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 				i--;
 			}
 		}
@@ -269,6 +315,9 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 			if(str[i] == '\"' && str[i-1] != '\\') {
 				rtn->push_back(token);
 				token.type = UNKNOWN;
+				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else
 				token.str += str[i];
@@ -277,6 +326,9 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 			if(str[i] == '\'' && str[i-1] != '\\') {
 				rtn->push_back(token);
 				token.type = UNKNOWN;
+				token.str = "";
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 			}
 			else
 				token.str += str[i];
@@ -289,6 +341,10 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 					token.type = KEYWORD;
 				rtn->push_back(token);
 				token.type = UNKNOWN;
+				token.lineNum = lineNum;
+				token.str = i;
+				token.lineNum = lineNum;
+				token.charNum = i+tabs;
 				i--;
 			}
 		}
@@ -303,6 +359,8 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 					Token token;
 					token.type = PUNCTUATION;
 					token.str = newTokenStrings[j];
+					token.lineNum = lineNum;
+					token.charNum = i+j;
 					rtn->push_back(token);
 				}
 				token.type = UNKNOWN;

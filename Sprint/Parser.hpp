@@ -9,14 +9,20 @@
 #ifndef Parser_cpp
 #define Parser_cpp
 
+
 #include <stdio.h>
 #include <vector>
-#include "Token.hpp"
+#include <iostream>
+#include "ParserTree.hpp"
 
 class Parser {
 public:
 	Parser();
-	void parse(std::vector<Token> tokens);
+	void parse(std::vector<Token> *tokens);
+private:
+	int index;
+	void exit(std::string message);
+	ParserTree* parseHelper(std::vector<Token> *tokens, ParserState parserState);
 };
 
 #endif /* Parser_cpp */

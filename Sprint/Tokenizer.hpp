@@ -30,7 +30,7 @@ private:
 	
 	std::string removeComents(std::string str);
 	std::vector<std::string> split(std::string str, char delim);
-	void tokenizeLine(std::string str, std::vector<Token> *rtn, int lineNum);
+	void tokenizeLine(std::string str, std::vector<Token> *rtn, int lineNum, int tabs);
 	bool isStartOfIdentifierLetter(char c);
 	bool isIdentifierLetter(char c);
 	std::vector<std::string> dividePunctuations(std::string str, char nextChar);

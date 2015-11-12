@@ -14,7 +14,7 @@
 int main(int argc, const char * argv[]) {
 	std::string line;
 	std::string contents = "";
-	std::ifstream myfile("/Users/thomasredding/Desktop/sprint.txt");
+	std::ifstream myfile("/Users/thomasredding/Desktop/Non-School/Light/sprint.txt");
 	if(myfile.is_open()) {
 		while(getline(myfile, line)) {
 			contents += line;
@@ -23,16 +23,15 @@ int main(int argc, const char * argv[]) {
 		myfile.close();
 	}
 	
-	
 	Tokenizer tokenizer;
 	std::vector<Token> tokenizedList = tokenizer.process(contents);
 	
 	for(int i=0; i<tokenizedList.size(); i++) {
-		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << ">\n";
+		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
 	}
 	
 	Parser parser;
-	parser.parse(tokenizedList);
+	parser.parse(&tokenizedList);
 	
     return 0;
 }
