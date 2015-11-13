@@ -17,25 +17,31 @@
 */
 
 Grammar::Grammar() {
-	rules.push_back(GrammarRule(GrammarObject(GENERAL),				Token(UNKNOWN, ""),			{})); // "null" rule
-	rules.push_back(GrammarRule(GrammarObject(GENERAL),				Token(KEYWORD, "class"),	{GrammarObject(CLASS)}));
-	rules.push_back(GrammarRule(GrammarObject(CLASS),				Token(KEYWORD, "class"),	{GrammarObject(TERMINAL, KEYWORD, "class"), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(TERMINAL, INDENT), GrammarObject(METHOD_DECLARATIONS)}));
-	rules.push_back(GrammarRule(GrammarObject(METHOD_DECLARATIONS),	Token(KEYWORD, "void"),		{GrammarObject(METHOD_DECLARATION), GrammarObject(METHOD_DECLARATIONS)}));
-	rules.push_back(GrammarRule(GrammarObject(METHOD_DECLARATION),	Token(KEYWORD, "void"),		{GrammarObject(TERMINAL, KEYWORD, "void"), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, BRACKET, "("), GrammarObject(PARAMETER), GrammarObject(TERMINAL, BRACKET, ")"), GrammarObject(METHOD_DECLARATIONS), GrammarObject(TERMINAL, NEWLINE)}));
-	rules.push_back(GrammarRule(GrammarObject(PARAMETER),			Token(KEYWORD, "int"),		{GrammarObject(TERMINAL, KEYWORD, "int"), GrammarObject(TERMINAL, IDENTIFIER)}));
+	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(UNKNOWN, "")},													{})); // "null" rule
+	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(KEYWORD, "class")},												{GrammarObject(CLASS)}));
+	rules.push_back(GrammarRule(GrammarObject(CLASS),				{Token(KEYWORD, "class")},												{GrammarObject(TERMINAL, KEYWORD, "class"), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(TERMINAL, INDENT), GrammarObject(DECLARATIONS), GrammarObject(TERMINAL, DEDENT)}));
+	rules.push_back(GrammarRule(GrammarObject(DECLARATIONS),		{Token(KEYWORD, "int"), Token(IDENTIFIER), Token(BRACKET, "(")},		{GrammarObject(METHOD_DECLARATION), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(DECLARATIONS)}));
+	rules.push_back(GrammarRule(GrammarObject(DECLARATIONS),		{Token(KEYWORD, "int"), Token(IDENTIFIER)},								{GrammarObject(VARIABLE_DECLARATION), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(DECLARATIONS)}));
+	rules.push_back(GrammarRule(GrammarObject(VARIABLE_DECLARATION),{Token(KEYWORD, "int")},												{GrammarObject(TERMINAL, KEYWORD, "int"), GrammarObject(TERMINAL, IDENTIFIER)}));
+	rules.push_back(GrammarRule(GrammarObject(METHOD_DECLARATION),	{Token(KEYWORD, "int")},												{GrammarObject(TERMINAL, KEYWORD, "int"), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, BRACKET, "("), GrammarObject(VARIABLE_DECLARATION), GrammarObject(TERMINAL, BRACKET, ")"), GrammarObject(DECLARATIONS)}));
 }
 
-std::vector<GrammarObject> Grammar::getRule(GrammarObject current, Token next) {
+std::vector<GrammarObject> Grammar::getRule(GrammarObject current, std::vector<Token> &next, int index) {
 	for(int i=1; i<rules.size(); i++) {
-		if(equalityChecker(current, rules[i].current, next, rules[i].next))
+		if(equalityChecker(current, rules[i].current, rules[i].next, next, index))
 			return rules[i].result;
 	}
 	return rules[0].result;
 }
 
-bool Grammar::equalityChecker(GrammarObject &a, GrammarObject &b, Token &c, Token &d) {
-	if(!c.equals(d))
+bool Grammar::equalityChecker(GrammarObject &a, GrammarObject &b, std::vector<Token> &exp, std::vector<Token> &next, int index) {
+	if(index+exp.size() >= next.size())
 		return false;
+	for(int i=0; i<exp.size(); i++) {
+		
+		if(!exp[i].halfEquals(next[index+i]))
+			return false;
+	}
 	if(a.type != b.type)
 		return false;
 	if(a.type != TERMINAL)

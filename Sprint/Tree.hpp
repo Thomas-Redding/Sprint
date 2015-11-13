@@ -49,6 +49,17 @@ public:
 		}
 		delete children;
 	}
+	std::string toString() {
+		if(children.size() == 0) {
+			return value.toString();
+		}
+		std::string rtn = "{";
+		for(int i=0; i<children.size(); i++) {
+			rtn += children[i]->toString();
+		}
+		rtn += "}";
+		return rtn;
+	}
 private:
 	V value;
 	std::vector<Tree<V>*> children;

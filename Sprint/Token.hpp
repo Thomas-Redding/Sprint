@@ -35,6 +35,11 @@ public:
 		lineNum = ln;
 		charNum = cn;
 	}
+	bool halfEquals(Token ty) {
+		if(ty.str == "" || str == "")
+			return type == ty.type;
+		return equals(ty);
+	}
 	bool equals(Token ty) {
 		if(type == ty.type && str == ty.str)
 			return true;

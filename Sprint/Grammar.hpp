@@ -14,7 +14,7 @@
 #include "Token.hpp"
 
 enum GrammarType {
-	GENERAL, CLASS, METHOD_DECLARATIONS, METHOD_DECLARATION, PARAMETER, TERMINAL
+	GENERAL, CLASS, DECLARATIONS, VARIABLE_DECLARATION, METHOD_DECLARATION, TERMINAL
 };
 
 struct GrammarObject {
@@ -30,25 +30,39 @@ struct GrammarObject {
 		token.type = tt;
 		token.str = str;
 	}
+	std::string toString() {
+		if(type == TERMINAL)
+			return token.str;
+		else if(type == GENERAL)
+			return "<GENERAL>";
+		else if(type == DECLARATIONS)
+			return "<DECLARATIONS>";
+		else if(type == VARIABLE_DECLARATION)
+			return "<VARIABLE_DECLARATION>";
+		else if(type == METHOD_DECLARATION)
+			return "<METHOD_DECLARATION>";
+		else
+			return "<???>";
+	}
 	GrammarType type;
 	Token token;
 };
 
 struct GrammarRule {
-	GrammarRule(GrammarObject c, Token n, std::vector<GrammarObject> r) : current(c), next(n), result(r) {
+	GrammarRule(GrammarObject c, std::vector<Token> n, std::vector<GrammarObject> r) : current(c), next(n), result(r) {
 	};
 	GrammarObject current;
-	Token next;
+	std::vector<Token> next;
 	std::vector<GrammarObject> result;
 };
 
 class Grammar {
 public:
 	Grammar();
-	std::vector<GrammarObject> getRule(GrammarObject current, Token next);
+	std::vector<GrammarObject> getRule(GrammarObject current, std::vector<Token> &next, int index);
 private:
 	std::vector<GrammarRule> rules;
-	bool equalityChecker(GrammarObject &a, GrammarObject &b, Token &c, Token &d);
+	bool equalityChecker(GrammarObject &a, GrammarObject &b, std::vector<Token> &next, std::vector<Token> &d, int index);
 };
 
 #endif /* Grammar_cpp */
