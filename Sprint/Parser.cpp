@@ -13,35 +13,34 @@ Parser::Parser() {
 }
 
 void Parser::parse(std::vector<Token> *tokens) {
-	index = -1;
-	parseHelper(tokens, NONE);
+	int index = 0;
+	parseHelper(tokens, &index, GENERAL);
 }
 
-ParserTree* Parser::parseHelper(std::vector<Token> *tokens, ParserState parserState) {
-	/*
-	 enum TokenType {
-	 INDENT, DEDENT, NEWLINE, KEYWORD, IDENTIFIER,
-	 INTEGER_LITERAL, FLOAT_LITERAL, CHARACTER_LITERAL, STRING_LITERAL,
-	 PUNCTUATION, BRACKET, UNKNOWN
-	 };
-	 */
-	// todo
-	index++;
-	Token t = tokens->at(index);
-	if(parserState == NONE) {
-		if(t.type == INDENT) {
-			exit("Syntax Error: Found indentation prior to any characters");
+Tree<GrammarObject> *Parser::parseHelper(std::vector<Token> *tokens, int *index, GrammarType state) {
+	Tree<GrammarObject> *rtn = new Tree<GrammarObject>(GrammarObject(state));
+	std::vector<GrammarObject> decomp = grammar.getRule(state, tokens->at(*index));
+	for(int j=0; j<decomp.size(); j++) {
+		if(decomp[j].type == TERMINAL) {
+			if(decomp[j].token.type != tokens->at(*index).type) {
+				
+				exit("Error #1\n");
+			}
+			if(decomp[j].token.str != "" || tokens->at(*index).str != "" || decomp[j].token.str == tokens->at(*index).str) {
+				// they are the same
+				Tree<GrammarObject> *child = new Tree<GrammarObject>(GrammarObject(TERMINAL, tokens->at(*index)));
+				rtn->addChild(child);
+				(*index)++;
+			}
+			else {
+				exit("Error #2\n");
+			}
 		}
-		else if(t.type == KEYWORD && t.str == "class") {
-			ParserTree *tree;
-			ParserToken token;
-			token.token = t;
-			token.state = CLASS;
-			tree->setParserToken(token);
-			parseHelper(tokens, CLASS);
+		else {
+			rtn->addChild(parseHelper(tokens, index, decomp[j].type));
 		}
 	}
-	return nullptr;
+	return rtn;
 }
 
 void Parser::exit(std::string message) {

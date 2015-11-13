@@ -21,11 +21,24 @@ class Token {
 public:
 	Token() {
 	}
+	Token(TokenType ty) {
+		type = ty;
+		str = "";
+	}
+	Token(TokenType ty, std::string st) {
+		type = ty;
+		str = st;
+	}
 	Token(TokenType ty, std::string st, long ln, long cn) {
 		type = ty;
 		str = st;
 		lineNum = ln;
 		charNum = cn;
+	}
+	bool equals(Token ty) {
+		if(type == ty.type && str == ty.str)
+			return true;
+		return false;
 	}
 	TokenType type;
 	std::string str;

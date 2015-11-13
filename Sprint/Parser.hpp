@@ -13,7 +13,9 @@
 #include <stdio.h>
 #include <vector>
 #include <iostream>
-#include "ParserTree.hpp"
+#include "Tree.hpp"
+#include "Grammar.hpp"
+#include "Tree.hpp"
 
 class Parser {
 public:
@@ -21,8 +23,9 @@ public:
 	void parse(std::vector<Token> *tokens);
 private:
 	int index;
+	Grammar grammar;
+	Tree<GrammarObject> *parseHelper(std::vector<Token> *tokens, int *index, GrammarType state);
 	void exit(std::string message);
-	ParserTree* parseHelper(std::vector<Token> *tokens, ParserState parserState);
 };
 
 #endif /* Parser_cpp */
