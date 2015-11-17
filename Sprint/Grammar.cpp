@@ -18,12 +18,12 @@
 
 Grammar::Grammar() {
 	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(UNKNOWN, "")},													{})); // "null" rule
-	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(KEYWORD, "enum")},												{GrammarObject(ENUM)}));
-	rules.push_back(GrammarRule(GrammarObject(ENUM),				{Token(KEYWORD, "enum"), Token(NEWLINE, "\n"), Token(INDENT)},			{GrammarObject(TERMINAL, KEYWORD, "enum"), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(TERMINAL, INDENT), GrammarObject(ENUM_DECLARATION), GrammarObject(ENUM_DECLARATIONS)}));
+	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(KEYWORD, "enum")},												{GrammarObject(ENUM), GrammarObject(GENERAL)}));
+	rules.push_back(GrammarRule(GrammarObject(ENUM),				{Token(KEYWORD, "enum"), Token(NEWLINE, "\n"), Token(INDENT)},			{GrammarObject(TERMINAL, KEYWORD, "enum"), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(TERMINAL, INDENT), GrammarObject(ENUM_DECLARATION), GrammarObject(ENUM_DECLARATIONS), GrammarObject(TERMINAL, DEDENT)}));
 	rules.push_back(GrammarRule(GrammarObject(ENUM_DECLARATIONS),	{Token(PUNCTUATION, ",")},												{GrammarObject(TERMINAL, PUNCTUATION, ","), GrammarObject(ENUM_DECLARATION), GrammarObject(ENUM_DECLARATIONS)}));
-	rules.push_back(GrammarRule(GrammarObject(ENUM_DECLARATION),	{Token(KEYWORD), Token(PUNCTUATION, "="), Token(INTEGER_LITERAL)},		{GrammarObject(TERMINAL, KEYWORD), GrammarObject(TERMINAL, PUNCTUATION, "="), GrammarObject(TERMINAL, INTEGER_LITERAL)}));
-	rules.push_back(GrammarRule(GrammarObject(ENUM_DECLARATION),	{Token(KEYWORD)},														{GrammarObject(TERMINAL, KEYWORD)}));	
-	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(KEYWORD, "class")},												{GrammarObject(CLASS)}));
+	rules.push_back(GrammarRule(GrammarObject(ENUM_DECLARATION),	{Token(IDENTIFIER), Token(PUNCTUATION, "="), Token(INTEGER_LITERAL)},	{GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, PUNCTUATION, "="), GrammarObject(TERMINAL, INTEGER_LITERAL)}));
+	rules.push_back(GrammarRule(GrammarObject(ENUM_DECLARATION),	{Token(IDENTIFIER)},													{GrammarObject(TERMINAL, IDENTIFIER)}));
+	rules.push_back(GrammarRule(GrammarObject(GENERAL),				{Token(KEYWORD, "class")},												{GrammarObject(CLASS), GrammarObject(GENERAL)}));
 	rules.push_back(GrammarRule(GrammarObject(CLASS),				{Token(KEYWORD, "class")},												{GrammarObject(TERMINAL, KEYWORD, "class"), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(TERMINAL, INDENT), GrammarObject(DECLARATIONS), GrammarObject(TERMINAL, DEDENT)}));
 	rules.push_back(GrammarRule(GrammarObject(DECLARATIONS),		{Token(KEYWORD, "int"), Token(IDENTIFIER), Token(BRACKET, "(")},		{GrammarObject(METHOD_DECLARATION), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(DECLARATIONS)}));
 	rules.push_back(GrammarRule(GrammarObject(DECLARATIONS),		{Token(KEYWORD, "int"), Token(IDENTIFIER)},								{GrammarObject(VARIABLE_DECLARATION), GrammarObject(TERMINAL, NEWLINE, "\n"), GrammarObject(DECLARATIONS)}));
@@ -32,6 +32,7 @@ Grammar::Grammar() {
 }
 
 std::vector<GrammarObject> Grammar::getRule(GrammarObject current, std::vector<Token> &next, int index) {
+	
 	for(int i=1; i<rules.size(); i++) {
 		if(equalityChecker(current, rules[i].current, rules[i].next, next, index))
 			return rules[i].result;
@@ -40,6 +41,7 @@ std::vector<GrammarObject> Grammar::getRule(GrammarObject current, std::vector<T
 }
 
 bool Grammar::equalityChecker(GrammarObject &a, GrammarObject &b, std::vector<Token> &exp, std::vector<Token> &next, int index) {
+	
 	if(index+exp.size() >= next.size())
 		return false;
 	for(int i=0; i<exp.size(); i++) {

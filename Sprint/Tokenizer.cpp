@@ -27,6 +27,7 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('<');
 	punctuation.insert('=');
 	punctuation.insert('>');
+	punctuation.insert(',');
 	
 	keywords.insert("break");
 	keywords.insert("case");

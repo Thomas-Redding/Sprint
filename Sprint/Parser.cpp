@@ -17,14 +17,14 @@ void Parser::parse(std::vector<Token> *tokens) {
 	Tree<GrammarObject> *tree = parseHelper(tokens, &index, GENERAL);
 	std::cout << tree->toString() << "\n";
 	if(index != tokens->size()) {
+		
 		exit("Error #3 (" + std::to_string(index) + " / " + std::to_string(tokens->size()) + ")\n");
 	}
 }
 
 Tree<GrammarObject> *Parser::parseHelper(std::vector<Token> *tokens, int *index, GrammarType state) {
-	
 	Tree<GrammarObject> *rtn = new Tree<GrammarObject>(GrammarObject(state));
-	std::vector<GrammarObject> decomp = grammar.getRule(state, *tokens, *index);
+	std::vector<GrammarObject> decomp = grammar.getRule(state, *tokens, *index);	
 	for(int j=0; j<decomp.size(); j++) {
 		if(decomp[j].type == TERMINAL) {
 			if(decomp[j].token.type != tokens->at(*index).type) {
