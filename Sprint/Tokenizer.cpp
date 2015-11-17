@@ -32,9 +32,6 @@ Tokenizer::Tokenizer() {
 	keywords.insert("break");
 	keywords.insert("case");
 	keywords.insert("catch");
-	keywords.insert("char8");
-	keywords.insert("char16");
-	keywords.insert("char32");
 	keywords.insert("class");
 	keywords.insert("const");
 	keywords.insert("continue");
@@ -43,19 +40,9 @@ Tokenizer::Tokenizer() {
 	keywords.insert("else");
 	keywords.insert("enum");
 	keywords.insert("false");
-	keywords.insert("float");
-	keywords.insert("float8");
-	keywords.insert("float16");
-	keywords.insert("float32");
-	keywords.insert("float64");
 	keywords.insert("for");
 	keywords.insert("if");
 	keywords.insert("inline");
-	keywords.insert("int");
-	keywords.insert("int8");
-	keywords.insert("int16");
-	keywords.insert("int32");
-	keywords.insert("int64");
 	keywords.insert("new");
 	keywords.insert("NULL");
 	keywords.insert("protected");
@@ -68,13 +55,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("throw");
 	keywords.insert("true");
 	keywords.insert("try");
-	keywords.insert("uint");
-	keywords.insert("uint8");
-	keywords.insert("uint16");
-	keywords.insert("uint32");
-	keywords.insert("uint64");
 	keywords.insert("virtual");
-	keywords.insert("void");
 	keywords.insert("while");
 }
 
