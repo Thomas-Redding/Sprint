@@ -10,11 +10,13 @@
 #include <fstream>
 #include "Tokenizer.hpp"
 #include "Parser.hpp"
+#include "ResourcePath.hpp"
+
 
 int main(int argc, const char * argv[]) {
 	std::string line;
 	std::string contents = "";
-	std::ifstream myfile("/Users/thomasredding/Desktop/Non-School/Light/sprint.txt");
+	std::ifstream myfile(desktopPath() + "/test.txt");
 	if(myfile.is_open()) {
 		while(getline(myfile, line)) {
 			contents += line;

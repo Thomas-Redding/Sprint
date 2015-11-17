@@ -17,7 +17,6 @@ void Parser::parse(std::vector<Token> *tokens) {
 	Tree<GrammarObject> *tree = parseHelper(tokens, &index, GENERAL);
 	std::cout << tree->toString() << "\n";
 	if(index != tokens->size()) {
-		
 		exit("Error #3 (" + std::to_string(index) + " / " + std::to_string(tokens->size()) + ")\n");
 	}
 }
