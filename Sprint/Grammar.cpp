@@ -61,11 +61,11 @@ Grammar::Grammar() {
 	rules.push_back(GrammarRule(
 		GrammarObject(VARIABLE_DECLARATION),
 		{Token(IDENTIFIER)},
-		{GrammarObject(TERMINAL, KEYWORD, "int"), GrammarObject(TERMINAL, IDENTIFIER)}));
+		{GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, IDENTIFIER)}));
 	rules.push_back(GrammarRule(
 		GrammarObject(METHOD_DECLARATION),
 		{Token(IDENTIFIER)},
-		{GrammarObject(TERMINAL, KEYWORD, "int"), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, BRACKET, "("), GrammarObject(VARIABLE_DECLARATION), GrammarObject(TERMINAL, BRACKET, ")"), GrammarObject(DECLARATIONS)}));
+		{GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, IDENTIFIER), GrammarObject(TERMINAL, BRACKET, "("), GrammarObject(VARIABLE_DECLARATION), GrammarObject(TERMINAL, BRACKET, ")"), GrammarObject(DECLARATIONS)}));
     
 }
 
