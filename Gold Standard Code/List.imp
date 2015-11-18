@@ -1,0 +1,32 @@
+
+void List.push(V item)
+	if(length+1 > capacity)
+		expand()
+	arr[length] = item
+	length++
+
+void List.insert(uint index, V item)
+	for(uint i=length-1; i>index; i++)
+		arr[i] = arr[i-1]
+	arr[index] = item
+
+V List.pop()
+	length--
+	return arr[length+1]
+
+V List.remove(uint index)
+	V rtn = arr[index]
+	for(int i=index; i<length; i++)
+		arr[i] = arr[i+1]
+	return rtn
+
+List = (List &this, V[] array)
+	delete this.arr
+	this.arr = array
+
+void List.expand()
+	V* newArr = new V[2*capacity]
+	for(uint i=0; i<capacity; i+=)
+		newArr[i] = arr[i]
+	capacity *= 2
+	arr = newArr
