@@ -12,11 +12,10 @@
 #include "Parser.hpp"
 #include "ResourcePath.hpp"
 
-
 int main(int argc, const char * argv[]) {
 	std::string line;
 	std::string contents = "";
-	std::ifstream myfile(desktopPath() + "/test.txt");
+	std::ifstream myfile("/Users/mredding/Desktop/abab.txt");
 	if(myfile.is_open()) {
 		while(getline(myfile, line)) {
 			contents += line;
@@ -33,7 +32,7 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	Parser parser;
-	parser.parse(&tokenizedList);
+	parser.parse(tokenizedList);
 	
     return 0;
 }

@@ -11,8 +11,6 @@
 		2868508D1BD85347003FB75E /* Tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2868508B1BD85347003FB75E /* Tokenizer.cpp */; };
 		287B003A1BFB9AE100842066 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 287B00381BFB9AE100842066 /* ResourcePath.mm */; };
 		28B119711BD940BB0033BC21 /* Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B1196F1BD940BB0033BC21 /* Parser.cpp */; };
-		28EC53BD1BF5549C009D8D53 /* Grammar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EC53BB1BF5549C009D8D53 /* Grammar.cpp */; };
-		28EC53C01BF56264009D8D53 /* Tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EC53BE1BF56264009D8D53 /* Tree.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,10 +36,9 @@
 		287B003B1BFBA08A00842066 /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		28B1196F1BD940BB0033BC21 /* Parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parser.cpp; sourceTree = "<group>"; };
 		28B119701BD940BB0033BC21 /* Parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Parser.hpp; sourceTree = "<group>"; };
-		28EC53BB1BF5549C009D8D53 /* Grammar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Grammar.cpp; sourceTree = "<group>"; };
-		28EC53BC1BF5549C009D8D53 /* Grammar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Grammar.hpp; sourceTree = "<group>"; };
-		28EC53BE1BF56264009D8D53 /* Tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tree.cpp; sourceTree = "<group>"; };
-		28EC53BF1BF56264009D8D53 /* Tree.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Tree.hpp; sourceTree = "<group>"; };
+		EC2978E21C036CBF006D8892 /* Node.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Node.hpp; sourceTree = "<group>"; };
+		EC2978E41C036F52006D8892 /* Grammar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Grammar.hpp; sourceTree = "<group>"; };
+		EC2978E61C03735E006D8892 /* Word.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Word.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,15 +75,14 @@
 				287B003B1BFBA08A00842066 /* test.txt */,
 				287B00381BFB9AE100842066 /* ResourcePath.mm */,
 				287B00391BFB9AE100842066 /* ResourcePath.hpp */,
+				EC2978E21C036CBF006D8892 /* Node.hpp */,
 				2868508F1BD853B6003FB75E /* Token.hpp */,
 				2868508B1BD85347003FB75E /* Tokenizer.cpp */,
 				2868508C1BD85347003FB75E /* Tokenizer.hpp */,
-				28EC53BE1BF56264009D8D53 /* Tree.cpp */,
-				28EC53BF1BF56264009D8D53 /* Tree.hpp */,
+				EC2978E61C03735E006D8892 /* Word.hpp */,
 				28B1196F1BD940BB0033BC21 /* Parser.cpp */,
+				EC2978E41C036F52006D8892 /* Grammar.hpp */,
 				28B119701BD940BB0033BC21 /* Parser.hpp */,
-				28EC53BB1BF5549C009D8D53 /* Grammar.cpp */,
-				28EC53BC1BF5549C009D8D53 /* Grammar.hpp */,
 			);
 			path = Sprint;
 			sourceTree = "<group>";
@@ -150,9 +146,7 @@
 				2868508D1BD85347003FB75E /* Tokenizer.cpp in Sources */,
 				28B119711BD940BB0033BC21 /* Parser.cpp in Sources */,
 				2839CDCB1BB9DB7300996C2F /* main.cpp in Sources */,
-				28EC53BD1BF5549C009D8D53 /* Grammar.cpp in Sources */,
 				287B003A1BFB9AE100842066 /* ResourcePath.mm in Sources */,
-				28EC53C01BF56264009D8D53 /* Tree.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

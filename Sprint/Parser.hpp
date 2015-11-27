@@ -13,18 +13,24 @@
 #include <stdio.h>
 #include <vector>
 #include <iostream>
-#include "Tree.hpp"
+#include "Token.hpp"
 #include "Grammar.hpp"
-#include "Tree.hpp"
+
 
 class Parser {
 public:
 	Parser();
-	void parse(std::vector<Token> *tokens);
+    
+    Node* parse(const std::vector<Token>& tokens);
+    Node* parse(const Token* tokens, const size_t n, const Rule& grammarRule);
+    
+    // returns the rule and the length of tokens used to satisfy it
+    std::pair<Rule, size_t> findGrammarMatch(const Token* tokens, const size_t n) const;
+    std::pair<Rule, size_t> findGrammarMatch(const Token* tokens, const size_t n, WordType output) const;
+    
 private:
+    Grammar grammar;
 	int index;
-	Grammar grammar;
-	Tree<GrammarObject> *parseHelper(std::vector<Token> *tokens, int *index, GrammarType state);
 	void exit(std::string message);
 };
 
