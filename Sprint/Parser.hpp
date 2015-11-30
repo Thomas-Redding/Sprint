@@ -14,24 +14,27 @@
 #include <vector>
 #include <iostream>
 #include "Token.hpp"
-#include "Grammar.hpp"
+#include "Tree.h"
 
-
-class Parser {
-public:
-	Parser();
-    
-    Node* parse(const std::vector<Token>& tokens);
-    Node* parse(const Token* tokens, const size_t n, const Rule& grammarRule);
-    
-    // returns the rule and the length of tokens used to satisfy it
-    std::pair<Rule, size_t> findGrammarMatch(const Token* tokens, const size_t n) const;
-    std::pair<Rule, size_t> findGrammarMatch(const Token* tokens, const size_t n, WordType output) const;
-    
-private:
-    Grammar grammar;
-	int index;
-	void exit(std::string message);
+struct Rule {
+    Rule(TokenType output, std::initializer_list<TokenType> components) : output(output), components(components) {}
+    TokenType output;
+    std::vector< TokenType > components;
 };
+
+struct Parser {
+    Parser(std::vector<Rule>& rules) : rules(rules) {};
+    Tree< std::pair<Token, size_t> >* match(const Token* A, size_t n, const Token& value);
+    Tree< std::pair<Token, size_t> >* match(const Token* A, size_t n, const Rule& rule);
+    std::vector< Rule > rules;
+};
+
+template<class A, class B>
+std::ostream& operator<<(std::ostream& o, const std::pair<A, B>& p) {
+    o << "(" << p.first << ", " << p.second << ")";
+    return o;
+}
+
+
 
 #endif /* Parser_cpp */

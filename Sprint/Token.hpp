@@ -12,11 +12,30 @@
 #include <string>
 
 enum TokenType {
-	INDENT, DEDENT, NEWLINE, KEYWORD, IDENTIFIER,
-	INTEGER_LITERAL, FLOAT_LITERAL, CHARACTER_LITERAL, STRING_LITERAL,
-	PUNCTUATION, BRACKET, UNKNOWN,
-    NULL_TOKEN_TYPE
+    etc,
+    etc_not,
+    
+	INDENT,
+    DEDENT,
+    NEWLINE = 4,
+    KEYWORD,
+    IDENTIFIER,
+	INTEGER_LITERAL,
+    FLOAT_LITERAL = 8,
+    CHARACTER_LITERAL,
+    STRING_LITERAL,
+	PUNCTUATION,
+    BRACKET = 12,
+    UNKNOWN,
+    NULL_TOKEN_TYPE,
+    
+    foo,
+    bar = 16,
+    program,
 };
+
+const size_t token_threshold = 15;
+
 
 class Token {
 public:
@@ -46,6 +65,9 @@ public:
 			return true;
 		return false;
 	}
+    friend std::ostream& operator<<(std::ostream& o, const Token& t) {
+        return o << t.type;
+    }
 	TokenType type;
 	std::string str;
 	long lineNum;

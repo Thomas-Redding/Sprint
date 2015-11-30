@@ -13,26 +13,43 @@
 #include "ResourcePath.hpp"
 
 int main(int argc, const char * argv[]) {
-	std::string line;
-	std::string contents = "";
-	std::ifstream myfile("/Users/mredding/Desktop/abab.txt");
-	if(myfile.is_open()) {
-		while(getline(myfile, line)) {
-			contents += line;
-			contents += "\n";
-		}
-		myfile.close();
-	}
+//	std::string line;
+//	std::string contents = "";
+//	std::ifstream myfile("/Users/mredding/Desktop/abab.txt");
+//	if(myfile.is_open()) {
+//		while(getline(myfile, line)) {
+//			contents += line;
+//			contents += "\n";
+//		}
+//		myfile.close();
+//	}
+//	
+//	Tokenizer tokenizer;
+//	std::vector<Token> tokenizedList = tokenizer.process(contents);
+//	
+//	for(int i=0; i<tokenizedList.size(); i++) {
+//		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
+//	}
+    
+    std::vector< Token > tokenizedList;
+    tokenizedList.push_back(Token(INDENT));
+    tokenizedList.push_back(Token(IDENTIFIER));
+    tokenizedList.push_back(Token(IDENTIFIER));
+    tokenizedList.push_back(Token(IDENTIFIER));
+    tokenizedList.push_back(Token(DEDENT));
 	
-	Tokenizer tokenizer;
-	std::vector<Token> tokenizedList = tokenizer.process(contents);
-	
-	for(int i=0; i<tokenizedList.size(); i++) {
-		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
-	}
-	
-	Parser parser;
-	parser.parse(tokenizedList);
-	
+    std::vector< Rule > rules =
+    {
+        Rule(bar, { etc, IDENTIFIER }),
+        Rule(foo, { INDENT, bar, DEDENT }),
+    };
+    Rule program_rule(program, {etc, foo});
+    
+    Parser parser(rules);
+    
+    Tree< std::pair< Token, size_t> >* tree = parser.match(&tokenizedList[0], tokenizedList.size(), foo);
+
+    std::cout << *tree << std::endl;
+    
     return 0;
 }

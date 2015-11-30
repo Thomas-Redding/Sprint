@@ -7,102 +7,82 @@
 //
 
 #include "Parser.hpp"
-#include "Node.hpp"
+#include "Token.hpp"
 
-Parser::Parser() {
-    
-    grammar.addRule(WordType::pseudo_chunck, {
-        Word(WordType::function_declaration)
-    });
-    grammar.addRule(WordType::pseudo_chunck, {
-        Word(WordType::class_declaration)
-    });
-    grammar.addRule(WordType::pseudo_chunck, {
-        Word(WordType::variable_declaration)
-    });
-    
-    // block
-    grammar.addRule(WordType::pseudo_line, { Word(real_line) });
-    grammar.addRule(WordType::pseudo_line, { Word(block) });
-    grammar.addRule(WordType::block, {
-        Word(TokenType::INDENT),
-        
-        Word(WordType::etc_not),
-        Word(WordType::block),
-        
-        Word(TokenType::DEDENT),
-    });
-    
-    // templating rules
-    grammar.addRule(template_parameters, {
-        Word(WordType::etc),
-        Word(WordType::template_parameter)
-    });
-    
-    grammar.addRule(template_parameter, {
-        Word(TokenType::IDENTIFIER),
-        Word(TokenType::IDENTIFIER)
-    });
-    
-    // class rules
-    grammar.addRule(class_declaration, {
-        Word("class"),
-        Word(TokenType::IDENTIFIER),
-        Word(TokenType::INDENT),
-        // continue until you find a 'dedent'
-        Word(TokenType::DEDENT),
-        Word(WordType::etc_not),
-    });
-
-
-}
-
-Node* Parser::parse(const std::vector<Token>& tokens) {
-    return parse(&tokens[0], tokens.size(), Rule(WordType::program, {Word(pseudo_chunck), Word(WordType::etc)}));
-}
-
-// returns the rule and the length of tokens used to satisfy it
-std::pair<Rule, size_t> Parser::findGrammarMatch(const Token* tokens, const size_t n) const {
-    for (auto it = grammar.rules.begin(); it != grammar.rules.end(); ++it) {
-        std::pair<Rule, size_t> x = findGrammarMatch(tokens, n, WordType(it->first));
-        if (x.second != 0) {
-            return x;
-        }
-    }
-    throw std::runtime_error("No rule matched to grammar");
-    return std::pair<Rule, size_t>(Rule(), 0);
-}
-
-// returns the rule and the length of tokens used to satisfy it
-std::pair<Rule, size_t> Parser::findGrammarMatch(const Token* tokens, const size_t n, WordType output) const {
-    auto it = grammar.rules.find(output);
-    if (it == grammar.rules.end()) {
-        throw std::runtime_error("No rule matched to grammar");
-    }
-    const std::vector< Rule >& rules = it->second;
-    for (size_t i = 0; i < rules.size(); ++i) {
-        // TODO
-    }
-    throw std::runtime_error("No rule matched to grammar");
-    return std::pair<Rule, size_t>(Rule(), 0);
-}
-
-Node* Parser::parse(const Token* tokens, const size_t n, const Rule& grammarRule) {
-    Node* rtn = new Node();
+Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const Rule& rule) {
+    Tree< std::pair<Token, size_t> >* rtn = new Tree< std::pair<Token, size_t> >(std::pair<TokenType, size_t>(rule.output, 0));
+    const std::vector< TokenType >& components = rule.components;
     size_t i = 0;
-    for (auto it = grammarRule.components.begin(); it != grammarRule.components.end(); ++it) {
-        const WordType& word = it->wordType();
-        if (word == WordType::NULL_WORD_TYPE) {
-            throw std::runtime_error("Tried to parse a terminal node");
+    for (size_t j = 0; j < components.size(); ++j) {
+        if (components[j] == 0) {
+            // etc
+            j++;
+            if (components[j] == 0) {
+                throw std::runtime_error("What in Jesus' name is \"etc, etc\" supposed to mean?");
+            }
+            else if (components[j] == 1) {
+                throw std::runtime_error("What in Jesus' name is \"etc, etc_not\" supposed to mean?");
+            }
+            while (i < n) {
+                Tree< std::pair<Token, size_t> >* x = match(A + i, n - i, components[j]);
+                if (x == nullptr) {
+                    break;
+                }
+                rtn->add_child(x);
+                i += x->value.second;
+            }
         }
-        std::pair<Rule, size_t> x = findGrammarMatch(&tokens[i], n - i, word);
-        rtn->add_child(parse(&tokens[i], n - i, x.first));
-        i += x.second;
+        else if (components[j] == 1) {
+            // etc_not
+            j++;
+            if (components[j] == 0) {
+                throw std::runtime_error("What in Jesus' name is \"etc_not, etc\" supposed to mean?");
+            }
+            else if (components[j] == 1) {
+                throw std::runtime_error("What in Jesus' name is \"etc_not, etc_not\" supposed to mean?");
+            }
+            while (i < n) {
+                Tree< std::pair<Token, size_t> >* x = match(A + i, n - i, components[j]);
+                if (x != nullptr) {
+                    delete x;// added
+                    break;
+                }
+                i++;
+            }
+        }
+        else {
+            Tree< std::pair<Token, size_t> >* x = match(A + i, n - i, components[j]);
+            if (x == nullptr) {
+                return nullptr;
+            }
+            rtn->add_child(x);
+            i += x->value.second;
+        }
     }
+    rtn->value.second = i;
     return rtn;
 }
 
-void Parser::exit(std::string message) {
-	std::cout << message << "\n";
-	_exit(1);
+Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const Token& value) {
+    
+    if (value.type < token_threshold) {
+        if (value.type == A[0].type) {
+            return new Tree< std::pair<Token, size_t> >( std::pair<Token, size_t>(value.type, 1));
+        }
+        else {
+            return nullptr;
+        }
+    }
+    
+    for (size_t i = 0; i < rules.size(); ++i) {
+        if (rules[i].output != value.type) {
+            continue;
+        }
+        Tree< std::pair<Token, size_t> >* x = match(A, n, rules[i]);
+        if (x != nullptr) {
+            return x;
+        }
+    }
+    return nullptr;
 }
+
