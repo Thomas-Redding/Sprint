@@ -34,6 +34,7 @@ private:
 	bool isStartOfIdentifierLetter(char c);
 	bool isIdentifierLetter(char c);
 	std::vector<std::string> dividePunctuations(std::string str, char nextChar);
+	void doMorgansDirtyWork(std::vector<Token> *tokens);
 };
 
 #endif /* Tokenizer_cpp */

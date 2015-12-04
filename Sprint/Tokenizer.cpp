@@ -130,7 +130,33 @@ std::vector<Token> Tokenizer::process(std::string str) {
 		rtn.push_back(Token(DEDENT, "", lines.size(), 0));
 	}
 	
+	doMorgansDirtyWork(&rtn);
+	
 	return rtn;
+}
+
+void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
+	for(int i=0; i<tokens->size(); i++) {
+		Token *t = &tokens->at(i);
+		if(t->type == BRACKET) {
+			if(t->str == "(")
+				t->type = OPEN_PARENTHESIS;
+			else if(t->str == ")")
+				t->type = CLOSE_PARENTHESIS;
+			else if(t->str == "[")
+				t->type = OPEN_BRACKET;
+			else if(t->str == "]")
+				t->type = OPEN_BRACKET;
+			else if(t->str == "(")
+				t->type = OPEN_CURLY_BRACE;
+			else if(t->str == "(")
+				t->type = OPEN_CURLY_BRACE;
+		}
+		else if(t->type == KEYWORD) {
+			if(t->str == "class")
+				t->type = KEYWORD_CLASS;
+		}
+	}
 }
 
 std::string Tokenizer::tokenTypeToString(TokenType t) {

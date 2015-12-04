@@ -28,7 +28,14 @@ enum TokenType {
     BRACKET = 12,
     UNKNOWN,
     NULL_TOKEN_TYPE,
-    
+	OPEN_PARENTHESIS,
+	CLOSE_PARENTHESIS,
+	OPEN_BRACKET,
+	CLOSE_BRACKET,
+	OPEN_CURLY_BRACE,
+	CLOSE_CURLY_BRACE,
+	KEYWORD_CLASS,
+	
     foo,
     bar = 16,
     program,
