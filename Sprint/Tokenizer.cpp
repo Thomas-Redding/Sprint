@@ -29,6 +29,7 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('>');
 	punctuation.insert(',');
 	
+	keywords.insert("abstract");
 	keywords.insert("break");
 	keywords.insert("case");
 	keywords.insert("catch");
@@ -153,8 +154,100 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = OPEN_CURLY_BRACE;
 		}
 		else if(t->type == KEYWORD) {
+			if(t->str == "abstract")
+				t->type = KEYWORD_ABSTRACT;
+			if(t->str == "break")
+				t->type = KEYWORD_BREAK;
+			if(t->str == "case")
+				t->type = KEYWORD_CASE;
+			if(t->str == "catch")
+				t->type = KEYWORD_CATCH;
 			if(t->str == "class")
 				t->type = KEYWORD_CLASS;
+			if(t->str == "const")
+				t->type = KEYWORD_CONST;
+			if(t->str == "continue")
+				t->type = KEYWORD_CONTINUE;
+			if(t->str == "delete")
+				t->type = KEYWORD_DELETE;
+			if(t->str == "do")
+				t->type = KEYWORD_DO;
+			if(t->str == "else")
+				t->type = KEYWORD_ELSE;
+			if(t->str == "enum")
+				t->type = KEYWORD_ENUM;
+			if(t->str == "false")
+				t->type = KEYWORD_FALSE;
+			if(t->str == "for")
+				t->type = KEYWORD_FOR;
+			if(t->str == "if")
+				t->type = KEYWORD_IF;
+			if(t->str == "inline")
+				t->type = KEYWORD_INLINE;
+			if(t->str == "new")
+				t->type = KEYWORD_NEW;
+			if(t->str == "NULL")
+				t->type = KEYWORD_NULL;
+			if(t->str == "protected")
+				t->type = KEYWORD_PROTECTED;
+			if(t->str == "private")
+				t->type = KEYWORD_PRIVATE;
+			if(t->str == "return")
+				t->type = KEYWORD_RETURN;
+			if(t->str == "static")
+				t->type = KEYWORD_STATIC;
+			if(t->str == "struct")
+				t->type = KEYWORD_STRUCT;
+			if(t->str == "this")
+				t->type = KEYWORD_THIS;
+			if(t->str == "throw")
+				t->type = KEYWORD_THROW;
+			if(t->str == "true")
+				t->type = KEYWORD_TRUE;
+			if(t->str == "try")
+				t->type = KEYWORD_TRY;
+			if(t->str == "virtual")
+				t->type = KEYWORD_VIRTUAL;
+			if(t->str == "while")
+				t->type = KEYWORD_WHILE;
+		}
+		else if(t->type == PUNCTUATION) {
+			if(t->str == ".")
+				t->type == PERIOD;
+			else if(t->str == ";")
+				t->type == SEMI_COLON;
+			else if(t->str == "+")
+				t->type == PLUS;
+			else if(t->str == "-")
+				t->type == MINUS;
+			else if(t->str == "*")
+				t->type == ASTERISK;
+			else if(t->str == "/")
+				t->type == SLASH;
+			else if(t->str == "&")
+				t->type == AMPERSAND;
+			else if(t->str == "#")
+				t->type == POUND_SIGN;
+			else if(t->str == "<")
+					t->type == LESS_THAN;
+			else if(t->str == "=")
+				t->type == EQUALS;
+			else if(t->str == ">")
+				t->type == GREATER_THAN;
+			else if(t->str == ",")
+				t->type == COMMA;
+			else if(t->str == "--")
+				t->type == DECREMENT;
+			else if(t->str == "++")
+				t->type == INCREMENT;
+			else if(t->str == "+=")
+				t->type == PLUS_EQUALS;
+			else if(t->str == "-=")
+				t->type == MINUS_EQUALS;
+			else if(t->str == "*=")
+				t->type == AMPERSAND_EQUALS;
+			else if(t->str == "/=")
+				t->type == SLASH_EQUALS;
 		}
 	}
 }
