@@ -6,7 +6,7 @@ void List.push(V item)
 	length++
 
 void List.insert(uint index, V item)
-	for(uint i=length-1; i>index; i++)
+	for uint i=length-1; i>index; i++
 		arr[i] = arr[i-1]
 	arr[index] = item
 
@@ -26,7 +26,7 @@ List = (ref List &this, V[] array)
 
 void List.expand()
 	V* newArr = new V[2*capacity]
-	for(uint i=0; i<capacity; i+=)
+	for uint i=0; i<capacity; i+=0
 		newArr[i] = arr[i]
 	capacity *= 2
 	arr = newArr

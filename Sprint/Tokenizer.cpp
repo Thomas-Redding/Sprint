@@ -283,6 +283,8 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 		return "PUNCTUATION";
 	else if(t == UNKNOWN)
 		return "UNKNOWN";
+	else if(t == OPEN_PARENTHESIS)
+		return "OPEN_PARENTHESIS";
 	else
 		return "";
 }
