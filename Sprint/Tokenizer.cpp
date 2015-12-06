@@ -213,41 +213,41 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 		}
 		else if(t->type == PUNCTUATION) {
 			if(t->str == ".")
-				t->type == PERIOD;
+				t->type = PERIOD;
 			else if(t->str == ";")
-				t->type == SEMI_COLON;
+				t->type = SEMI_COLON;
 			else if(t->str == "+")
-				t->type == PLUS;
+				t->type = PLUS;
 			else if(t->str == "-")
-				t->type == MINUS;
+				t->type = MINUS;
 			else if(t->str == "*")
-				t->type == ASTERISK;
+				t->type = ASTERISK;
 			else if(t->str == "/")
-				t->type == SLASH;
+				t->type = SLASH;
 			else if(t->str == "&")
-				t->type == AMPERSAND;
+				t->type = AMPERSAND;
 			else if(t->str == "#")
-				t->type == POUND_SIGN;
+				t->type = POUND_SIGN;
 			else if(t->str == "<")
-					t->type == LESS_THAN;
+					t->type = LESS_THAN;
 			else if(t->str == "=")
-				t->type == EQUALS;
+				t->type = EQUALS;
 			else if(t->str == ">")
-				t->type == GREATER_THAN;
+				t->type = GREATER_THAN;
 			else if(t->str == ",")
-				t->type == COMMA;
+				t->type = COMMA;
 			else if(t->str == "--")
-				t->type == DECREMENT;
+				t->type = DECREMENT;
 			else if(t->str == "++")
-				t->type == INCREMENT;
+				t->type = INCREMENT;
 			else if(t->str == "+=")
-				t->type == PLUS_EQUALS;
+				t->type = PLUS_EQUALS;
 			else if(t->str == "-=")
-				t->type == MINUS_EQUALS;
+				t->type = MINUS_EQUALS;
 			else if(t->str == "*=")
-				t->type == AMPERSAND_EQUALS;
+				t->type = AMPERSAND_EQUALS;
 			else if(t->str == "/=")
-				t->type == SLASH_EQUALS;
+				t->type = SLASH_EQUALS;
 		}
 	}
 }

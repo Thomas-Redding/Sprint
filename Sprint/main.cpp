@@ -17,9 +17,9 @@ int main(int argc, const char * argv[]) {
 	std::string contents = "";
 	std::string pathToDesktop = desktopPath();
 	std::string pathToFile;
-	if(pathToDesktop == "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/List.hpp") {
+	if(pathToDesktop == "/Users/thomasredding/Desktop") {
 		// Thomas
-		pathToFile = pathToDesktop + "/test.txt";
+		pathToFile = "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/List.hpp";
 	}
 	else {
 		// Morgan
