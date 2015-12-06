@@ -13,30 +13,33 @@
 #include "ResourcePath.hpp"
 
 int main(int argc, const char * argv[]) {
-//	std::string line;
-//	std::string contents = "";
-//	std::ifstream myfile("/Users/mredding/Desktop/abab.txt");
-//	if(myfile.is_open()) {
-//		while(getline(myfile, line)) {
-//			contents += line;
-//			contents += "\n";
-//		}
-//		myfile.close();
-//	}
-//	
-//	Tokenizer tokenizer;
-//	std::vector<Token> tokenizedList = tokenizer.process(contents);
-//	
-//	for(int i=0; i<tokenizedList.size(); i++) {
-//		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
-//	}
-    
-    std::vector< Token > tokenizedList;
-    tokenizedList.push_back(Token(INDENT));
-    tokenizedList.push_back(Token(IDENTIFIER));
-    tokenizedList.push_back(Token(IDENTIFIER));
-    tokenizedList.push_back(Token(IDENTIFIER));
-    tokenizedList.push_back(Token(DEDENT));
+	std::string line;
+	std::string contents = "";
+	std::string pathToDesktop = desktopPath();
+	std::string pathToFile;
+	if(pathToDesktop == "/Users/thomasredding/Desktop") {
+		// Thomas
+		pathToFile = pathToDesktop + "/test.txt";
+	}
+	else {
+		// Morgan
+		pathToFile = pathToDesktop + "/test.txt";
+	}
+	std::ifstream myfile(pathToFile);
+	if(myfile.is_open()) {
+		while(getline(myfile, line)) {
+			contents += line;
+			contents += "\n";
+		}
+		myfile.close();
+	}
+	
+	Tokenizer tokenizer;
+	std::vector<Token> tokenizedList = tokenizer.process(contents);
+	
+	for(int i=0; i<tokenizedList.size(); i++) {
+		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
+	}
 	
     std::vector< Rule > rules =
     {
