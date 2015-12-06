@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
 	}
 	else {
 		// Morgan
-		pathToFile = pathToDesktop + "/test.txt";
+		pathToFile = "/Users/mredding/Sprint/test.txt";
 	}
 	std::ifstream myfile(pathToFile);
 	if(myfile.is_open()) {
