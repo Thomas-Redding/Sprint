@@ -15,10 +15,10 @@ class List<class V>
 	void isEmpty()
 		return length == 0
 
-	List = (List &this, V[] array)
+	= (ref List this, V[] array)
 
 	private:
-		V* arr
+		ptr V arr
 		uint length = 0
 		uint capacity = 20
 		void expand()
