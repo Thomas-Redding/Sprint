@@ -78,15 +78,14 @@ enum TokenType {
 	INCREMENT,
 	PLUS_EQUALS,
 	MINUS_EQUALS,
-	AMPERSAND_EQUALS = 66,
-	SLASH_EQUALS,
+	AMPERSAND_EQUALS,
+	SLASH_EQUALS = 67,
     foo,
     bar,
     program,
 };
 
-const size_t token_threshold = 67;
-
+const size_t token_threshold = 68;
 
 class Token {
 public:
