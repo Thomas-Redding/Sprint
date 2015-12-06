@@ -1,8 +1,0 @@
-
-class foo
-	int x
-	int bar(int z)
-	int y
-	int bar(int alpha)
-enum
-	ALPHA, BETA, GAMMA = 2, DELTA

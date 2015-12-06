@@ -26,6 +26,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2817BCF81C14C26400A5CE9A /* List.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = List.hpp; sourceTree = "<group>"; };
+		2817BCF91C14C26400A5CE9A /* List.imp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = List.imp; sourceTree = "<group>"; };
+		2817BCFA1C14C26400A5CE9A /* script-list.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "script-list.hpp"; sourceTree = "<group>"; };
 		2839CDC71BB9DB7300996C2F /* Sprint */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sprint; sourceTree = BUILT_PRODUCTS_DIR; };
 		2839CDCA1BB9DB7300996C2F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		2868508B1BD85347003FB75E /* Tokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tokenizer.cpp; sourceTree = "<group>"; };
@@ -33,7 +36,6 @@
 		2868508F1BD853B6003FB75E /* Token.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Token.hpp; sourceTree = "<group>"; };
 		287B00381BFB9AE100842066 /* ResourcePath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
 		287B00391BFB9AE100842066 /* ResourcePath.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
-		287B003B1BFBA08A00842066 /* test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		28B1196F1BD940BB0033BC21 /* Parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parser.cpp; sourceTree = "<group>"; };
 		28B119701BD940BB0033BC21 /* Parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Parser.hpp; sourceTree = "<group>"; };
 		ECC10F0E1C0CDF47004D6E78 /* Tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
@@ -50,6 +52,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2817BCF71C14C24500A5CE9A /* Gold Standard Code */ = {
+			isa = PBXGroup;
+			children = (
+				2817BCF81C14C26400A5CE9A /* List.hpp */,
+				2817BCF91C14C26400A5CE9A /* List.imp */,
+				2817BCFA1C14C26400A5CE9A /* script-list.hpp */,
+			);
+			path = "Gold Standard Code";
+			sourceTree = SOURCE_ROOT;
+		};
 		2839CDBE1BB9DB7200996C2F = {
 			isa = PBXGroup;
 			children = (
@@ -70,7 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				2839CDCA1BB9DB7300996C2F /* main.cpp */,
-				287B003B1BFBA08A00842066 /* test.txt */,
+				2817BCF71C14C24500A5CE9A /* Gold Standard Code */,
 				287B00381BFB9AE100842066 /* ResourcePath.mm */,
 				287B00391BFB9AE100842066 /* ResourcePath.hpp */,
 				2868508F1BD853B6003FB75E /* Token.hpp */,
