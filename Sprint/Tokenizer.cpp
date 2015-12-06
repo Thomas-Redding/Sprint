@@ -48,6 +48,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("NULL");
 	keywords.insert("protected");
 	keywords.insert("private");
+	keywords.insert("ref");
 	keywords.insert("return");
 	keywords.insert("static");
 	keywords.insert("struct");
@@ -192,6 +193,8 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = KEYWORD_PROTECTED;
 			if(t->str == "private")
 				t->type = KEYWORD_PRIVATE;
+			if(t->str == "ref")
+				t->type = KEYWORD_REF;
 			if(t->str == "return")
 				t->type = KEYWORD_RETURN;
 			if(t->str == "static")
