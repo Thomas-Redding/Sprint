@@ -18,8 +18,8 @@ class List<class V>
 	= (ref List this, V[] array)
 
 	readonly V* arr
+	readonly uint length = 0
 
 	private:
-		uint length = 0
 		uint capacity = 20
 		void expand()

@@ -256,37 +256,207 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 }
 
 std::string Tokenizer::tokenTypeToString(TokenType t) {
-	/*
-	 INDENT, DEDENT, NEWLINE, KEYWORD, IDENTIFIER,
-	 INTEGER_LITERAL, FLOAT_LITERAL, CHARACTER_LITERAL, STRING_LITERAL,
-	 PUNCTUATION, UNKNOWN
-	 */
-	if(t == INDENT)
+	if( t == INDENT) {
 		return "INDENT";
-	else if(t == DEDENT)
+	}
+	else if( t == DEDENT) {
 		return "DEDENT";
-	else if(t == NEWLINE)
+	}
+	else if( t == NEWLINE) {
 		return "NEWLINE";
-	else if(t == KEYWORD)
+	}
+	else if( t == KEYWORD) {
 		return "KEYWORD";
-	else if(t == IDENTIFIER)
+	}
+	else if( t == IDENTIFIER) {
 		return "IDENTIFIER";
-	else if(t == INTEGER_LITERAL)
+	}
+	else if( t == INTEGER_LITERAL) {
 		return "INTEGER_LITERAL";
-	else if(t == FLOAT_LITERAL)
+	}
+	else if( t == FLOAT_LITERAL) {
 		return "FLOAT_LITERAL";
-	else if(t == CHARACTER_LITERAL)
+	}
+	else if( t == CHARACTER_LITERAL) {
 		return "CHARACTER_LITERAL";
-	else if(t == STRING_LITERAL)
+	}
+	else if( t == STRING_LITERAL) {
 		return "STRING_LITERAL";
-	else if(t == PUNCTUATION)
+	}
+	else if( t == PUNCTUATION) {
 		return "PUNCTUATION";
-	else if(t == UNKNOWN)
+	}
+	else if( t == BRACKET) {
+		return "BRACKET";
+	}
+	else if( t == UNKNOWN) {
 		return "UNKNOWN";
-	else if(t == OPEN_PARENTHESIS)
+	}
+	else if( t == NULL_TOKEN_TYPE) {
+		return "NULL_TOKEN_TYPE";
+	}
+	else if( t == OPEN_PARENTHESIS) {
 		return "OPEN_PARENTHESIS";
-	else
-		return "";
+	}
+	else if( t == CLOSE_PARENTHESIS) {
+		return "CLOSE_PARENTHESIS";
+	}
+	else if( t == OPEN_BRACKET) {
+		return "OPEN_BRACKET";
+	}
+	else if( t == CLOSE_BRACKET) {
+		return "CLOSE_BRACKET";
+	}
+	else if( t == OPEN_CURLY_BRACE) {
+		return "OPEN_CURLY_BRACE";
+	}
+	else if( t == CLOSE_CURLY_BRACE) {
+		return "CLOSE_CURLY_BRACE";
+	}
+	else if( t == KEYWORD_ABSTRACT) {
+		return "KEYWORD_ABSTRACT";
+	}
+	else if( t == KEYWORD_BREAK) {
+		return "KEYWORD_BREAK";
+	}
+	else if( t == KEYWORD_CASE) {
+		return "KEYWORD_CASE";
+	}
+	else if( t == KEYWORD_CATCH) {
+		return "KEYWORD_CATCH";
+	}
+	else if( t == KEYWORD_CLASS) {
+		return "KEYWORD_CLASS";
+	}
+	else if( t == KEYWORD_CONST) {
+		return "KEYWORD_CONST";
+	}
+	else if( t == KEYWORD_CONTINUE) {
+		return "KEYWORD_CONTINUE";
+	}
+	else if( t == KEYWORD_DELETE) {
+		return "KEYWORD_DELETE";
+	}
+	else if( t == KEYWORD_DO) {
+		return "KEYWORD_DO";
+	}
+	else if( t == KEYWORD_ELSE) {
+		return "KEYWORD_ELSE";
+	}
+	else if( t == KEYWORD_ENUM) {
+		return "KEYWORD_ENUM";
+	}
+	else if( t == KEYWORD_FALSE) {
+		return "KEYWORD_FALSE";
+	}
+	else if( t == KEYWORD_FOR) {
+		return "KEYWORD_FOR";
+	}
+	else if( t == KEYWORD_IF) {
+		return "KEYWORD_IF";
+	}
+	else if( t == KEYWORD_INLINE) {
+		return "KEYWORD_INLINE";
+	}
+	else if( t == KEYWORD_NEW) {
+		return "KEYWORD_NEW";
+	}
+	else if( t == KEYWORD_NULL) {
+		return "KEYWORD_NULL";
+	}
+	else if( t == KEYWORD_PROTECTED) {
+		return "KEYWORD_PROTECTED";
+	}
+	else if( t == KEYWORD_PRIVATE) {
+		return "KEYWORD_PRIVATE";
+	}
+	else if( t == KEYWORD_REF) {
+		return "KEYWORD_REF";
+	}
+	else if( t == KEYWORD_RETURN) {
+		return "KEYWORD_RETURN";
+	}
+	else if( t == KEYWORD_STATIC) {
+		return "KEYWORD_STATIC";
+	}
+	else if( t == KEYWORD_STRUCT) {
+		return "KEYWORD_STRUCT";
+	}
+	else if( t == KEYWORD_THIS) {
+		return "KEYWORD_THIS";
+	}
+	else if( t == KEYWORD_THROW) {
+		return "KEYWORD_THROW";
+	}
+	else if( t == KEYWORD_TRUE) {
+		return "KEYWORD_TRUE";
+	}
+	else if( t == KEYWORD_TRY) {
+		return "KEYWORD_TRY";
+	}
+	else if( t == KEYWORD_VIRTUAL) {
+		return "KEYWORD_VIRTUAL";
+	}
+	else if( t == KEYWORD_WHILE) {
+		return "KEYWORD_WHILE";
+	}
+	else if( t == PERIOD) {
+		return "PERIOD";
+	}
+	else if( t == SEMI_COLON) {
+		return "SEMI_COLON";
+	}
+	else if( t == PLUS) {
+		return "PLUS";
+	}
+	else if( t == MINUS) {
+		return "MINUS";
+	}
+	else if( t == ASTERISK) {
+		return "ASTERISK";
+	}
+	else if( t == SLASH) {
+		return "SLASH";
+	}
+	else if( t == AMPERSAND) {
+		return "AMPERSAND";
+	}
+	else if( t == POUND_SIGN) {
+		return "POUND_SIGN";
+	}
+	else if( t == LESS_THAN) {
+		return "LESS_THAN";
+	}
+	else if( t == EQUALS) {
+		return "EQUALS";
+	}
+	else if( t == GREATER_THAN) {
+		return "GREATER_THAN";
+	}
+	else if( t == COMMA) {
+		return "COMMA";
+	}
+	else if( t == DECREMENT) {
+		return "DECREMENT";
+	}
+	else if( t == INCREMENT) {
+		return "INCREMENT";
+	}
+	else if( t == PLUS_EQUALS) {
+		return "PLUS_EQUALS";
+	}
+	else if( t == MINUS_EQUALS) {
+		return "MINUS_EQUALS";
+	}
+	else if( t == AMPERSAND_EQUALS) {
+		return "AMPERSAND_EQUALS";
+	}
+	else if( t == SLASH_EQUALS) {
+		return "SLASH_EQUALS";
+	}
+	else {
+		return "ERROR";
+	}
 }
 
 std::string Tokenizer::removeComents(std::string str) {
