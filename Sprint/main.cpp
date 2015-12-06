@@ -52,7 +52,8 @@ int main(int argc, const char * argv[]) {
     
     Tree< std::pair< Token, size_t> >* tree = parser.match(&tokenizedList[0], tokenizedList.size(), foo);
 
-    std::cout << *tree << std::endl;
+	if(tree != NULL)
+	    std::cout << *tree << std::endl;
     
     return 0;
 }
