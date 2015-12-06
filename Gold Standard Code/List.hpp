@@ -15,7 +15,7 @@ class List<class V>
 	void isEmpty()
 		return length == 0
 
-	= (List& this, V[] array)
+	= (ref List this, V[] array)
 
 	readonly V* arr
 

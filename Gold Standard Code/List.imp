@@ -20,7 +20,7 @@ V List.remove(uint index)
 		arr[i] = arr[i+1]
 	return rtn
 
-List = (List &this, V[] array)
+List = (ref List &this, V[] array)
 	delete this.arr
 	this.arr = array
 
