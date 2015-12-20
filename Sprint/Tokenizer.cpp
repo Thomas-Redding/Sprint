@@ -30,6 +30,8 @@ Tokenizer::Tokenizer() {
 	punctuation.insert(',');
 	punctuation.insert('|');
 	punctuation.insert('%');
+	punctuation.insert('!');
+	punctuation.insert('^');
 	
 	keywords.insert("abstract");
 	keywords.insert("break");
@@ -45,6 +47,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("false");
 	keywords.insert("for");
 	keywords.insert("if");
+	keywords.insert("in");
 	keywords.insert("inline");
 	keywords.insert("new");
 	keywords.insert("NULL");
@@ -186,6 +189,8 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = KEYWORD_FOR;
 			if(t->str == "if")
 				t->type = KEYWORD_IF;
+			if(t->str == "in")
+				t->type = KEYWORD_IN;
 			if(t->str == "inline")
 				t->type = KEYWORD_INLINE;
 			if(t->str == "new")
@@ -248,6 +253,10 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = VERTICAL_BAR;
 			else if(t->str == "%")
 				t->type = PERCENT;
+			else if(t->str == "!")
+				t->type = EXCLAMATION_POINT;
+			else if(t->str == "^")
+				t->type = CARROT;
 		}
 	}
 }
@@ -352,6 +361,9 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	else if( t == KEYWORD_IF) {
 		return "KEYWORD_IF";
 	}
+	else if( t == KEYWORD_IN) {
+		return "KEYWORD_IN";
+	}
 	else if( t == KEYWORD_INLINE) {
 		return "KEYWORD_INLINE";
 	}
@@ -441,6 +453,12 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	}
 	else if ( t == PERCENT) {
 		return "PERCENT";
+	}
+	else if ( t == EXCLAMATION_POINT) {
+		return "EXCLAMATION_POINT";
+	}
+	else if ( t == CARROT) {
+		return "CARROT";
 	}
 	else {
 		return "ERROR";
