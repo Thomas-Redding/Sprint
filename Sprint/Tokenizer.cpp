@@ -28,6 +28,8 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('=');
 	punctuation.insert('>');
 	punctuation.insert(',');
+	punctuation.insert('|');
+	punctuation.insert('%');
 	
 	keywords.insert("abstract");
 	keywords.insert("break");
@@ -50,6 +52,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("private");
 	keywords.insert("ref");
 	keywords.insert("return");
+	keywords.insert("sizeof");
 	keywords.insert("static");
 	keywords.insert("struct");
 	keywords.insert("switch");
@@ -197,6 +200,8 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = KEYWORD_REF;
 			if(t->str == "return")
 				t->type = KEYWORD_RETURN;
+			if(t->str == "sizeof")
+				t->type = KEYWORD_SIZEOF;
 			if(t->str == "static")
 				t->type = KEYWORD_STATIC;
 			if(t->str == "struct")
@@ -239,18 +244,10 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = GREATER_THAN;
 			else if(t->str == ",")
 				t->type = COMMA;
-			else if(t->str == "--")
-				t->type = DECREMENT;
-			else if(t->str == "++")
-				t->type = INCREMENT;
-			else if(t->str == "+=")
-				t->type = PLUS_EQUALS;
-			else if(t->str == "-=")
-				t->type = MINUS_EQUALS;
-			else if(t->str == "*=")
-				t->type = AMPERSAND_EQUALS;
-			else if(t->str == "/=")
-				t->type = SLASH_EQUALS;
+			else if(t->str == "|")
+				t->type = VERTICAL_BAR;
+			else if(t->str == "%")
+				t->type = PERCENT;
 		}
 	}
 }
@@ -376,6 +373,9 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	else if( t == KEYWORD_RETURN) {
 		return "KEYWORD_RETURN";
 	}
+	else if( t == KEYWORD_SIZEOF) {
+		return "KEYWORD_SIZEOF";
+	}
 	else if( t == KEYWORD_STATIC) {
 		return "KEYWORD_STATIC";
 	}
@@ -436,23 +436,11 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	else if( t == COMMA) {
 		return "COMMA";
 	}
-	else if( t == DECREMENT) {
-		return "DECREMENT";
+	else if ( t == VERTICAL_BAR) {
+		return "VERTICAL_BAR";
 	}
-	else if( t == INCREMENT) {
-		return "INCREMENT";
-	}
-	else if( t == PLUS_EQUALS) {
-		return "PLUS_EQUALS";
-	}
-	else if( t == MINUS_EQUALS) {
-		return "MINUS_EQUALS";
-	}
-	else if( t == AMPERSAND_EQUALS) {
-		return "AMPERSAND_EQUALS";
-	}
-	else if( t == SLASH_EQUALS) {
-		return "SLASH_EQUALS";
+	else if ( t == PERCENT) {
+		return "PERCENT";
 	}
 	else {
 		return "ERROR";
@@ -652,29 +640,8 @@ void Tokenizer::tokenizeLine(std::string str, std::vector<Token> *rtn, int lineN
 
 std::vector<std::string> Tokenizer::dividePunctuations(std::string str, char nextChar) {
 	std::vector<std::string> rtn = std::vector<std::string>();
-	if(str.length() == 1) {
-		rtn.push_back(str);
-	}
-	else if(str.length() == 2) {
-		if(str == "--") {
-			if(isdigit(nextChar) || isStartOfIdentifierLetter(nextChar)) {
-				// minus negative
-				rtn.push_back("-");
-				rtn.push_back("-");
-			}
-			else
-				rtn.push_back("--");
-		}
-		else if(str == "+-") {
-			// plus negative
-			rtn.push_back("+");
-			rtn.push_back("-");
-		}
-		else
-			rtn.push_back(str);
-	}
-	else {
-		std::cout << "TOKENIZER: INVALID STRING OF PUNCTUATION\n";
+	for(int i=0; i<str.length(); i++) {
+		rtn.push_back(str.substr(i, 1));
 	}
 	return rtn;
 }
