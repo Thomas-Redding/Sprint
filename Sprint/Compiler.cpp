@@ -8,6 +8,29 @@
 
 #include "Compiler.hpp"
 
-void Compiler::compile(Tree< std::pair< Token, size_t> >* tree) {
-	//
+void Compiler::compile(Tree< std::pair< Token, size_t> >* tree, std::string path) {
+	std::string newFolderPath = path + "c++ code";
+	mkdir(newFolderPath.c_str(), 0777);
+	writeToFile(newFolderPath + "/test.txt", "Hello World!");
+}
+
+std::string Compiler::readFile(std::string path) {
+	std::string line, contents;
+	std::ifstream myfile(path);
+	if(myfile.is_open()) {
+		while(getline(myfile, line)) {
+			contents += line;
+			contents += "\n";
+		}
+		myfile.close();
+	}
+	return contents;
+}
+
+void Compiler::writeToFile(std::string path, std::string newContents) {
+	std::ofstream myfile(path);
+	if(myfile.is_open()) {
+		myfile << newContents;
+		myfile.close();
+	}
 }

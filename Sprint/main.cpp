@@ -20,13 +20,13 @@ int main(int argc, const char * argv[]) {
 	std::string pathToFile;
 	if(pathToDesktop == "/Users/thomasredding/Desktop") {
 		// Thomas
-		pathToFile = "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/List.hpp";
+		pathToFile = "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/";
 	}
 	else {
 		// Morgan
-		pathToFile = "/Users/mredding/Sprint/test.txt";
+		pathToFile = "/Users/mredding/Sprint/Gold Standard Code/";
 	}
-	std::ifstream myfile(pathToFile);
+	std::ifstream myfile(pathToFile+"List.hpp");
 	if(myfile.is_open()) {
 		while(getline(myfile, fileLine)) {
 			contents += fileLine;
@@ -182,6 +182,6 @@ int main(int argc, const char * argv[]) {
 		std::cout << "null tree" << std::endl;
 	
 	Compiler compiler;
-	compiler.compile(tree);
+	compiler.compile(tree, pathToFile);
 	return 0;
 }
