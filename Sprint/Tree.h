@@ -6,6 +6,8 @@
 //  Copyright © 2015 Thomas Redding. All rights reserved.
 //
 
+#include <vector>
+
 #ifndef Tree_h
 #define Tree_h
 
