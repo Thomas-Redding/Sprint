@@ -452,6 +452,36 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	else if( t == KEYWORD_WHILE) {
 		return "KEYWORD_WHILE";
 	}
+	else if( t == KEYWORD_INT) {
+		return "KEYWORD_INT";
+	}
+	else if( t == KEYWORD_INT8) {
+		return "KEYWORD_INT8";
+	}
+	else if( t == KEYWORD_INT16) {
+		return "KEYWORD_INT16";
+	}
+	else if( t == KEYWORD_INT32) {
+		return "KEYWORD_INT32";
+	}
+	else if( t == KEYWORD_INT64) {
+		return "KEYWORD_INT64";
+	}
+	else if( t == KEYWORD_UINT) {
+		return "KEYWORD_UINT";
+	}
+	else if( t == KEYWORD_UINT8) {
+		return "KEYWORD_UINT8";
+	}
+	else if( t == KEYWORD_UINT16) {
+		return "KEYWORD_UINT16";
+	}
+	else if( t == KEYWORD_UINT32) {
+		return "KEYWORD_UINT32";
+	}
+	else if( t == KEYWORD_UINT64) {
+		return "KEYWORD_UINT64";
+	}
 	else if( t == PERIOD) {
 		return "PERIOD";
 	}
