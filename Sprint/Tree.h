@@ -7,6 +7,7 @@
 //
 
 #include <vector>
+#include <ostream>
 
 #ifndef Tree_h
 #define Tree_h

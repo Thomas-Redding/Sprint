@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		280642F31C2B367E00312E5E /* Compiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280642F11C2B367E00312E5E /* Compiler.cpp */; };
 		2839CDCB1BB9DB7300996C2F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2839CDCA1BB9DB7300996C2F /* main.cpp */; };
 		2868508D1BD85347003FB75E /* Tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2868508B1BD85347003FB75E /* Tokenizer.cpp */; };
 		287B003A1BFB9AE100842066 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 287B00381BFB9AE100842066 /* ResourcePath.mm */; };
@@ -26,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		280642F11C2B367E00312E5E /* Compiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Compiler.cpp; sourceTree = "<group>"; };
+		280642F21C2B367E00312E5E /* Compiler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Compiler.hpp; sourceTree = "<group>"; };
 		2817BCF81C14C26400A5CE9A /* List.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = List.hpp; sourceTree = "<group>"; };
 		2817BCF91C14C26400A5CE9A /* List.imp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = List.imp; sourceTree = "<group>"; };
 		2817BCFA1C14C26400A5CE9A /* script-list.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "script-list.hpp"; sourceTree = "<group>"; };
@@ -91,6 +94,8 @@
 				28B1196F1BD940BB0033BC21 /* Parser.cpp */,
 				28B119701BD940BB0033BC21 /* Parser.hpp */,
 				ECC10F0E1C0CDF47004D6E78 /* Tree.h */,
+				280642F11C2B367E00312E5E /* Compiler.cpp */,
+				280642F21C2B367E00312E5E /* Compiler.hpp */,
 			);
 			path = Sprint;
 			sourceTree = "<group>";
@@ -154,6 +159,7 @@
 				2868508D1BD85347003FB75E /* Tokenizer.cpp in Sources */,
 				28B119711BD940BB0033BC21 /* Parser.cpp in Sources */,
 				2839CDCB1BB9DB7300996C2F /* main.cpp in Sources */,
+				280642F31C2B367E00312E5E /* Compiler.cpp in Sources */,
 				287B003A1BFB9AE100842066 /* ResourcePath.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
