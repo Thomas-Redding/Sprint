@@ -66,6 +66,20 @@ Tokenizer::Tokenizer() {
 	keywords.insert("try");
 	keywords.insert("virtual");
 	keywords.insert("while");
+	
+	keywords.insert("uint");
+	keywords.insert("uint8");
+	keywords.insert("uint16");
+	keywords.insert("uint32");
+	keywords.insert("uint64");
+	keywords.insert("int");
+	keywords.insert("int8");
+	keywords.insert("int16");
+	keywords.insert("int32");
+	keywords.insert("int64");
+	
+	keywords.insert("float");
+	keywords.insert("double");
 }
 
 std::vector<Token> Tokenizer::process(std::string str) {
@@ -226,6 +240,26 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = KEYWORD_VIRTUAL;
 			if(t->str == "while")
 				t->type = KEYWORD_WHILE;
+			if(t->str == "int")
+				t->type = KEYWORD_INT;
+			if(t->str == "int8")
+				t->type = KEYWORD_INT8;
+			if(t->str == "int16")
+				t->type = KEYWORD_INT16;
+			if(t->str == "int32")
+				t->type = KEYWORD_INT32;
+			if(t->str == "int64")
+				t->type = KEYWORD_INT64;
+			if(t->str == "uint")
+				t->type = KEYWORD_UINT;
+			if(t->str == "uint8")
+				t->type = KEYWORD_UINT8;
+			if(t->str == "uint16")
+				t->type = KEYWORD_UINT16;
+			if(t->str == "uint32")
+				t->type = KEYWORD_UINT32;
+			if(t->str == "uint64")
+				t->type = KEYWORD_UINT64;
 		}
 		else if(t->type == PUNCTUATION) {
 			if(t->str == ".")
