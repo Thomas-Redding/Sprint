@@ -4,12 +4,6 @@
  
 
 void foo(int a)
-	int a;
-	int b;
-	return 0;
-
-//void main(int a)
-//	int x
 
 //class List<class V>
 //	List()

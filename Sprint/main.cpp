@@ -44,23 +44,20 @@ int main(int argc, const char * argv[]) {
 	
     std::vector< Rule > rules =
     {
-		Rule(general, {klass, NEWLINE}),
-		Rule(general, {method_declaration_and_implementation, NEWLINE}),
+//		Rule(general, {klass, NEWLINE}),
+//		Rule(general, {method_declaration_and_implementation, NEWLINE}),
+		Rule(general, {method_declaration, NEWLINE}),
 		
 		// class
-		Rule(klass, {GREATER_THAN, template_arguments_declaration, etc, t_arg_d, LESS_THAN, NEWLINE, KEYWORD_CLASS, type_name_decl, NEWLINE, INDENT, etc, in_class, DEDENT}),
-		Rule(klass, {KEYWORD_CLASS, type_name_decl, NEWLINE, INDENT, etc, in_class, DEDENT}),
-		Rule(in_class, {method_declaration, NEWLINE}),
-		Rule(in_class, {method_declaration_and_implementation, NEWLINE}),
-		Rule(in_class, {member_variable_declaration, NEWLINE}),
+//		Rule(klass, {KEYWORD_CLASS}),
+//		Rule(in_class, {method_declaration, NEWLINE}),
+//		Rule(in_class, {method_declaration_and_implementation, NEWLINE}),
+//		Rule(in_class, {member_variable_declaration, NEWLINE}),
 		
 		// functions, methods & member variables
-		Rule(method_declaration, {GREATER_THAN, template_arguments_declaration, etc, t_arg_d, LESS_THAN, NEWLINE,  type_name_decl, IDENTIFIER, OPEN_PARENTHESIS, method_args, CLOSE_PARENTHESIS}),
-		Rule(method_declaration, {type_name_decl, IDENTIFIER, OPEN_PARENTHESIS, method_args, CLOSE_PARENTHESIS}),
-		Rule(method_declaration_and_implementation, {method_declaration, NEWLINE, block}),
-		Rule(member_variable_declaration, {type_name, IDENTIFIER, EQUALS, literal}),
-		Rule(member_variable_declaration, {type_name, IDENTIFIER}),
-		Rule(method_args, {template_arguments_declaration}), // just … you know… renaming this
+		Rule(method_declaration, { IDENTIFIER, IDENTIFIER, OPEN_PARENTHESIS, IDENTIFIER, IDENTIFIER, CLOSE_PARENTHESIS }),
+//		Rule(method_declaration_and_implementation, {}),
+//		Rule(member_variable_declaration, {}),
 		
 		// loops
 		Rule(while_loop, {KEYWORD_WHILE, logical_or_expression, NEWLINE, block, NEWLINE}),
@@ -149,26 +146,6 @@ int main(int argc, const char * argv[]) {
 		
 		Rule(function_call, {IDENTIFIER, OPEN_PARENTHESIS, expression, etc, function_arg , CLOSE_PARENTHESIS}),
 		Rule(function_arg, {COMMA, expression}),
-		
-		// think Foo<5, &x, Bar<4>>*
-		
-		Rule(type_name, {IDENTIFIER, t_args, ASTERISK}),
-		Rule(type_name, {IDENTIFIER, t_args}),
-		Rule(type_name, {IDENTIFIER, ASTERISK}),
-		Rule(type_name, {IDENTIFIER}),
-		Rule(t_args, {GREATER_THAN, ta, etc, t_arg, LESS_THAN}),
-		Rule(t_arg, {COMMA, ta}),
-		Rule(ta, {INTEGER_LITERAL}),
-		Rule(ta, {AMPERSAND, IDENTIFIER}),
-		Rule(ta, {type_name}),
-		
-		// think Foo<int a, Bar<4>* b, class c>
-		Rule(type_name_decl, {IDENTIFIER}),
-		Rule(type_name_decl, {IDENTIFIER, GREATER_THAN, template_arguments_declaration, etc, t_arg_d, LESS_THAN}),
-		Rule(t_arg_d, {COMMA, template_arguments_declaration}),
-		Rule(template_arguments_declaration, {IDENTIFIER, IDENTIFIER}),
-		Rule(template_arguments_declaration, {type_name, ASTERISK, IDENTIFIER}),
-		Rule(template_arguments_declaration, {KEYWORD_CLASS, IDENTIFIER}),
     };
 
     Parser parser(rules);
