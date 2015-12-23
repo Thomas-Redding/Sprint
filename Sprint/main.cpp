@@ -11,6 +11,7 @@
 #include "Tokenizer.hpp"
 #include "Parser.hpp"
 #include "ResourcePath.hpp"
+#include "Compiler.hpp"
 
 int main(int argc, const char * argv[]) {
 	std::string fileLine;
@@ -179,5 +180,8 @@ int main(int argc, const char * argv[]) {
 	    std::cout << *tree << std::endl;
 	else
 		std::cout << "null tree" << std::endl;
-    return 0;
+	
+	Compiler compiler;
+	compiler.compile(tree);
+	return 0;
 }
