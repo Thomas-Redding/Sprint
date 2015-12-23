@@ -170,11 +170,11 @@ int main(int argc, const char * argv[]) {
 		Rule(template_arguments_declaration, {type_name, ASTERISK, IDENTIFIER}),
 		Rule(template_arguments_declaration, {KEYWORD_CLASS, IDENTIFIER}),
     };
-    Rule program_rule(program, {etc, general});
-    
+
     Parser parser(rules);
-	
-    Tree< std::pair< Token, size_t> >* tree = parser.match(&tokenizedList[0], tokenizedList.size(), general);
+    
+    Rule program_rule(program, {etc, general});
+    ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
 	if(tree != NULL)
 	    std::cout << *tree << std::endl;

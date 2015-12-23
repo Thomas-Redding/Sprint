@@ -9,22 +9,21 @@
 #include "Parser.hpp"
 #include "Token.hpp"
 
-Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const Rule& rule) {
-    Tree< std::pair<Token, size_t> >* rtn = new Tree< std::pair<Token, size_t> >(std::pair<TokenType, size_t>(rule.output, 0));
+ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
+    ParseTree* rtn = new ParseTree(std::pair<const Token*, size_t>(new Token(rule.output), 0));
     const std::vector< TokenType >& components = rule.components;
     size_t i = 0;
     for (size_t j = 0; j < components.size(); ++j) {
-        if (components[j] == 0) {
-            // etc
+        if (components[j] == TokenType::etc) {
             j++;
-            if (components[j] == 0) {
+            if (components[j] == TokenType::etc) {
                 throw std::runtime_error("What in Jesus' name is \"etc, etc\" supposed to mean?");
             }
-            else if (components[j] == 1) {
+            else if (components[j] == TokenType::etc_not) {
                 throw std::runtime_error("What in Jesus' name is \"etc, etc_not\" supposed to mean?");
             }
             while (i < n) {
-                Tree< std::pair<Token, size_t> >* x = match(A + i, n - i, components[j]);
+                ParseTree* x = match(A + i, n - i, components[j]);
                 if (x == nullptr) {
                     break;
                 }
@@ -32,17 +31,16 @@ Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const 
                 i += x->value.second;
             }
         }
-        else if (components[j] == 1) {
-            // etc_not
+        else if (components[j] == TokenType::etc_not) {
             j++;
-            if (components[j] == 0) {
+            if (components[j] == TokenType::etc) {
                 throw std::runtime_error("What in Jesus' name is \"etc_not, etc\" supposed to mean?");
             }
-            else if (components[j] == 1) {
+            else if (components[j] == TokenType::etc_not) {
                 throw std::runtime_error("What in Jesus' name is \"etc_not, etc_not\" supposed to mean?");
             }
             while (i < n) {
-                Tree< std::pair<Token, size_t> >* x = match(A + i, n - i, components[j]);
+                ParseTree* x = match(A + i, n - i, components[j]);
                 if (x != nullptr) {
                     delete x;// added
                     break;
@@ -51,7 +49,7 @@ Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const 
             }
         }
         else {
-            Tree< std::pair<Token, size_t> >* x = match(A + i, n - i, components[j]);
+            ParseTree* x = match(A + i, n - i, components[j]);
             if (x == nullptr) {
                 return nullptr;
             }
@@ -63,11 +61,11 @@ Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const 
     return rtn;
 }
 
-Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const Token& value) {
+ParseTree* Parser::match(const Token* A, size_t n, const Token& value) {
     
     if (value.type < token_threshold) {
         if (value.type == A[0].type) {
-            return new Tree< std::pair<Token, size_t> >( std::pair<Token, size_t>(value.type, 1));
+            return new ParseTree(std::pair<const Token*, size_t>(new Token(value), 1));
         }
         else {
             return nullptr;
@@ -78,7 +76,7 @@ Tree< std::pair<Token, size_t> >* Parser::match(const Token* A, size_t n, const 
         if (rules[i].output != value.type) {
             continue;
         }
-        Tree< std::pair<Token, size_t> >* x = match(A, n, rules[i]);
+        ParseTree* x = match(A, n, rules[i]);
         if (x != nullptr) {
             return x;
         }

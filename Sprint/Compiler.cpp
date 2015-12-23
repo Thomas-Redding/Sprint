@@ -8,7 +8,7 @@
 
 #include "Compiler.hpp"
 
-void Compiler::compile(Tree< std::pair< Token, size_t> >* tree, std::string path) {
+void Compiler::compile(ParseTree* tree, std::string path) {
 	std::string newFolderPath = path + "c++ code";
 	mkdir(newFolderPath.c_str(), 0777);
 	writeToFile(newFolderPath + "/test.txt", "Hello World!");

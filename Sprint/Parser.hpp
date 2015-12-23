@@ -14,7 +14,14 @@
 #include <vector>
 #include <iostream>
 #include "Token.hpp"
-#include "Tree.h"
+#include "ParseTree.hpp"
+
+/*
+ *
+ * The pair<Token, size_t> contains a value for the node of the tree and the
+ * number of tokens it is long
+ *
+ */
 
 struct Rule {
     Rule(TokenType output, std::initializer_list<TokenType> components) : output(output), components(components) {}
@@ -24,16 +31,10 @@ struct Rule {
 
 struct Parser {
     Parser(std::vector<Rule>& rules) : rules(rules) {};
-    Tree< std::pair<Token, size_t> >* match(const Token* A, size_t n, const Token& value);
-    Tree< std::pair<Token, size_t> >* match(const Token* A, size_t n, const Rule& rule);
+    ParseTree* match(const Token* A, size_t n, const Token& value);
+    ParseTree* match(const Token* A, size_t n, const Rule& rule);
     std::vector< Rule > rules;
 };
-
-template<class A, class B>
-std::ostream& operator<<(std::ostream& o, const std::pair<A, B>& p) {
-    o << "(" << p.first << ", " << p.second << ")";
-    return o;
-}
 
 
 
