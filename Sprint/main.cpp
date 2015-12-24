@@ -90,25 +90,16 @@ int main(int argc, const char * argv[]) {
 		Rule(assignment_set, {PERCENT, EQUALS}),
 		Rule(assignment_set, {LESS_THAN, EQUALS}),
 		Rule(assignment_set, {GREATER_THAN, EQUALS}),
-		Rule(assignment_set, {VERTICAL_BAR, EQUALS}),
-		Rule(assignment_set, {CARROT, EQUALS}),
-		Rule(assignment_set, {AMPERSAND, EQUALS}),
 		Rule(assignment_rightmost_expression, {assignment_set, logical_or_expression}),
 		
-		Rule(logical_or_expression, {logical_or_expression, VERTICAL_BAR, VERTICAL_BAR, logical_and_expression}),
-		Rule(logical_or_expression, {logical_and_expression}),
+		Rule(or_expression, {or_expression, KEYWORD_OR, and_expression}),
+		Rule(or_expression, {and_expression}),
 		
-		Rule(logical_and_expression, {bitwise_and_expression, AMPERSAND, AMPERSAND, logical_or_expression}),
-		Rule(logical_and_expression, {bitwise_or_expression}),
+		Rule(and_expression, {and_expression, KEYWORD_AND, xor_expression}),
+		Rule(and_expression, {xor_expression}),
 		
-		Rule(bitwise_or_expression, {bitwise_or_expression, VERTICAL_BAR, bitwise_xor_expression}),
-		Rule(bitwise_or_expression, {bitwise_xor_expression}),
-		
-		Rule(bitwise_xor_expression, {bitwise_xor_expression, CARROT, bitwise_and_expression}),
-		Rule(bitwise_xor_expression, {bitwise_and_expression}),
-		
-		Rule(bitwise_and_expression, {bitwise_and_expression, AMPERSAND, equality_expression}),
-		Rule(bitwise_and_expression, {equality_expression}),
+		Rule(xor_expression, {xor_expression, KEYWORD_XOR, equality_expression}),
+		Rule(xor_expression, {and_expression}),
 		
 		Rule(equality_set, {EQUALS, EQUALS}), Rule(equality_set, {EXCLAMATION_POINT, EQUALS}),
 		Rule(equality_expression, {equality_expression, equality_set, relational_expression}),
