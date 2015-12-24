@@ -782,7 +782,7 @@ std::vector<std::string> Tokenizer::split(std::string str, char delim) {
 	std::vector<std::string> elems;
 	std::string item;
 	while(true) {
-		int index = str.find(delim);
+		unsigned long index = str.find(delim);
 		if(index == -1) {
 			elems.push_back(str);
 			return elems;
