@@ -147,7 +147,7 @@ enum TokenType {
 	expression
 };
 
-const size_t token_threshold = 80;
+const size_t token_threshold = 84;
 
 class Token {
 public:
