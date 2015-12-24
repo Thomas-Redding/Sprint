@@ -81,6 +81,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("and");
 	keywords.insert("or");
 	keywords.insert("not");
+	keywords.insert("xor");
 	
 	keywords.insert("float");
 	keywords.insert("double");
@@ -264,6 +265,14 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = KEYWORD_UINT32;
 			if(t->str == "uint64")
 				t->type = KEYWORD_UINT64;
+			if(t->str == "and")
+				t->type = KEYWORD_AND;
+			if(t->str == "or")
+				t->type = KEYWORD_OR;
+			if(t->str == "not")
+				t->type = KEYWORD_NOT;
+			if(t->str == "xor")
+				t->type = KEYWORD_XOR;
 		}
 		else if(t->type == PUNCTUATION) {
 			if(t->str == ".")
@@ -496,6 +505,9 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	}
 	else if( t == KEYWORD_NOT) {
 		return "KEYWORD_NOT";
+	}
+	else if( t == KEYWORD_XOR) {
+		return "KEYWORD_XOR";
 	}
 	else if( t == KEYWORD_FLOAT) {
 		return "KEYWORD_FLOAT";
