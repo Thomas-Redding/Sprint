@@ -78,6 +78,10 @@ Tokenizer::Tokenizer() {
 	keywords.insert("int32");
 	keywords.insert("int64");
 	
+	keywords.insert("and");
+	keywords.insert("or");
+	keywords.insert("not");
+	
 	keywords.insert("float");
 	keywords.insert("double");
 }
@@ -483,6 +487,21 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	}
 	else if( t == KEYWORD_UINT64) {
 		return "KEYWORD_UINT64";
+	}
+	else if( t == KEYWORD_AND) {
+		return "KEYWORD_AND";
+	}
+	else if( t == KEYWORD_OR) {
+		return "KEYWORD_OR";
+	}
+	else if( t == KEYWORD_NOT) {
+		return "KEYWORD_NOT";
+	}
+	else if( t == KEYWORD_FLOAT) {
+		return "KEYWORD_FLOAT";
+	}
+	else if( t == KEYWORD_DOUBLE) {
+		return "KEYWORD_DOUBLE";
 	}
 	else if( t == PERIOD) {
 		return "PERIOD";
