@@ -292,6 +292,8 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = PERCENT;
 			else if(t->str == "!")
 				t->type = EXCLAMATION_POINT;
+			else if(t->str == "@")
+				t->type = AT;
 			else if(t->str == "^")
 				t->type = CARROT;
 		}
@@ -526,6 +528,9 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	}
 	else if ( t == EXCLAMATION_POINT) {
 		return "EXCLAMATION_POINT";
+	}
+	else if ( t == AT) {
+		return "AT";
 	}
 	else if ( t == CARROT) {
 		return "CARROT";
