@@ -139,7 +139,8 @@ int main(int argc, const char * argv[]) {
 		Rule(times_expression, {simple_value, plus_set, times_expression}),
 		Rule(times_expression, {unary_expression}),
 		
-		Rule(unary_expression, {KEYWORD_NEW, type, }),
+		Rule(unary_expression, {KEYWORD_NEW, type, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS}),
+		Rule(unary_expression, {KEYWORD_NEW, type, OPEN_BRACKET, or_expression, CLOSE_BRACKET}),
 		Rule(unary_expression, {simple_value}),
 		
 		Rule(simple_value, {literal}),

@@ -141,7 +141,11 @@ enum TokenType {
 	t_arg,
 	line,
 	program,
-	expression,
+	expression = 130,
+    template_parameter,
+    template_parameter_child,
+    function_parameter,
+    type,
 	unary_expression
 };
 
