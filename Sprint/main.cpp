@@ -141,7 +141,9 @@ int main(int argc, const char * argv[]) {
 		
 		Rule(unary_expression, {KEYWORD_NEW, type, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS}),
 		Rule(unary_expression, {KEYWORD_NEW, type, OPEN_BRACKET, or_expression, CLOSE_BRACKET}),
+		Rule(unary_expression, {KEYWORD_DELETE, simple_value}),
 		Rule(unary_expression, {simple_value}),
+		
 		
 		Rule(simple_value, {literal}),
 		Rule(simple_value, {IDENTIFIER, etc, pointer_value}),
