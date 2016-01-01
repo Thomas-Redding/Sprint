@@ -50,14 +50,14 @@ int main(int argc, const char * argv[]) {
 		// class
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, NEWLINE, INDENT, etc, in_class, DEDENT}),
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT}),
-		Rule(in_class, {method_declaration, NEWLINE}),
+//		Rule(in_class, {method_declaration, NEWLINE}),
 		Rule(in_class, {method_declaration_and_implementation, NEWLINE}),
-		Rule(in_class, {member_variable_declaration, NEWLINE}),
+//		Rule(in_class, {member_variable_declaration, NEWLINE}),
         
         
 		// functions, methods & member variables
-		Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS }),
-		Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS }),
+		Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
+		Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
 //		Rule(member_variable_declaration, {}),
         
         Rule(template_parameter, {COMMA, template_parameter}),
@@ -91,7 +91,8 @@ int main(int argc, const char * argv[]) {
 		Rule(block, {INDENT, etc, block_components, DEDENT}),
 		
 		// declarations, assignments
-		Rule(line, {type, IDENTIFIER, etc, simple_assign, NEWLINE}),
+		Rule(line, {type, IDENTIFIER, assignment_rightmost_expression, NEWLINE}),
+        Rule(line, {type, IDENTIFIER, etc, simple_assign, NEWLINE}),
 		Rule(line, {type, IDENTIFIER, etc, simple_assign, assignment_rightmost_expression, NEWLINE}),
 		Rule(simple_assign, {assignment_set, IDENTIFIER}),
 		
@@ -163,7 +164,8 @@ int main(int argc, const char * argv[]) {
 
     Parser parser(rules);
     
-    Rule program_rule(program, {etc, general});
+//    Rule program_rule(program, {etc, general});
+    Rule program_rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT});
     ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
 	if(tree != NULL)
