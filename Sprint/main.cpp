@@ -118,8 +118,11 @@ int main(int argc, const char * argv[]) {
 		Rule(plus_expression, {times_expression}),
 		
 		Rule(times_set, {ASTERISK}), Rule(times_set, {SLASH}), Rule(times_set, {PERCENT}),
-		Rule(times_expression, {times_expression, plus_set, times_expression}),
-		Rule(times_expression, {simple_value}),
+		Rule(times_expression, {simple_value, plus_set, times_expression}),
+		Rule(times_expression, {unary_expression}),
+		
+		Rule(unary_expression, {KEYWORD_NEW, type, }),
+		Rule(unary_expression, {simple_value}),
 		
 		Rule(simple_value, {literal}),
 		Rule(simple_value, {IDENTIFIER, etc, pointer_value}),

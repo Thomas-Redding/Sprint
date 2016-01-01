@@ -144,7 +144,8 @@ enum TokenType {
 	t_arg,
 	line = 130,
 	program,
-	expression
+	expression,
+	unary_expression
 };
 
 const size_t token_threshold = 84;
