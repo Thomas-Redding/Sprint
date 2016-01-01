@@ -1,13 +1,11 @@
 /*
  * WE CAN'T USE 'return' STATEMENTS?!
  */
- 
-
-void foo(int a)
 
 //class List<class V>
-//	List()
-//		arr = new V[capacity]
+class List
+	List()
+		arr = new V[capacity]
 //	void push(V item)
 //	void insert(uint index, V item)
 //	V pop()

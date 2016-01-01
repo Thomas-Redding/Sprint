@@ -99,22 +99,19 @@ enum TokenType {
 	AT,
 	CARROT,
 	general,
-	type_name_decl,
 	in_class,
 	klass,
-	method_declaration = 90,
-	method_declaration_and_implementation,
+	method_declaration,
+	method_declaration_and_implementation = 90,
 	member_variable_declaration,
-	template_arguments_declaration,
 	t_arg_d,
 	method_args,
 	block,
 	type_name,
-	logical_or_expression,
 	while_loop,
-	for_in_loop = 100,
+	for_in_loop,
 	if_statement,
-	literal,
+	literal = 100,
 	if_else_statement,
 	block_components,
 	simple_assign,
@@ -122,9 +119,9 @@ enum TokenType {
 	assignment_set,
 	or_expression,
 	and_expression,
-	xor_expression = 110,
+	xor_expression,
 	equality_expression,
-	equality_set,
+	equality_set = 110,
 	relational_expression,
 	relational_set,
 	shift_expression,
@@ -132,9 +129,9 @@ enum TokenType {
 	plus_expression,
 	plus_set,
 	times_expression,
-	times_set = 120,
+	times_set,
 	simple_value,
-	pointer_value,
+	pointer_value = 120,
 	access_value,
 	pointer_access,
 	function_call,
@@ -142,7 +139,7 @@ enum TokenType {
 	t_args,
 	ta,
 	t_arg,
-	line = 130,
+	line,
 	program,
 	expression,
 	unary_expression
@@ -179,7 +176,7 @@ public:
 		return false;
 	}
     friend std::ostream& operator<<(std::ostream& o, const Token& t) {
-		std::string arr[134] = { "etc","etc_not","INDENT","DEDENT","NEWLINE","KEYWORD","IDENTIFIER","INTEGER_LITERAL","FLOAT_LITERAL","CHARACTER_LITERAL","STRING_LITERAL","PUNCTUATION","BRACKET","UNKNOWN","NULL_TOKEN_TYPE","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACKET","CLOSE_BRACKET","OPEN_CURLY_BRACE","CLOSE_CURLY_BRACE","KEYWORD_ABSTRACT","KEYWORD_BREAK","KEYWORD_CASE","KEYWORD_CATCH","KEYWORD_CLASS","KEYWORD_CONST","KEYWORD_CONTINUE","KEYWORD_DELETE","KEYWORD_DO","KEYWORD_ELSE","KEYWORD_ENUM","KEYWORD_FALSE","KEYWORD_FOR","KEYWORD_IF","KEYWORD_IN","KEYWORD_INLINE","KEYWORD_NEW","KEYWORD_NULL","KEYWORD_PROTECTED","KEYWORD_PRIVATE","KEYWORD_PTR","KEYWORD_REF","KEYWORD_RETURN","KEYWORD_SIZEOF","KEYWORD_STATIC","KEYWORD_STRUCT","KEYWORD_THIS","KEYWORD_THROW","KEYWORD_TRUE","KEYWORD_TRY","KEYWORD_VIRTUAL","KEYWORD_WHILE","KEYWORD_INT","KEYWORD_INT8","KEYWORD_INT16","KEYWORD_INT32","KEYWORD_INT64","KEYWORD_UINT","KEYWORD_UINT8","KEYWORD_UINT16","KEYWORD_UINT32","KEYWORD_UINT64","KEYWORD_AND","KEYWORD_OR","KEYWORD_NOT", "KEYWORD_XOR","KEYWORD_FLOAT","KEYWORD_DOUBLE","PERIOD","SEMI_COLON","PLUS","MINUS","ASTERISK","SLASH","AMPERSAND","POUND_SIGN","LESS_THAN","EQUALS","GREATER_THAN","COMMA","VERTICAL_BAR","PERCENT","EXCLAMATION_POINT","AT","CARROT","general","type_name_decl","in_class","klass","method_declaration","method_declaration_and_implementation","member_variable_declaration","template_arguments_declaration","t_arg_d","method_args","block","type_name","logical_or_expression","while_loop","for_in_loop","if_statement","literal","if_else_statement","block_components","simple_assign","assignment_rightmost_expression","assignment_set","logical_and_expression","bitwise_and_expression","bitwise_or_expression","bitwise_xor_expression","equality_expression","equality_set","relational_expression","relational_set","shift_expression","shift_set","plus_expression","plus_set","times_expression","times_set","simple_value","pointer_value","access_value","pointer_access","function_call","function_arg","t_args","ta","t_arg","line","program","expression" };
+		std::string arr[135] = { "etc","etc_not","INDENT","DEDENT","NEWLINE","KEYWORD","IDENTIFIER","INTEGER_LITERAL","FLOAT_LITERAL","CHARACTER_LITERAL","STRING_LITERAL","PUNCTUATION","BRACKET","UNKNOWN","NULL_TOKEN_TYPE","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACKET","CLOSE_BRACKET","OPEN_CURLY_BRACE","CLOSE_CURLY_BRACE","KEYWORD_ABSTRACT","KEYWORD_BREAK","KEYWORD_CASE","KEYWORD_CATCH","KEYWORD_CLASS","KEYWORD_CONST","KEYWORD_CONTINUE","KEYWORD_DELETE","KEYWORD_DO","KEYWORD_ELSE","KEYWORD_ENUM","KEYWORD_FALSE","KEYWORD_FOR","KEYWORD_IF","KEYWORD_IN","KEYWORD_INLINE","KEYWORD_NEW","KEYWORD_NULL","KEYWORD_PROTECTED","KEYWORD_PRIVATE","KEYWORD_PTR","KEYWORD_REF","KEYWORD_RETURN","KEYWORD_SIZEOF","KEYWORD_STATIC","KEYWORD_STRUCT","KEYWORD_THIS","KEYWORD_THROW","KEYWORD_TRUE","KEYWORD_TRY","KEYWORD_VIRTUAL","KEYWORD_WHILE","KEYWORD_INT","KEYWORD_INT8","KEYWORD_INT16","KEYWORD_INT32","KEYWORD_INT64","KEYWORD_UINT","KEYWORD_UINT8","KEYWORD_UINT16","KEYWORD_UINT32","KEYWORD_UINT64","KEYWORD_AND","KEYWORD_OR","KEYWORD_NOT","KEYWORD_XOR","KEYWORD_FLOAT","KEYWORD_DOUBLE","PERIOD","SEMI_COLON","PLUS","MINUS","ASTERISK","SLASH","AMPERSAND","POUND_SIGN","LESS_THAN","EQUALS","GREATER_THAN","COMMA","VERTICAL_BAR","PERCENT","EXCLAMATION_POINT","AT","CARROT","general","in_class","klass","method_declaration","method_declaration_and_implementation","member_variable_declaration","t_arg_d","method_args","block","type_name","logical_or_expression","while_loop","for_in_loop","if_statement","literal","if_else_statement","block_components","simple_assign","assignment_rightmost_expression","assignment_set","or_expression","and_expression","xor_expression","equality_expression","equality_set","relational_expression","relational_set","shift_expression","shift_set","plus_expression","plus_set","times_expression","times_set","simple_value","pointer_value","access_value","pointer_access","function_call","function_arg","t_args","ta","t_arg","line","program","expression","template_parameter","template_parameter_child","function_parameter","type" };
         return o << arr[int(t.type)];
     }
 	TokenType type;

@@ -21,7 +21,7 @@
  * The pair<Token, size_t> contains a value for the node of the tree and the
  * number of tokens it is long
  *
- */
+*/
 
 struct Rule {
     Rule(TokenType output, std::initializer_list<TokenType> components) : output(output), components(components) {}

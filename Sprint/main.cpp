@@ -44,28 +44,46 @@ int main(int argc, const char * argv[]) {
 	
     std::vector< Rule > rules =
     {
-//		Rule(general, {klass, NEWLINE}),
-//		Rule(general, {method_declaration_and_implementation, NEWLINE}),
-		Rule(general, {method_declaration, NEWLINE}),
+		Rule(general, {klass, NEWLINE}),
+		Rule(general, {method_declaration_and_implementation, NEWLINE, block}),
 		
 		// class
-//		Rule(klass, {KEYWORD_CLASS}),
-//		Rule(in_class, {method_declaration, NEWLINE}),
-//		Rule(in_class, {method_declaration_and_implementation, NEWLINE}),
-//		Rule(in_class, {member_variable_declaration, NEWLINE}),
-		
+		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, NEWLINE, INDENT, etc, in_class, DEDENT}),
+		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT}),
+		Rule(in_class, {method_declaration, NEWLINE}),
+		Rule(in_class, {method_declaration_and_implementation, NEWLINE}),
+		Rule(in_class, {member_variable_declaration, NEWLINE}),
+        
+        
 		// functions, methods & member variables
-		Rule(method_declaration, { IDENTIFIER, IDENTIFIER, OPEN_PARENTHESIS, IDENTIFIER, IDENTIFIER, CLOSE_PARENTHESIS }),
-//		Rule(method_declaration_and_implementation, {}),
+		Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS }),
+		Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS }),
 //		Rule(member_variable_declaration, {}),
+        
+        Rule(template_parameter, {COMMA, template_parameter}),
+        Rule(template_parameter, {template_parameter_child, IDENTIFIER}),
+
+        Rule(template_parameter_child, {IDENTIFIER, LESS_THAN, template_parameter_child, GREATER_THAN, ASTERISK}),
+        Rule(template_parameter_child, {IDENTIFIER, ASTERISK}),
+        Rule(template_parameter_child, {KEYWORD_INT}), // TODO: make this a set of all int types
+        Rule(template_parameter_child, {KEYWORD_CLASS}),
+        
+        Rule(function_parameter, {COMMA, function_parameter}),
+        Rule(function_parameter, {type, IDENTIFIER}),
+        Rule(type, {IDENTIFIER, ASTERISK}),
+        Rule(type, {IDENTIFIER, LESS_THAN, type, GREATER_THAN, ASTERISK}),
+        Rule(type, {IDENTIFIER, LESS_THAN, type, GREATER_THAN}),
+        Rule(type, {IDENTIFIER}),
+        Rule(type, {KEYWORD_INT}), // TODO: make this a set of all int types
+        
 		
 		// loops
-		Rule(while_loop, {KEYWORD_WHILE, logical_or_expression, NEWLINE, block, NEWLINE}),
+		Rule(while_loop, {KEYWORD_WHILE, or_expression, NEWLINE, block, NEWLINE}),
 		Rule(for_in_loop, {KEYWORD_FOR, type_name, IDENTIFIER, KEYWORD_IN, IDENTIFIER, NEWLINE, block, NEWLINE}),
 		
 		// if (-else)
 		Rule(if_else_statement, {if_statement, NEWLINE, KEYWORD_ELSE, NEWLINE, block, NEWLINE}),
-		Rule(if_statement, {KEYWORD_IF, logical_or_expression, NEWLINE, block}),
+		Rule(if_statement, {KEYWORD_IF, or_expression, NEWLINE, block}),
 		
 		// blocks
 		Rule(block_components, {line}),
@@ -73,14 +91,14 @@ int main(int argc, const char * argv[]) {
 		Rule(block, {INDENT, etc, block_components, DEDENT}),
 		
 		// declarations, assignments
-		Rule(line, {type_name, IDENTIFIER, etc, simple_assign, NEWLINE}),
-		Rule(line, {type_name, IDENTIFIER, etc, simple_assign, assignment_rightmost_expression, NEWLINE}),
+		Rule(line, {type, IDENTIFIER, etc, simple_assign, NEWLINE}),
+		Rule(line, {type, IDENTIFIER, etc, simple_assign, assignment_rightmost_expression, NEWLINE}),
 		Rule(simple_assign, {assignment_set, IDENTIFIER}),
 		
 		Rule(expression, {IDENTIFIER, etc, simple_assign}),
 		Rule(expression, {IDENTIFIER, etc, simple_assign, assignment_rightmost_expression}),
 		Rule(expression, {IDENTIFIER, assignment_rightmost_expression}),
-		Rule(expression, {logical_or_expression}),
+		Rule(expression, {or_expression}),
 		
 		Rule(assignment_set, {EQUALS}),
 		Rule(assignment_set, {PLUS, EQUALS}),
@@ -90,31 +108,31 @@ int main(int argc, const char * argv[]) {
 		Rule(assignment_set, {PERCENT, EQUALS}),
 		Rule(assignment_set, {LESS_THAN, EQUALS}),
 		Rule(assignment_set, {GREATER_THAN, EQUALS}),
-		Rule(assignment_rightmost_expression, {assignment_set, logical_or_expression}),
+		Rule(assignment_rightmost_expression, {assignment_set, or_expression}),
 		
-		Rule(or_expression, {or_expression, KEYWORD_OR, and_expression}),
+		Rule(or_expression, {and_expression, KEYWORD_OR, or_expression}),
 		Rule(or_expression, {and_expression}),
 		
-		Rule(and_expression, {and_expression, KEYWORD_AND, xor_expression}),
+		Rule(and_expression, {xor_expression, KEYWORD_AND, and_expression}),
 		Rule(and_expression, {xor_expression}),
 		
-		Rule(xor_expression, {xor_expression, KEYWORD_XOR, equality_expression}),
-		Rule(xor_expression, {and_expression}),
+		Rule(xor_expression, {equality_expression, KEYWORD_XOR, xor_expression}),
+		Rule(xor_expression, {equality_expression}),
 		
 		Rule(equality_set, {EQUALS, EQUALS}), Rule(equality_set, {EXCLAMATION_POINT, EQUALS}),
-		Rule(equality_expression, {equality_expression, equality_set, relational_expression}),
+		Rule(equality_expression, {relational_expression, equality_set, equality_expression}),
 		Rule(equality_expression, {relational_expression}),
 		
 		Rule(relational_set, {LESS_THAN}), Rule(relational_set, {GREATER_THAN}), Rule(relational_set, {LESS_THAN, EQUALS}), Rule(relational_set, {GREATER_THAN, EQUALS}),
-		Rule(relational_expression, {relational_expression, relational_set, shift_expression}),
+		Rule(relational_expression, {shift_expression, relational_set, relational_expression}),
 		Rule(relational_expression, {shift_expression}),
 		
 		Rule(shift_set, {LESS_THAN, LESS_THAN}), Rule(shift_set, {GREATER_THAN, GREATER_THAN}),
-		Rule(shift_expression, {shift_expression, shift_set, plus_expression}),
+		Rule(shift_expression, {plus_expression, shift_set, shift_expression}),
 		Rule(shift_expression, {plus_expression}),
 		
 		Rule(plus_set, {PLUS}), Rule(plus_set, {MINUS}),
-		Rule(plus_expression, {plus_expression, plus_set, times_expression}),
+		Rule(plus_expression, {times_expression, plus_set, plus_expression}),
 		Rule(plus_expression, {times_expression}),
 		
 		Rule(times_set, {ASTERISK}), Rule(times_set, {SLASH}), Rule(times_set, {PERCENT}),
