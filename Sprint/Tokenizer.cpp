@@ -175,6 +175,13 @@ std::vector<Token> Tokenizer::process(std::string str) {
 	
 	doMorgansDirtyWork(&rtn);
 	
+	for (int i=0; i<rtn.size()-1; i++) {
+		if ((rtn[i].type == INDENT || rtn[i].type == DEDENT) && rtn[i+1].type == NEWLINE) {
+			rtn.erase(rtn.begin()+i+1);
+			i--;
+		}
+	}
+	
 	// add line at end
 	rtn.push_back(Token(NEWLINE, "\n", lines.size()+1, 0));
 	
