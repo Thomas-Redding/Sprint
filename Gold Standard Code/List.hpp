@@ -2,12 +2,18 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
-//class List<class V>
+class List<class V>
+	List List()
+		int x = 5
+		int v = x = 56
+	void push<class X>(V item)
+	void insert(uint index, V item)
+
 class List
 	List List()
 		int x = 5
-//	void push(V item)
-//	void insert(uint index, V item)
+	void push(V item)
+	void insert(uint index, V item)
 //	V pop()
 //	V remove(uint index)
 //	V at(uint index)
