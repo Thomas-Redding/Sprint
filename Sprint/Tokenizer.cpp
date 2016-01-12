@@ -88,8 +88,26 @@ Tokenizer::Tokenizer() {
 	keywords.insert("double");
 }
 
+std::string Tokenizer::removeEmptyLines(std::string str) {
+	std::vector<std::string> lines = split(str, '\n');
+	std::string rtn = "";
+	for (int i=0; i<lines.size(); i++) {
+		int j;
+		for (j=0; j<lines[i].length(); j++) {
+			if (lines[i][j] != '\n' && lines[i][j] != '\t') {
+				break;
+			}
+		}
+		if (j != lines[i].length()) {
+			rtn += lines[i] + '\n';
+		}
+	}
+	return rtn;
+}
+
 std::vector<Token> Tokenizer::process(std::string str) {
 	str = removeComents(str);
+	str = removeEmptyLines(str);
 	std::vector<std::string> lines = split(str, '\n');
 	std::vector<unsigned int> indents;
 	std::vector<Token> rtn;
