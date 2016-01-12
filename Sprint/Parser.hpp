@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <vector>
 #include <iostream>
-#include "Token.hpp"
 #include "ParseTree.hpp"
 
 /*

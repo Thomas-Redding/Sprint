@@ -12,7 +12,6 @@
 #include <sys/stat.h>
 #include <fstream>
 #include "ParseTree.hpp"
-#include "Token.hpp"
 
 class Compiler {
 public:

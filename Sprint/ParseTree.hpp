@@ -46,35 +46,49 @@ struct ParseTree {
         return _children[i];
     }
     std::pair<const Token*, size_t> value;
+    
     friend std::ostream& operator<<(std::ostream& o, const ParseTree& t) {
-        
-        o << "(" << *t.value.first << ", " << t.value.second << ")" << std::endl;
-        if (t.number_of_children() == 0) {
-            return o;
-        }
-        o << "children:" << std::endl;
-        o << "(" << *(t._children[0]->value.first) << ", " << t._children[0]->value.second << ")";
-        for (size_t i = 1; i < t._children.size(); ++i) {
-            o << "      (" << *t._children[i]->value.first << ", " << t._children[i]->value.second << ")";
-        }
-        o << std::endl;
-        o << "grand children:" << std::endl;
-        for (size_t i = 0; i < t._children.size(); ++i) {
-            if (i != 0) {
-                o << " | ";
-            }
-            if (t._children[i]->number_of_children() == 0) {
-                continue;
-            }
-            o << "(" << *t._children[i]->_children[0]->value.first << ", " << t._children[i]->_children[0]->value.second << ")";
-            for (size_t j = 1; j < t._children[i]->_children.size(); ++j) {
-                o << "      (" << *t._children[i]->_children[j]->value.first << ", " << t._children[i]->_children[j]->value.second << ")";
-            }
-        }
-        return o;
+        return o << t.toString();
     }
+    
+    std::string toString(int depth = 0) const {
+        
+        std::string rtn = "";
+        for (int i = 0; i < depth; ++i) {
+            rtn += "    ";
+        }
+        rtn += valueToString();
+        if (children.size() == 0) {
+            return rtn;
+        }
+        for (int i = 0; i < children.size(); ++i) {
+            rtn += '\n';
+            rtn += children[i]->toString(depth + 1);
+        }
+        return rtn;
+    }
+    
+    std::string valueToString() const {
+        return "  " + token_to_string(value.first->type) + "  ";
+    }
+    
     const std::vector<ParseTree*>& children;
+    
 private:
+    
+    int width() const {
+        int x = int(valueToString().size());
+        int y = 0;
+        for (int i = 0; i < children.size(); ++i) {
+            y += children[i]->width();
+        }
+        return x > y ? x : y;
+    }
+    
+    std::string token_to_string(const TokenType& t) const {
+        std::string arr[138] = { "etc","etc_not","INDENT","DEDENT","NEWLINE","KEYWORD","IDENTIFIER","INTEGER_LITERAL","FLOAT_LITERAL","CHARACTER_LITERAL","STRING_LITERAL","PUNCTUATION","BRACKET","UNKNOWN","NULL_TOKEN_TYPE","OPEN_PARENTHESIS","CLOSE_PARENTHESIS","OPEN_BRACKET","CLOSE_BRACKET","OPEN_CURLY_BRACE","CLOSE_CURLY_BRACE","KEYWORD_ABSTRACT","KEYWORD_BREAK","KEYWORD_CASE","KEYWORD_CATCH","KEYWORD_CLASS","KEYWORD_CONST","KEYWORD_CONTINUE","KEYWORD_DELETE","KEYWORD_DO","KEYWORD_ELSE","KEYWORD_ENUM","KEYWORD_FALSE","KEYWORD_FOR","KEYWORD_IF","KEYWORD_IN","KEYWORD_INLINE","KEYWORD_NEW","KEYWORD_NULL","KEYWORD_PROTECTED","KEYWORD_PRIVATE","KEYWORD_PTR","KEYWORD_REF","KEYWORD_RETURN","KEYWORD_SIZEOF","KEYWORD_STATIC","KEYWORD_STRUCT","KEYWORD_THIS","KEYWORD_THROW","KEYWORD_TRUE","KEYWORD_TRY","KEYWORD_VIRTUAL","KEYWORD_WHILE","KEYWORD_INT","KEYWORD_INT8","KEYWORD_INT16","KEYWORD_INT32","KEYWORD_INT64","KEYWORD_UINT","KEYWORD_UINT8","KEYWORD_UINT16","KEYWORD_UINT32","KEYWORD_UINT64","KEYWORD_AND","KEYWORD_OR","KEYWORD_NOT","KEYWORD_XOR","KEYWORD_FLOAT","KEYWORD_DOUBLE","KEYWORD_PUBLIC","PERIOD","SEMI_COLON","PLUS","MINUS","ASTERISK","SLASH","AMPERSAND","POUND_SIGN","LESS_THAN","EQUALS","GREATER_THAN","COMMA","VERTICAL_BAR","PERCENT","EXCLAMATION_POINT","AT","CARROT","general","in_class","klass","method_declaration","method_declaration_and_implementation","member_variable_declaration","t_arg_d","method_args","block","type_name","while_loop","for_in_loop","if_statement","literal","if_else_statement","block_components","simple_assign","assignment_rightmost_expression","assignment_set","or_expression","and_expression","xor_expression","equality_expression","equality_set","relational_expression","relational_set","shift_expression","shift_set","plus_expression","plus_set","times_expression","times_set","simple_value","pointer_value","access_value","pointer_access","function_call","function_arg","t_args","ta","t_arg","line","program","expression","template_parameter","template_parameter_child","function_parameter","type","unary_expression","access_modifier_set", };
+        return arr[int(t)];
+    }
     
     size_t _number_of_leaves;
     std::vector<ParseTree*> _children;

@@ -48,13 +48,14 @@ int main(int argc, const char * argv[]) {
     {
 		Rule(general, {klass}),
 		Rule(general, {method_declaration_and_implementation}),
+		Rule(general, {method_declaration}),
 		
 		// class
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, NEWLINE, INDENT, etc, in_class, DEDENT}),
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT}),
         Rule(in_class, {method_declaration_and_implementation}),
 		Rule(in_class, {method_declaration}),
-//		Rule(in_class, {member_variable_declaration, NEWLINE}),
+//		Rule(in_class, {member_variable_declaration}),
         
         
 		// functions, methods & member variables
@@ -183,17 +184,15 @@ int main(int argc, const char * argv[]) {
     Parser parser(rules);
     
     Rule program_rule(program, {etc, general});
-//    Rule program_rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT, NEWLINE});
     ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
     if (tree != NULL) {
         std::cout << *tree << std::endl << std::endl;
-        std::cout << *(tree->children[0]->children[0]) << std::endl << std::endl;
     }
     else {
 		std::cout << "null tree" << std::endl;
     }
-	
+    
 	Compiler compiler;
 	compiler.compile(tree, pathToFile);
 	return 0;

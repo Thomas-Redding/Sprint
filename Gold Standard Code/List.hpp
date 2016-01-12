@@ -2,12 +2,7 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
-class List<class V>
-	List List()
-		int x = 5
-		int v = x = 56
-	void push<class X>(V item)
-	void insert(uint index, V item)
+void bar()
 
 class List
 	List List()
