@@ -19,11 +19,8 @@ class List
 //	void isEmpty()
 //		return length == 0
 //
-//	= (ref List this, V[] array)
-//
 //	readonly V* arr
 //	readonly uint length = 0
 //
-//	private:
-//		uint capacity = 20
-//		void expand()
+//	private uint capacity = 20
+//	private void expand()
