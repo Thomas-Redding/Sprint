@@ -2,6 +2,9 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
+void push(int index)
+	int x = 5
+
 //class List<class V>
 void foo()
 	int bar; int baz;
