@@ -6,10 +6,8 @@ void push(int index)
 	int x = 5
 
 //class List<class V>
-void foo()
-	int bar; int baz;
 //class List
-//	List List()
+//	constructor List()
 //		int x = 5
 //		arr = new V[capacity]
 //	void push(V item)
@@ -25,11 +23,8 @@ void foo()
 //	void isEmpty()
 //		return length == 0
 //
-//	= (ref List this, V[] array)
-//
 //	readonly V* arr
 //	readonly uint length = 0
 //
-//	private:
-//		uint capacity = 20
-//		void expand()
+//	private uint capacity = 20
+//	private void expand()
