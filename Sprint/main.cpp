@@ -104,15 +104,11 @@ int main(int argc, const char * argv[]) {
 		Rule(block, {INDENT, etc, block_components, DEDENT}),
 		
 		// declarations, assignments
-		Rule(line, {type, IDENTIFIER, assignment_rightmost_expression, NEWLINE}),
-        Rule(line, {type, IDENTIFIER, etc, simple_assign, NEWLINE}),
-		Rule(line, {type, IDENTIFIER, etc, simple_assign, assignment_rightmost_expression, NEWLINE}),
-		Rule(simple_assign, {assignment_set, IDENTIFIER}),
+		Rule(line, {type, IDENTIFIER, etc, assignment_expression,  NEWLINE}),
+		Rule(line, {expression, NEWLINE}),
 		
-		Rule(expression, {IDENTIFIER, etc, simple_assign}),
-		Rule(expression, {IDENTIFIER, etc, simple_assign, assignment_rightmost_expression}),
-		Rule(expression, {IDENTIFIER, assignment_rightmost_expression}),
-		Rule(expression, {or_expression}),
+		Rule(expression, {IDENTIFIER, etc, assignment_expression, NEWLINE}),
+		Rule(expression, {or_expression, NEWLINE}),
 		
 		Rule(assignment_set, {EQUALS}),
 		Rule(assignment_set, {PLUS, EQUALS}),
@@ -122,33 +118,41 @@ int main(int argc, const char * argv[]) {
 		Rule(assignment_set, {PERCENT, EQUALS}),
 		Rule(assignment_set, {LESS_THAN, EQUALS}),
 		Rule(assignment_set, {GREATER_THAN, EQUALS}),
-		Rule(assignment_rightmost_expression, {assignment_set, or_expression}),
+		Rule(assignment_expression, {assignment_set, or_expression}),
 		
+		Rule(or_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(or_expression, {and_expression, KEYWORD_OR, or_expression}),
 		Rule(or_expression, {and_expression}),
 		
+		Rule(and_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(and_expression, {xor_expression, KEYWORD_AND, and_expression}),
 		Rule(and_expression, {xor_expression}),
 		
+		Rule(xor_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(xor_expression, {equality_expression, KEYWORD_XOR, xor_expression}),
 		Rule(xor_expression, {equality_expression}),
 		
 		Rule(equality_set, {EQUALS, EQUALS}), Rule(equality_set, {EXCLAMATION_POINT, EQUALS}),
+		Rule(equality_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(equality_expression, {relational_expression, equality_set, equality_expression}),
 		Rule(equality_expression, {relational_expression}),
 		
 		Rule(relational_set, {LESS_THAN}), Rule(relational_set, {GREATER_THAN}), Rule(relational_set, {LESS_THAN, EQUALS}), Rule(relational_set, {GREATER_THAN, EQUALS}),
+		Rule(relational_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(relational_expression, {shift_expression, relational_set, relational_expression}),
 		Rule(relational_expression, {shift_expression}),
 		
 		Rule(shift_set, {LESS_THAN, LESS_THAN}), Rule(shift_set, {GREATER_THAN, GREATER_THAN}),
+		Rule(shift_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(shift_expression, {plus_expression, shift_set, shift_expression}),
 		Rule(shift_expression, {plus_expression}),
 		
 		Rule(plus_set, {PLUS}), Rule(plus_set, {MINUS}),
+		Rule(plus_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(plus_expression, {times_expression, plus_set, plus_expression}),
 		Rule(plus_expression, {times_expression}),
 		
+		Rule(times_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(times_set, {ASTERISK}), Rule(times_set, {SLASH}), Rule(times_set, {PERCENT}),
 		Rule(times_expression, {simple_value, plus_set, times_expression}),
 		Rule(times_expression, {unary_expression}),
