@@ -4,10 +4,10 @@
 
 //class List<class V>
 class List
-//	List List()
-//		int x = 5
-	void push(V item)
-	void insert(uint index, V item)
+	List List()
+		int x = 5
+//	void push(V item)
+//	void insert(uint index, V item)
 //	V pop()
 //	V remove(uint index)
 //	V at(uint index)
