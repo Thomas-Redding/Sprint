@@ -3,9 +3,11 @@
  */
 
 //class List<class V>
-class List
-	List List()
-		int x = 5
+void foo()
+	int bar; int baz;
+//class List
+//	List List()
+//		int x = 5
 //		arr = new V[capacity]
 //	void push(V item)
 //	void insert(uint index, V item)

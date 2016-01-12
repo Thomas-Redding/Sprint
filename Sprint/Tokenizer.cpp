@@ -161,6 +161,9 @@ std::vector<Token> Tokenizer::process(std::string str) {
 	
 	doMorgansDirtyWork(&rtn);
 	
+	// add line at end
+	rtn.push_back(Token(NEWLINE, "\n", lines.size()+1, 0));
+	
 	return rtn;
 }
 
