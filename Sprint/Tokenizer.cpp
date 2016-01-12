@@ -161,10 +161,6 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			i --;
 		}
 	}
-	if(rtn[0].type == NEWLINE)
-		rtn.erase(rtn.begin());
-	if(rtn[rtn.size()-1].type == NEWLINE)
-		rtn.erase(rtn.begin() + rtn.size()-1);
 	
 	int finalIndentLevel = 0;
 	for(int i=0; i<rtn.size(); i++) {
