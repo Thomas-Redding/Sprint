@@ -31,8 +31,9 @@ struct Rule {
 
 struct Parser {
     Parser(std::vector<Rule>& rules) : rules(rules) {};
-    ParseTree* match(const Token* A, size_t n, const Token& value);
     ParseTree* match(const Token* A, size_t n, const Rule& rule);
+private:
+    ParseTree* match(const Token* A, size_t n, const Token& value);
     std::vector< Rule > rules;
 };
 
