@@ -81,8 +81,9 @@ enum TokenType {
 	KEYWORD_XOR,
 	KEYWORD_FLOAT,
 	KEYWORD_DOUBLE,
-	PERIOD,
-	SEMI_COLON = 70,
+	KEYWORD_PUBLIC,
+	PERIOD = 70,
+	SEMI_COLON,
 	PLUS,
 	MINUS,
 	ASTERISK,
@@ -91,8 +92,8 @@ enum TokenType {
 	POUND_SIGN,
 	LESS_THAN,
 	EQUALS,
-	GREATER_THAN,
-	COMMA = 80,
+	GREATER_THAN = 80,
+	COMMA,
 	VERTICAL_BAR,
 	PERCENT,
 	EXCLAMATION_POINT,
@@ -101,8 +102,8 @@ enum TokenType {
 	general,
 	in_class,
 	klass,
-	method_declaration,
-	method_declaration_and_implementation = 90,
+	method_declaration = 90,
+	method_declaration_and_implementation,
 	member_variable_declaration,
 	t_arg_d,
 	method_args,
@@ -149,7 +150,7 @@ enum TokenType {
 	unary_expression
 };
 
-const size_t token_threshold = 84;
+const size_t token_threshold = 85;
 
 class Token {
 public:
