@@ -2,18 +2,12 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
-void push(int index)
-	int x = 5
-
 //class List<class V>
-void foo()
-	int bar; int baz;
-//class List
-//	List List()
-//		int x = 5
-//		arr = new V[capacity]
-//	void push(V item)
-//	void insert(uint index, V item)
+class List
+	List List()
+		int x = 5
+	void push(V item)
+	void insert(uint index, V item)
 //	V pop()
 //	V remove(uint index)
 //	V at(uint index)
