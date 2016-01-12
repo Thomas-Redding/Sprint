@@ -147,7 +147,8 @@ enum TokenType {
     template_parameter_child,
     function_parameter,
     type,
-	unary_expression
+	unary_expression,
+	access_modifier_set
 };
 
 const size_t token_threshold = 85;

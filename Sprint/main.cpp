@@ -172,6 +172,10 @@ int main(int argc, const char * argv[]) {
 		
 		Rule(function_call, {IDENTIFIER, OPEN_PARENTHESIS, expression, etc, function_arg , CLOSE_PARENTHESIS}),
 		Rule(function_arg, {COMMA, expression}),
+		
+		Rule(access_modifier_set, {KEYWORD_PUBLIC}),
+		Rule(access_modifier_set, {KEYWORD_PROTECTED}),
+		Rule(access_modifier_set, {KEYWORD_PRIVATE})
     };
 
     Parser parser(rules);
