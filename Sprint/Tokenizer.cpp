@@ -54,6 +54,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("protected");
 	keywords.insert("private");
 	keywords.insert("ptr");
+	keywords.insert("public");
 	keywords.insert("ref");
 	keywords.insert("return");
 	keywords.insert("sizeof");
@@ -221,6 +222,8 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = KEYWORD_PROTECTED;
 			if(t->str == "private")
 				t->type = KEYWORD_PRIVATE;
+			if(t->str == "public")
+				t->type = KEYWORD_PUBLIC;
 			if(t->str == "ptr")
 				t->type = KEYWORD_PTR;
 			if(t->str == "ref")
@@ -430,6 +433,9 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	}
 	else if( t == KEYWORD_PRIVATE) {
 		return "KEYWORD_PRIVATE";
+	}
+	else if( t == KEYWORD_PUBLIC) {
+		return "KEYWORD_PUBLIC";
 	}
 	else if( t == KEYWORD_PTR) {
 		return "KEYWORD_PTR";
