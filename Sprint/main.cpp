@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
 	std::string contents = "";
 	std::string pathToDesktop = desktopPath();
 	std::string pathToFile;
-	if(pathToDesktop == "/Users/thomasredding/Desktop") {
+	if (pathToDesktop == "/Users/thomasredding/Desktop") {
 		// Thomas
 		pathToFile = "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/";
 	}
@@ -27,7 +27,7 @@ int main(int argc, const char * argv[]) {
 		pathToFile = "/Users/mredding/Sprint/Gold Standard Code/";
 	}
 	std::ifstream myfile(pathToFile+"List.hpp");
-	if(myfile.is_open()) {
+	if (myfile.is_open()) {
 		while(getline(myfile, fileLine)) {
 			contents += fileLine;
 			contents += "\n";
@@ -38,24 +38,26 @@ int main(int argc, const char * argv[]) {
 	Tokenizer tokenizer;
 	std::vector<Token> tokenizedList = tokenizer.process(contents);
 	
-	for(int i=0; i<tokenizedList.size(); i++) {
+	for (int i=0; i<tokenizedList.size(); i++) {
 		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
 	}
 	
     std::vector< Rule > rules =
     {
 		Rule(general, {klass, NEWLINE}),
-		Rule(general, {method_declaration_and_implementation, NEWLINE, block}),
+		Rule(general, {method_declaration_and_implementation, NEWLINE}),
 		
 		// class
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, NEWLINE, INDENT, etc, in_class, DEDENT}),
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT}),
-//		Rule(in_class, {method_declaration, NEWLINE}),
-		Rule(in_class, {method_declaration_and_implementation, NEWLINE}),
+		Rule(in_class, {method_declaration}),
+		Rule(in_class, {method_declaration_and_implementation}),
 //		Rule(in_class, {member_variable_declaration, NEWLINE}),
         
         
 		// functions, methods & member variables
+        Rule(method_declaration, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE}),
+        Rule(method_declaration, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE}),
 		Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
 		Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
 //		Rule(member_variable_declaration, {}),
@@ -74,7 +76,16 @@ int main(int argc, const char * argv[]) {
         Rule(type, {IDENTIFIER, LESS_THAN, type, GREATER_THAN, ASTERISK}),
         Rule(type, {IDENTIFIER, LESS_THAN, type, GREATER_THAN}),
         Rule(type, {IDENTIFIER}),
-        Rule(type, {KEYWORD_INT}), // TODO: make this a set of all int types
+        Rule(type, {KEYWORD_INT}),
+        Rule(type, {KEYWORD_INT8}),
+        Rule(type, {KEYWORD_INT16}),
+        Rule(type, {KEYWORD_INT32}),
+        Rule(type, {KEYWORD_INT64}),
+        Rule(type, {KEYWORD_UINT}),
+        Rule(type, {KEYWORD_UINT8}),
+        Rule(type, {KEYWORD_UINT16}),
+        Rule(type, {KEYWORD_UINT32}),
+        Rule(type, {KEYWORD_UINT64}),
         
 		
 		// loops
@@ -145,7 +156,6 @@ int main(int argc, const char * argv[]) {
 		Rule(unary_expression, {KEYWORD_DELETE, simple_value}),
 		Rule(unary_expression, {simple_value}),
 		
-		
 		Rule(simple_value, {literal}),
 		Rule(simple_value, {IDENTIFIER, etc, pointer_value}),
 		Rule(simple_value, {IDENTIFIER, etc, access_value}),
@@ -166,8 +176,8 @@ int main(int argc, const char * argv[]) {
 
     Parser parser(rules);
     
-//    Rule program_rule(program, {etc, general});
-    Rule program_rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT});
+    Rule program_rule(program, {etc, general});
+//    Rule program_rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT});
     ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
 	if(tree != NULL)

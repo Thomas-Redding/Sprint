@@ -2,10 +2,13 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
+void push(int index)
+	int x = 5
+
 //class List<class V>
-class List
-	List List()
-		int x = 5
+//class List
+//	constructor List()
+//		int x = 5
 //		arr = new V[capacity]
 //	void push(V item)
 //	void insert(uint index, V item)
