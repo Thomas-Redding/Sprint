@@ -155,7 +155,7 @@ int main(int argc, const char * argv[]) {
 		
 		Rule(times_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(times_set, {ASTERISK}), Rule(times_set, {SLASH}), Rule(times_set, {PERCENT}),
-		Rule(times_expression, {postfix_expression, plus_set, times_expression}),
+		Rule(times_expression, {postfix_expression, times_set, times_expression}),
 		Rule(times_expression, {unary_expression}),
 		
 		Rule(unary_expression, {postfix_expression}),
