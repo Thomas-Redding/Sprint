@@ -159,17 +159,22 @@ int main(int argc, const char * argv[]) {
 		Rule(times_expression, {unary_expression}),
 		
 		Rule(unary_expression, {postfix_expression}),
-		/*Rule(unary_expression, {PLUS, PLUS, unary_expression}),
+		Rule(unary_expression, {PLUS, PLUS, unary_expression}),
 		Rule(unary_expression, {MINUS, MINUS, unary_expression}),
+		/*
 		Rule(unary_expression, {KEYWORD_NEW, type, OPEN_BRACKET, or_expression, CLOSE_BRACKET}),
 		Rule(unary_expression, {KEYWORD_DELETE, postfix_expression}),
-		Rule(unary_expression, {postfix_expression}),*/
+		 */
 		
 		Rule(postfix_expression, {literal}),
-		/*Rule(postfix_expression, {postfix_expression, PLUS, PLUS}),
-		Rule(postfix_expression, {postfix_expression, MINUS, MINUS}),*/
 		Rule(postfix_expression, {IDENTIFIER, etc, pointer_value}),
 		Rule(postfix_expression, {IDENTIFIER, etc, access_value}),
+		Rule(postfix_expression, {postfix_expression_two, PLUS, PLUS}),
+		Rule(postfix_expression, {postfix_expression_two, MINUS, MINUS}),
+		
+		Rule(postfix_expression_two, {literal}),
+		Rule(postfix_expression_two, {IDENTIFIER, etc, pointer_value}),
+		Rule(postfix_expression_two, {IDENTIFIER, etc, access_value}),
 		
 		Rule(access_value, {PERIOD, IDENTIFIER}),
 		Rule(pointer_access, {MINUS, GREATER_THAN, IDENTIFIER}),
