@@ -13,6 +13,18 @@
 #include "ResourcePath.hpp"
 #include "Compiler.hpp"
 
+struct Foo {
+    Foo& operator++() {
+        value++;
+        return *this;
+    }
+    Foo& operator++(int) {
+        value++;
+        return *this;
+    }
+    int value = 0;
+};
+
 int main(int argc, const char * argv[]) {
 	std::string fileLine;
 	std::string contents = "";
@@ -193,6 +205,10 @@ int main(int argc, const char * argv[]) {
 		Rule(access_modifier_set, {KEYWORD_PROTECTED}),
 		Rule(access_modifier_set, {KEYWORD_PRIVATE})
     };
+    
+    Foo a;
+    a++;
+    a++;
 
     Parser parser(rules);
     
