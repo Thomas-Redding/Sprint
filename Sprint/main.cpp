@@ -163,7 +163,6 @@ int main(int argc, const char * argv[]) {
 		Rule(times_expression, {postfix_expression, times_set, times_expression}),
 		Rule(times_expression, {unary_expression}),
 		
-		Rule(unary_expression, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(unary_expression, {PLUS, PLUS, unary_expression}),
 		Rule(unary_expression, {MINUS, MINUS, unary_expression}),
 		Rule(unary_expression, {postfix_expression}),
@@ -178,6 +177,7 @@ int main(int argc, const char * argv[]) {
 		Rule(postfix_expression, {postfix_expression_two, PLUS, PLUS}),
 		Rule(postfix_expression, {postfix_expression_two, MINUS, MINUS}),
 		
+		Rule(postfix_expression_two, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(postfix_expression_two, {literal}),
 		Rule(postfix_expression_two, {IDENTIFIER, etc, pointer_value}),
 		Rule(postfix_expression_two, {IDENTIFIER, etc, access_value}),
