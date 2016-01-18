@@ -6,9 +6,9 @@
 
 class List
 	List List()
-//		int x = 5
+		int x = 5
 		int y = 8 and 9 or 5 * 3 + 2
-//		int z = (5+2)*3
+		int z = (5+2)*3
 //	void push(V item)
 //	void insert(uint index, V item)
 //	V pop()
