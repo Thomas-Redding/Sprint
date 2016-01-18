@@ -51,11 +51,14 @@ struct ParseTree {
         return o << t.toString();
     }
     
+    const size_t max_print_depth = 16;
     std::string toString(int depth = 0) const {
-        
         std::string rtn = "";
         for (int i = 0; i < depth; ++i) {
             rtn += "    ";
+        }
+        if (depth > max_print_depth) {
+            return rtn + "...";
         }
         rtn += valueToString();
         if (children.size() == 0) {
