@@ -26,6 +26,7 @@ struct Foo {
 };
 
 int main(int argc, const char * argv[]) {
+    
 	std::string fileLine;
 	std::string contents = "";
 	std::string pathToDesktop = desktopPath();
@@ -198,10 +199,6 @@ int main(int argc, const char * argv[]) {
 		Rule(access_modifier_set, {KEYWORD_PROTECTED}),
 		Rule(access_modifier_set, {KEYWORD_PRIVATE})
     };
-    
-    Foo a;
-    a++;
-    a++;
 
     Parser parser(rules);
     
