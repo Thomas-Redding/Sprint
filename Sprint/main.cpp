@@ -121,8 +121,8 @@ int main(int argc, const char * argv[]) {
 		Rule(line, {type, IDENTIFIER, etc, assignment_expression,  NEWLINE}),
 		Rule(line, {expression, NEWLINE}),
 		
-		Rule(expression, {IDENTIFIER, etc, assignment_expression, NEWLINE}),
-		Rule(expression, {or_expression, NEWLINE}),
+		Rule(expression, {IDENTIFIER, etc, assignment_expression}),
+		Rule(expression, {or_expression}),
 		
 		Rule(assignment_set, {EQUALS}),
 		Rule(assignment_set, {PLUS, EQUALS}),
@@ -176,6 +176,7 @@ int main(int argc, const char * argv[]) {
 		Rule(postfix_expression, {IDENTIFIER, etc, access_value}),
 		Rule(postfix_expression, {postfix_expression_two, PLUS, PLUS}),
 		Rule(postfix_expression, {postfix_expression_two, MINUS, MINUS}),
+		Rule(postfix_expression, {postfix_expression_two}),
 		
 		Rule(postfix_expression_two, {OPEN_PARENTHESIS, expression, CLOSE_PARENTHESIS}),
 		Rule(postfix_expression_two, {literal}),
