@@ -185,6 +185,15 @@ std::vector<Token> Tokenizer::process(std::string str) {
 	// add line at end
 	rtn.push_back(Token(NEWLINE, "\n", lines.size()+1, 0));
 	
+	for (int i=0; i<rtn.size(); i++) {
+		if (rtn[i].str == "\n")
+			rtn[i].str = "\\n";
+		else if (rtn[i].str == "\r")
+			rtn[i].str = "\\r";
+		else if (rtn[i].str == "\t")
+			rtn[i].str = "\\t";
+	}
+	
 	return rtn;
 }
 
