@@ -148,7 +148,8 @@ enum TokenType {
     type,
 	unary_expression,
 	access_modifier_set,
-	postfix_expression_two
+	postfix_expression_two,
+    all_ints
 };
 
 const size_t token_threshold = 87;
