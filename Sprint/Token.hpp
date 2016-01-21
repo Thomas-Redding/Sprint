@@ -152,7 +152,8 @@ enum TokenType {
 	postfix_expression_two,
 	array,
 	dictionary,
-	dictionary_arg = 140
+	dictionary_arg = 140,
+	all_ints
 };
 
 const size_t token_threshold = 88;
