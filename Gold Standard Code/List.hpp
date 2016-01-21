@@ -2,7 +2,12 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
-//void bar()
+void bar()
+
+void foo<class F, uint8 y>(int x)
+	int x = 5
+
+int x = 5
 
 class List
 	List List()

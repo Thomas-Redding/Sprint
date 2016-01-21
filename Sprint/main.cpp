@@ -54,7 +54,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
 	
 	for (int i=0; i<tokenizedList.size(); i++) {
-		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << " : " << tokenizedList[i].str << " : " << tokenizedList[i].lineNum << " : " << tokenizedList[i].charNum << ">\n";
+		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
 	}
 	
     std::vector< Rule > rules =
@@ -62,13 +62,14 @@ int main(int argc, const char * argv[]) {
 		Rule(general, {klass}),
 		Rule(general, {method_declaration_and_implementation}),
 		Rule(general, {method_declaration}),
+		Rule(general, {member_variable_declaration}),
 		
 		// class
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, NEWLINE, INDENT, etc, in_class, DEDENT}),
 		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT}),
         Rule(in_class, {method_declaration_and_implementation}),
 		Rule(in_class, {method_declaration}),
-//		Rule(in_class, {member_variable_declaration}),
+		Rule(in_class, {member_variable_declaration}),
         
         
 		// functions, methods & member variables
@@ -76,14 +77,15 @@ int main(int argc, const char * argv[]) {
         Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
         Rule(method_declaration, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE}),
         Rule(method_declaration, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE}),
-//		Rule(member_variable_declaration, {}),
+		Rule(member_variable_declaration, {type, IDENTIFIER, NEWLINE}),
+		Rule(member_variable_declaration, {type, IDENTIFIER, etc, assignment_expression, NEWLINE}),
         
         Rule(template_parameter, {COMMA, template_parameter}),
         Rule(template_parameter, {template_parameter_child, IDENTIFIER}),
 
-        Rule(template_parameter_child, {IDENTIFIER, LESS_THAN, template_parameter_child, GREATER_THAN, ASTERISK}),
+        Rule(template_parameter_child, {IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, ASTERISK}),
         Rule(template_parameter_child, {IDENTIFIER, ASTERISK}),
-        Rule(template_parameter_child, {KEYWORD_INT}), // TODO: make this a set of all int types
+        Rule(template_parameter_child, {all_ints}),
         Rule(template_parameter_child, {KEYWORD_CLASS}),
         
         Rule(function_parameter, {COMMA, function_parameter}),
@@ -92,16 +94,18 @@ int main(int argc, const char * argv[]) {
         Rule(type, {IDENTIFIER, LESS_THAN, type, GREATER_THAN, ASTERISK}),
         Rule(type, {IDENTIFIER, LESS_THAN, type, GREATER_THAN}),
         Rule(type, {IDENTIFIER}),
-        Rule(type, {KEYWORD_INT}),
-        Rule(type, {KEYWORD_INT8}),
-        Rule(type, {KEYWORD_INT16}),
-        Rule(type, {KEYWORD_INT32}),
-        Rule(type, {KEYWORD_INT64}),
-        Rule(type, {KEYWORD_UINT}),
-        Rule(type, {KEYWORD_UINT8}),
-        Rule(type, {KEYWORD_UINT16}),
-        Rule(type, {KEYWORD_UINT32}),
-        Rule(type, {KEYWORD_UINT64}),
+        Rule(type, {all_ints}),
+        
+        Rule(all_ints, {KEYWORD_INT}),
+        Rule(all_ints, {KEYWORD_INT8}),
+        Rule(all_ints, {KEYWORD_INT16}),
+        Rule(all_ints, {KEYWORD_INT32}),
+        Rule(all_ints, {KEYWORD_INT64}),
+        Rule(all_ints, {KEYWORD_UINT}),
+        Rule(all_ints, {KEYWORD_UINT8}),
+        Rule(all_ints, {KEYWORD_UINT16}),
+        Rule(all_ints, {KEYWORD_UINT32}),
+        Rule(all_ints, {KEYWORD_UINT64}),
         
 		
 		// loops
@@ -216,7 +220,7 @@ int main(int argc, const char * argv[]) {
     ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
     if (tree != NULL) {
-        std::cout << *tree << std::endl << std::endl;
+        std::cout << tree->toString(3) << std::endl << std::endl;
     }
     else {
 		std::cout << "null tree" << std::endl;
