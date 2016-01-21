@@ -18,6 +18,10 @@ std::string tokenToString(const TokenType t) {
     return arr[int(t)];
 }
 
+void addFunctionSugar(std::vector<Token>& tokens) {
+    // TODO
+}
+
 bool checkParentheses(Token* tokens, size_t n) {
     std::vector<char> tree;
     for (size_t i = 0; i < n; ++i) {
@@ -89,6 +93,9 @@ int main(int argc, const char * argv[]) {
     if (!checkParentheses(&tokenizedList[0], tokenizedList.size()) != tokenizedList.size()) {
         return 0;
     }
+    
+    // syntatic sugar to switch a.b(c) to b(a,c)
+    addFunctionSugar(tokenizedList);
 	
 //    std::vector< Rule > rules =
 //    {
