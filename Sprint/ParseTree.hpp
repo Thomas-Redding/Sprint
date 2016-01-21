@@ -56,16 +56,15 @@ struct ParseTree {
         for (int i = 0; i < depth; ++i) {
             rtn += "    ";
         }
-        if (depth >= max_print_depth) {
-            return rtn + "...";
-        }
         rtn += valueToString();
         if (children.size() == 0) {
             return rtn;
         }
-        for (int i = 0; i < children.size(); ++i) {
-            rtn += '\n';
-            rtn += children[i]->toString(max_print_depth, depth + 1);
+        if (depth < max_print_depth) {
+            for (int i = 0; i < children.size(); ++i) {
+                rtn += '\n';
+                rtn += children[i]->toString(max_print_depth, depth + 1);
+            }
         }
         return rtn;
     }
