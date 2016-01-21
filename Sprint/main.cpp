@@ -171,6 +171,8 @@ int main(int argc, const char * argv[]) {
 		Rule(unary_expression, {KEYWORD_DELETE, postfix_expression}),
 		 */
 		
+		Rule(postfix_expression, {array}),
+		Rule(postfix_expression, {dictionary}),
 		Rule(postfix_expression, {literal}),
 		Rule(postfix_expression, {IDENTIFIER, etc, pointer_value}),
 		Rule(postfix_expression, {IDENTIFIER, etc, access_value}),
@@ -188,6 +190,12 @@ int main(int argc, const char * argv[]) {
 		Rule(access_value, {PERIOD, function_call}),
 		Rule(pointer_access, {MINUS, GREATER_THAN, function_call}),
 		
+		Rule(array, {OPEN_BRACKET, CLOSE_BRACKET}),
+		Rule(array, {OPEN_BRACKET, expression, etc, function_arg, CLOSE_BRACKET}),
+		
+		Rule(dictionary, {OPEN_CURLY_BRACE, CLOSE_CURLY_BRACE}),
+		Rule(dictionary, {OPEN_CURLY_BRACE, expression, COLON, expression, etc, dictionary_arg, CLOSE_CURLY_BRACE}),
+		
 		Rule(literal, {INTEGER_LITERAL}),
 		Rule(literal, {FLOAT_LITERAL}),
 		Rule(literal, {CHARACTER_LITERAL}),
@@ -195,6 +203,7 @@ int main(int argc, const char * argv[]) {
 		
 		Rule(function_call, {IDENTIFIER, OPEN_PARENTHESIS, expression, etc, function_arg , CLOSE_PARENTHESIS}),
 		Rule(function_arg, {COMMA, expression}),
+		Rule(dictionary_arg, {COMMA, expression, COLON, expression}),
 		
 		Rule(access_modifier_set, {KEYWORD_PUBLIC}),
 		Rule(access_modifier_set, {KEYWORD_PROTECTED}),

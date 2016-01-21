@@ -9,6 +9,8 @@ class List
 		int x = 5
 		int z = (5+2)*3
 		int y = 8 and 9 or 5 * 3 + 2
+		int arr = [2, 5, 9]
+		int dic = {1: 2, 3: 4, 5: 6}
 //	void push(V item)
 //	void insert(uint index, V item)
 //	V pop()

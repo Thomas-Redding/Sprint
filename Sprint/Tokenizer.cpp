@@ -208,11 +208,11 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 			else if(t->str == "[")
 				t->type = OPEN_BRACKET;
 			else if(t->str == "]")
-				t->type = OPEN_BRACKET;
-			else if(t->str == "(")
+				t->type = CLOSE_BRACKET;
+			else if(t->str == "{")
 				t->type = OPEN_CURLY_BRACE;
-			else if(t->str == "(")
-				t->type = OPEN_CURLY_BRACE;
+			else if(t->str == "}")
+				t->type = CLOSE_CURLY_BRACE;
 		}
 		else if(t->type == KEYWORD) {
 			if(t->str == "abstract")
@@ -345,6 +345,8 @@ void Tokenizer::doMorgansDirtyWork(std::vector<Token> *tokens) {
 				t->type = AT;
 			else if(t->str == "^")
 				t->type = CARROT;
+			else if(t->str == ":")
+				t->type = COLON;
 		}
 	}
 }
@@ -604,6 +606,9 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 	}
 	else if ( t == CARROT) {
 		return "CARROT";
+	}
+	else if ( t == COLON) {
+		return "COLON";
 	}
 	else {
 		return "ERROR";

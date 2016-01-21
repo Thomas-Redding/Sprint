@@ -61,6 +61,7 @@ ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
 }
 
 ParseTree* Parser::match(const Token* A, size_t n, const Token& value) {
+	
     if (value.type < token_threshold) {
         if (value.type == A[0].type) {
             return new ParseTree(std::pair<const Token*, size_t>(new Token(value), 1));

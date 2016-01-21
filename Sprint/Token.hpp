@@ -99,10 +99,11 @@ enum TokenType {
 	EXCLAMATION_POINT,
 	AT,
 	CARROT,
+	COLON,
 	general,
 	in_class,
-	klass,
-	method_declaration = 90,
+	klass = 90,
+	method_declaration,
 	method_declaration_and_implementation,
 	member_variable_declaration,
 	t_arg_d,
@@ -111,8 +112,8 @@ enum TokenType {
 	type_name,
 	while_loop,
 	for_in_loop,
-	if_statement,
-	literal = 100,
+	if_statement = 100,
+	literal,
 	if_else_statement,
 	block_components,
 	assignment_expression,
@@ -121,8 +122,8 @@ enum TokenType {
 	and_expression,
 	xor_expression,
 	equality_expression,
-	equality_set,
-	relational_expression = 110,
+	equality_set = 110,
+	relational_expression,
 	relational_set,
 	shift_expression,
 	shift_set,
@@ -131,8 +132,8 @@ enum TokenType {
 	times_expression,
 	times_set,
 	postfix_expression,
-	pointer_value,
-	access_value = 120,
+	pointer_value = 120,
+	access_value,
 	pointer_access,
 	function_call,
 	function_arg,
@@ -141,17 +142,20 @@ enum TokenType {
 	t_arg,
 	line,
 	program,
-	expression,
-    template_parameter = 130,
+	expression = 130,
+    template_parameter,
     template_parameter_child,
     function_parameter,
     type,
 	unary_expression,
 	access_modifier_set,
-	postfix_expression_two
+	postfix_expression_two,
+	array,
+	dictionary,
+	dictionary_arg = 140
 };
 
-const size_t token_threshold = 87;
+const size_t token_threshold = 88;
 
 class Token {
 public:
