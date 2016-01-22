@@ -2,10 +2,9 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
-void foo() {
-    int x = 1 + 3 * 5;
+void foo()
+    int x = a.foo(x, y)
 //    int y = x == 5 ? x.foo(y) : foo(x, y) * 3 + 5;
-}
 
 //void bar()
 //

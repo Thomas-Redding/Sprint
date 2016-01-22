@@ -18,8 +18,18 @@ std::string tokenToString(const TokenType t) {
     return arr[int(t)];
 }
 
+// TODO: handle when there are parentheses or returned-values, e.g. (a + b).foo(), foo().bar(), A[5].bar()
 void addFunctionSugar(std::vector<Token>& tokens) {
-    // TODO
+    for (size_t i = 0; i < tokens.size() - 3; ++i) {
+        if (tokens[i].type == IDENTIFIER && tokens[i + 1].type == PERIOD && tokens[i + 2].type == IDENTIFIER && tokens[i + 3].type == OPEN_PARENTHESIS) {
+            Token a = tokens[i];
+            tokens[i] = tokens[i + 2];
+            tokens[i + 1] = tokens[i + 3];
+            tokens[i + 2] = a;
+            tokens[i + 3] = Token(COMMA, ",", tokens[i + 2].lineNum, tokens[i + 2].charNum);
+            i += 3;
+        }
+    }
 }
 
 bool checkParentheses(Token* tokens, size_t n) {
@@ -83,19 +93,19 @@ int main(int argc, const char * argv[]) {
 	Tokenizer tokenizer;
 	std::vector<Token> tokenizedList = tokenizer.process(contents);
     
-    std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
-	
-	for (size_t i = 0; i < tokenizedList.size(); ++i) {
-		std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
-	}
-    
     // ensure all parentheses, brackets, and curly braces are structured nicely
-    if (!checkParentheses(&tokenizedList[0], tokenizedList.size()) != tokenizedList.size()) {
+    if (!checkParentheses(&tokenizedList[0], tokenizedList.size())) {
         return 0;
     }
     
     // syntatic sugar to switch a.b(c) to b(a,c)
     addFunctionSugar(tokenizedList);
+    
+    std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
+    for (size_t i = 0; i < tokenizedList.size(); ++i) {
+        std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
+    }
+
 	
 //    std::vector< Rule > rules =
 //    {
