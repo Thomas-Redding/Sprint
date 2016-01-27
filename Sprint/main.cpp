@@ -18,18 +18,84 @@ std::string tokenToString(const TokenType t) {
     return arr[int(t)];
 }
 
-// TODO: handle when there are parentheses or returned-values, e.g. (a + b).foo(), foo().bar(), A[5].bar()
-void addFunctionSugar(std::vector<Token>& tokens) {
-    for (size_t i = 0; i < tokens.size() - 3; ++i) {
-        if (tokens[i].type == IDENTIFIER && tokens[i + 1].type == PERIOD && tokens[i + 2].type == IDENTIFIER && tokens[i + 3].type == OPEN_PARENTHESIS) {
-            Token a = tokens[i];
-            tokens[i] = tokens[i + 2];
-            tokens[i + 1] = tokens[i + 3];
-            tokens[i + 2] = a;
-            tokens[i + 3] = Token(COMMA, ",", tokens[i + 2].lineNum, tokens[i + 2].charNum);
-            i += 3;
-        }
+template<class T>
+void move(std::vector<T>& A, size_t from, size_t length, size_t to) {
+    T* store = new T[length];
+    for (size_t i = 0; i < length; ++i) {
+        store[i] = A[from + i];
     }
+    for (size_t i = from; i < to; ++i) {
+        A[i] = A[i + length];
+    }
+    for (size_t i = 0; i < length; ++i) {
+        A[to + i] = store[i];
+    }
+    delete [] store;
+}
+
+// NOTE: there will be lonely commas; e.g. "a.foo()" becomes "foo(a,)"
+bool addFunctionSugar(std::vector<Token>& tokens) {
+    for (size_t i = 1; i < tokens.size() - 2; ++i) {
+        if (tokens[i].type != PERIOD || tokens[i + 1].type != IDENTIFIER) {
+            continue;
+        }
+        
+        // calculate 'beginningOfArguments', which is the index of the first argument
+        size_t beginningOfArguments;
+        if (tokens[i + 2].type == GREATER_THAN) {
+            size_t depth = 1;
+            size_t j = i + 3;
+            while (depth > 0) {
+                if (tokens[j].type == GREATER_THAN) {
+                    depth++;
+                }
+                else if (tokens[j].type == LESS_THAN) {
+                    depth--;
+                }
+                j++;
+            }
+            if (tokens[j].type == OPEN_PARENTHESIS) {
+                beginningOfArguments = j + 1;
+            }
+            else {
+                std::cout << "Expected a function call at line " << tokens[j].lineNum << " but there was not a parenthesis ( found a '" << tokenToString(tokens[j].type) << "' instead" << std::endl;
+                return false;
+            }
+        }
+        else if (tokens[i + 2].type == OPEN_PARENTHESIS) {
+            beginningOfArguments = i + 2;
+        }
+        else {
+            std::cout << "Expected a function call at line " << tokens[i + 2].lineNum << " but there was not a parenthesis ( found a '" << tokenToString(tokens[i + 2].type) << "' instead" << std::endl;
+            return false;
+        }
+        
+        
+        size_t startingIndex = i - 1;
+        size_t endingIndex = i;
+        
+        // calculate the beginning of the expression that is calling the function.  E.g. a.foo(), (a + b).foo(), a()[5].foo(), etc.
+        size_t depth = (tokens[i - 1].type == CLOSE_PARENTHESIS || tokens[i - 1].type == CLOSE_BRACKET || tokens[i - 1].type == GREATER_THAN) ? 1 : 0;
+        while (depth > 0) {
+            startingIndex--;
+            if (tokens[startingIndex].type == CLOSE_PARENTHESIS || tokens[startingIndex].type == CLOSE_BRACKET || tokens[startingIndex].type == GREATER_THAN) {
+                depth++;
+            }
+            else if (tokens[startingIndex].type == OPEN_PARENTHESIS || tokens[startingIndex].type == OPEN_BRACKET || tokens[startingIndex].type == LESS_THAN) {
+                depth--;
+            }
+            if (depth == 0 && (tokens[startingIndex - 1].type == CLOSE_PARENTHESIS || tokens[startingIndex - 1].type == CLOSE_BRACKET || tokens[startingIndex - 1].type == GREATER_THAN)) {
+                depth++;
+                startingIndex--;
+            }
+        }
+        if (tokens[startingIndex - 1].type == IDENTIFIER) {
+            startingIndex--;
+        }
+        tokens[i] = Token(COMMA, ",", tokens[i].lineNum, tokens[i].charNum);
+        move(tokens, startingIndex, endingIndex - startingIndex + 1, startingIndex + beginningOfArguments - endingIndex);
+    }
+    return true;
 }
 
 bool checkParentheses(Token* tokens, size_t n) {
@@ -99,11 +165,13 @@ int main(int argc, const char * argv[]) {
     }
     
     // syntatic sugar to switch a.b(c) to b(a,c)
-    addFunctionSugar(tokenizedList);
+    if (!addFunctionSugar(tokenizedList)) {
+        return 0;
+    }
     
     std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
     for (size_t i = 0; i < tokenizedList.size(); ++i) {
-        std::cout << "<" << tokenizer.tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
+        std::cout << i << ": <" << tokenizer.tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
     }
 
 	

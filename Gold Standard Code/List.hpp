@@ -3,7 +3,7 @@
  */
 
 void foo()
-    int x = a.foo(x, y)
+    int x = a(b).c().foo(x, y)
 //    int y = x == 5 ? x.foo(y) : foo(x, y) * 3 + 5;
 
 //void bar()
