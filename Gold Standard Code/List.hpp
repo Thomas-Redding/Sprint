@@ -2,20 +2,25 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 
-void bar()
+void foo()
+    int x = a.foo(x, y)
+//    int y = x == 5 ? x.foo(y) : foo(x, y) * 3 + 5;
 
-void foo<class F, uint8 y>(int x)
-	int x = 5
-
-int x = 5
-
-class List
-	List List()
-		int x = 5
-		int z = (5+2)*3
-		int y = 8 and 9 or 5 * 3 + 2
-		int arr = [2, 5, 9]
-		int dic = {1: 2, 3: 4, 5: 6}
+//void bar()
+//
+//void foo<class F, uint8 y>(int x)
+//	int x = 5
+//
+//int x = 5
+//
+//class List
+//	List List()
+//		int x = 5
+//		int x = [[
+//		int z = (5+2)*3
+//		int y = 8 and 9 or 5 * 3 + 2
+//		int arr = [2, 5, 9]
+//		int dic = {1: 2, 3: 4, 5: 6}
 //	void push(V item)
 //	void insert(uint index, V item)
 //	V pop()

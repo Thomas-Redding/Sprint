@@ -50,6 +50,7 @@ ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
         else {
             ParseTree* x = match(A + i, n - i, components[j]);
             if (x == nullptr) {
+                delete rtn;
                 return nullptr;
             }
             rtn->add_child(x);
