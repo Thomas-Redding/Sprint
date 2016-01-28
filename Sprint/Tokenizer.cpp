@@ -219,8 +219,8 @@ void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 					setToken(token, EXCLAMATION_POINT, "!", lineNum, it);
 				else if(str[it] == '^')
 					setToken(token, CARROT, "^", lineNum, it);
-				else if(str[it] == '!')
-					setToken(token, QUESTION_MARK, "^", lineNum, it);
+				else if(str[it] == '?')
+					setToken(token, QUESTION_MARK, "?", lineNum, it);
 				else {
 					std::cout << "TOKERNIZER ERROR #1 (" << str[it] << ")\n";
 				}
