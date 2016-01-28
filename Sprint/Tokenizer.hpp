@@ -15,6 +15,7 @@
 #include <iostream>
 #include <ctype.h>
 #include <set>
+#include <deque>
 
 #include "Token.hpp"
 
@@ -24,18 +25,25 @@ public:
 	std::vector<Token> process(std::string str);
 	std::string tokenTypeToString(TokenType t);
 private:
-	std::set<char> punctuation;
-	std::set<char> brackets;
 	std::set<std::string> keywords;
 	
 	std::string removeComents(std::string str);
-	std::vector<std::string> split(std::string str, char delim);
-	void tokenizeLine(std::string str, std::vector<Token> *rtn, int lineNum, int tabs);
 	bool isStartOfIdentifierLetter(char c);
 	bool isIdentifierLetter(char c);
-	std::vector<std::string> dividePunctuations(std::string str, char nextChar);
-	void doMorgansDirtyWork(std::vector<Token> *tokens);
-	std::string removeEmptyLines(std::string str);
+	bool inComment();
+	void resetToken(Token &token, long lineNum, long charNum);
+	void storeAndReset(Token &token, long lineNum, long charNum);
+	std::vector<std::string> split(std::string str, char delim);
+	void tokenizeLine(std::string str, long lineNum);
+	void setToken(Token &token, TokenType type, std::string str, long lineNum, long charNum);
+	TokenType identifierStringToEnum(std::string str);
+	
+	std::vector<Token> rtn;
+	std::vector<int> tabs;
+	enum StackState {
+		paranthesis, curly_bracket, square_brace, single_line_comment, multi_line_comment
+	};
+	std::deque<StackState> stack;
 };
 
 #endif /* Tokenizer_cpp */
