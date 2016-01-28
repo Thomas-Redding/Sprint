@@ -23,7 +23,6 @@ class Tokenizer {
 public:
 	Tokenizer();
 	std::vector<Token> process(std::string str);
-	std::string tokenTypeToString(TokenType t);
 private:
 	enum StackState {
 		paranthesis, curly_bracket, square_brace, multi_line_comment
