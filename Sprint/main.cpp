@@ -11,121 +11,7 @@
 #include "Parser.hpp"
 #include "Tokenizer.hpp"
 #include "ResourcePath.hpp"
-
-template<class T>
-void move(std::vector<T>& A, size_t from, size_t length, size_t to) {
-    T* store = new T[length];
-    for (size_t i = 0; i < length; ++i) {
-        store[i] = A[from + i];
-    }
-    for (size_t i = from; i < to; ++i) {
-        A[i] = A[i + length];
-    }
-    for (size_t i = 0; i < length; ++i) {
-        A[to + i] = store[i];
-    }
-    delete [] store;
-}
-
-// NOTE: there will be lonely commas; e.g. "a.foo()" becomes "foo(a,)"
-bool addFunctionSugar(std::vector<Token>& tokens) {
-    for (size_t i = 1; i < tokens.size() - 2; ++i) {
-        if (tokens[i].type != PERIOD || tokens[i + 1].type != IDENTIFIER) {
-            continue;
-        }
-        
-        // calculate 'beginningOfArguments', which is the index of the first argument
-        size_t beginningOfArguments;
-        if (tokens[i + 2].type == GREATER_THAN) {
-            size_t depth = 1;
-            size_t j = i + 3;
-            while (depth > 0) {
-                if (tokens[j].type == GREATER_THAN) {
-                    depth++;
-                }
-                else if (tokens[j].type == LESS_THAN) {
-                    depth--;
-                }
-                j++;
-            }
-            if (tokens[j].type == OPEN_PARENTHESIS) {
-                beginningOfArguments = j + 1;
-            }
-            else {
-                std::cout << "Expected a function call at line " << tokens[j].lineNum << " but there was not a parenthesis ( found a '" << Token::tokenTypeToString(tokens[j].type) << "' instead" << std::endl;
-                return false;
-            }
-        }
-        else if (tokens[i + 2].type == OPEN_PARENTHESIS) {
-            beginningOfArguments = i + 2;
-        }
-        else {
-            std::cout << "Expected a function call at line " << tokens[i + 2].lineNum << " but there was not a parenthesis ( found a '" << Token::tokenTypeToString(tokens[i + 2].type) << "' instead" << std::endl;
-            return false;
-        }
-        
-        
-        size_t startingIndex = i - 1;
-        size_t endingIndex = i;
-        
-        // calculate the beginning of the expression that is calling the function.  E.g. a.foo(), (a + b).foo(), a()[5].foo(), etc.
-        size_t depth = (tokens[i - 1].type == CLOSE_PARENTHESIS || tokens[i - 1].type == CLOSE_BRACKET || tokens[i - 1].type == GREATER_THAN) ? 1 : 0;
-        while (depth > 0) {
-            startingIndex--;
-            if (tokens[startingIndex].type == CLOSE_PARENTHESIS || tokens[startingIndex].type == CLOSE_BRACKET || tokens[startingIndex].type == GREATER_THAN) {
-                depth++;
-            }
-            else if (tokens[startingIndex].type == OPEN_PARENTHESIS || tokens[startingIndex].type == OPEN_BRACKET || tokens[startingIndex].type == LESS_THAN) {
-                depth--;
-            }
-            if (depth == 0 && (tokens[startingIndex - 1].type == CLOSE_PARENTHESIS || tokens[startingIndex - 1].type == CLOSE_BRACKET || tokens[startingIndex - 1].type == GREATER_THAN)) {
-                depth++;
-                startingIndex--;
-            }
-        }
-        if (tokens[startingIndex - 1].type == IDENTIFIER) {
-            startingIndex--;
-        }
-        tokens[i] = Token(COMMA, ",", tokens[i].lineNum, tokens[i].charNum);
-        move(tokens, startingIndex, endingIndex - startingIndex + 1, startingIndex + beginningOfArguments - endingIndex);
-    }
-    return true;
-}
-
-bool checkParentheses(Token* tokens, size_t n) {
-    std::vector<char> tree;
-    for (size_t i = 0; i < n; ++i) {
-        if (tokens[i].type == OPEN_PARENTHESIS) {
-            tree.push_back('(');
-        }
-        else if (tokens[i].type == OPEN_BRACKET) {
-            tree.push_back('[');
-        }
-        else if (tokens[i].type == OPEN_CURLY_BRACE) {
-            tree.push_back('{');
-        }
-        else if (tokens[i].type == CLOSE_PARENTHESIS || tokens[i].type == CLOSE_BRACKET || tokens[i].type == CLOSE_CURLY_BRACE) {
-            if (tree.back() == '(' && tokens[i].type != CLOSE_PARENTHESIS) {
-                std::cout << "Error on line " << tokens[i].lineNum << std::endl << "Expected 'CLOSE_PARENTHESIS' but found '" << Token::tokenTypeToString(tokens[i].type) << "'" << std::endl;
-                return false;
-            }
-            else if (tree.back() == '[' && tokens[i].type != CLOSE_BRACKET) {
-                std::cout << "Error on line " << tokens[i].lineNum << std::endl << "Expected 'CLOSE_BRACKET' but found '" << Token::tokenTypeToString(tokens[i].type) << "'" << std::endl;
-                return false;
-            }
-            else if (tree.back() == '{' && tokens[i].type != CLOSE_CURLY_BRACE) {
-                std::cout << "Error on line " << tokens[i].lineNum << std::endl << "Expected 'CLOSE_CURLY_BRACE' but found '" << Token::tokenTypeToString(tokens[i].type) << "'" << std::endl;
-                return false;
-            }
-            tree.pop_back();
-        }
-    }
-    if (tree.size() != 0) {
-        std::cout << "Error; one of your '" << tree.back() << "' is not closed"  << std::endl;
-        return false;
-    }
-    return true;
-}
+#include "Sweetener.hpp"
 
 int main(int argc, const char * argv[]) {
     
@@ -153,17 +39,10 @@ int main(int argc, const char * argv[]) {
 	Tokenizer tokenizer;
 	std::vector<Token> tokenizedList = tokenizer.process(contents);
     
-    // ensure all parentheses, brackets, and curly braces are structured nicely
-    if (!checkParentheses(&tokenizedList[0], tokenizedList.size())) {
-        return 0;
-    }
-    
     // syntatic sugar to switch a.b(c) to b(a,c)
-	/*
     if (!addFunctionSugar(tokenizedList)) {
         return 0;
     }
-	*/
     
     std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
     for (size_t i = 0; i < tokenizedList.size(); ++i) {
