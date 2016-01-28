@@ -70,7 +70,9 @@ std::vector<Token> Tokenizer::process(std::string str) {
 	std::vector<std::string> lines = split(str, '\n');
 	for (int i=0; i<lines.size(); i++) {
 		tokenizeLine(lines[i], i);
-		rtn.push_back(Token(NEWLINE, "\n", i, lines[i].length()));
+		if (!(stack.size() > 0 && stack.back() == paranthesis)) {
+			rtn.push_back(Token(NEWLINE, "\n", i, lines[i].length()));
+		}
 	}
 	
 	// remove excessive new lines
