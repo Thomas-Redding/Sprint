@@ -62,13 +62,23 @@ Tokenizer::Tokenizer() {
 }
 
 std::vector<Token> Tokenizer::process(std::string str) {
-	std::vector<std::string> lines = split(str, '\n');
-	std::vector<Token> rtn;
 	tabs.clear();
 	stack.clear();
 	rtn.clear();
+	
+	// tokenizer each line
+	std::vector<std::string> lines = split(str, '\n');
 	for (int i=0; i<lines.size(); i++) {
 		tokenizeLine(lines[i], i);
+		rtn.push_back(Token(NEWLINE, "\n", i, lines[i].length()));
+	}
+	
+	// remove excessive new lines
+	for (int i=1; i<rtn.size(); i++) {
+		if (rtn[i-1].type == NEWLINE && rtn[i].type == NEWLINE) {
+			rtn.erase(rtn.begin()+i);
+			i--;
+		}
 	}
 	return rtn;
 }
@@ -338,12 +348,29 @@ std::string Tokenizer::tokenTypeToString(TokenType t) {
 }
 
 void Tokenizer::tokenizeLine(std::string str, long lineNum) {
-	int it=0;
-	// If we're currently in a multi-line comment, search for the end of that comment
+	int it = 0;
+	
+	if(str.length() == 0) {
+		if (inComment()) {
+			// do nothing
+		}
+		else {
+			if (tabs.size() != 0 && tabs.back() > 0) {
+				for (int i=0; i<tabs.back(); i++) {
+					rtn.push_back(Token(DEDENT, "", lineNum, 0));
+				}
+			}
+			tabs.push_back(0);
+		}
+		return;
+	}
+	
 	if (inComment()) {
-		for (it=it; it<str.length()-1; it++) {
-			if (str.substr(it, 2) == "*/") {
-				it++;
+		// If we're currently in a multi-line comment, search for the end of that comment
+		for (it=it; it<str.length(); it++) {
+			if (str[it] == '*' && it+1 < str.length() && str[it+1] == '/') {
+				it += 2;
+				popOffStack(multi_line_comment);
 				break;
 			}
 		}
@@ -352,7 +379,7 @@ void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 	// Count indents
 	int startIt = it;
 	for (it=it; it<str.length(); it++) {
-		if (str[it] != 't') {
+		if (str[it] != '\t') {
 			if (lineNum != 0) {
 				if (it > tabs.back()) {
 					for (int i=0; i<it-tabs.back(); i++) {
@@ -366,86 +393,99 @@ void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 				}
 			}
 			tabs.push_back(it-startIt);
+			break;
 		}
 	}
 	
 	Token token = Token(UNKNOWN, "", lineNum, it);
 	for (it=it; it<str.length(); it++) {
-		if (token.type == UNKNOWN) {
-			if(isdigit(str[it])) {
-				token.type = INTEGER_LITERAL;
-				token.str = str[it];
-				token.lineNum = lineNum;
-				token.charNum = it;
+		
+		if (inComment()) {
+			if (str[it] == '*' && it+1 < str.length() && str[it+1] == '/') {
+				stack.pop_back();
 			}
-			else if(str[it] == '\"') {
-				token.type = STRING_LITERAL;
-				token.str = "";
-				token.lineNum = lineNum;
-				token.charNum = it;
+		}
+		else if (token.type == UNKNOWN) {
+			if(isdigit(str[it]))
+				setToken(token, INTEGER_LITERAL, str.substr(it, 1), lineNum, it);
+			else if(str[it] == '\"')
+				setToken(token, STRING_LITERAL, "\"", lineNum, it);
+			else if(str[it] == '\'')
+				setToken(token, CHARACTER_LITERAL, "'", lineNum, it);
+			else if(isStartOfIdentifierLetter(str[it]))
+				setToken(token, IDENTIFIER, str.substr(it, 1), lineNum, it);
+			else if(str[it] == '/' && it+1 < str.length() && str[it+1] == '/') {
+				return;
 			}
-			else if(str[it] == '\'') {
-				token.type = CHARACTER_LITERAL;
-				token.str = "";
-				token.lineNum = lineNum;
-				token.charNum = it;
+			else if(str[it] == '/' && it+1 < str.length() && str[it+1] == '*') {
+				stack.push_back(multi_line_comment);
 			}
-			else if(isStartOfIdentifierLetter(str[it])) {
-				token.type = IDENTIFIER;
-				token.str = str[it];
-				token.lineNum = lineNum;
-				token.charNum = it;
+			else if(str[it] == ' ') {
+				// do nothing
 			}
 			else {
 				// single-character tokens
 				if(str[it] == ';')
 					setToken(token, SEMI_COLON, ";", lineNum, it);
-				else if(str[it] == '{')
+				else if(str[it] == '{') {
 					setToken(token, OPEN_CURLY_BRACE, "{", lineNum, it);
-				else if(str[it] == '}')
+					stack.push_back(curly_bracket);
+				}
+				else if(str[it] == '}') {
 					setToken(token, CLOSE_CURLY_BRACE, "}", lineNum, it);
-				else if(str[it] == '(')
+					popOffStack(curly_bracket);
+				}
+				else if(str[it] == '(') {
 					setToken(token, OPEN_PARENTHESIS, "(", lineNum, it);
-				else if(str[it] == ')')
+					stack.push_back(paranthesis);
+				}
+				else if(str[it] == ')') {
 					setToken(token, CLOSE_PARENTHESIS, ")", lineNum, it);
-				else if(str[it] == '[')
+					popOffStack(paranthesis);
+				}
+				else if(str[it] == '[') {
 					setToken(token, OPEN_BRACKET, "[", lineNum, it);
-				else if(str[it] == ']')
+					stack.push_back(square_brace);
+				}
+				else if(str[it] == ']') {
 					setToken(token, CLOSE_BRACKET, "]", lineNum, it);
+					popOffStack(square_brace);
+				}
 				else if(str[it] == '.')
 					setToken(token, PERIOD, ".", lineNum, it);
 				else if(str[it] == ':')
-					setToken(token, PERIOD, ":", lineNum, it);
+					setToken(token, COLON, ":", lineNum, it);
 				else if(str[it] == '+')
-					setToken(token, PERIOD, "+", lineNum, it);
+					setToken(token, PLUS, "+", lineNum, it);
 				else if(str[it] == '-')
-					setToken(token, PERIOD, "-", lineNum, it);
+					setToken(token, MINUS, "-", lineNum, it);
 				else if(str[it] == '*')
-					setToken(token, PERIOD, "*", lineNum, it);
+					setToken(token, ASTERISK, "*", lineNum, it);
 				else if(str[it] == '/')
-					setToken(token, PERIOD, "/", lineNum, it);
+					setToken(token, SLASH, "/", lineNum, it);
 				else if(str[it] == '&')
-					setToken(token, PERIOD, "&", lineNum, it);
+					setToken(token, AMPERSAND, "&", lineNum, it);
 				else if(str[it] == '#')
-					setToken(token, PERIOD, "#", lineNum, it);
+					setToken(token, POUND_SIGN, "#", lineNum, it);
 				else if(str[it] == '<')
-					setToken(token, PERIOD, "<", lineNum, it);
+					setToken(token, LESS_THAN, "<", lineNum, it);
 				else if(str[it] == '=')
-					setToken(token, PERIOD, "=", lineNum, it);
+					setToken(token, EQUALS, "=", lineNum, it);
 				else if(str[it] == '>')
-					setToken(token, PERIOD, ">", lineNum, it);
+					setToken(token, GREATER_THAN, ">", lineNum, it);
 				else if(str[it] == ',')
-					setToken(token, PERIOD, ",", lineNum, it);
+					setToken(token, COMMA, ",", lineNum, it);
 				else if(str[it] == '|')
-					setToken(token, PERIOD, "|", lineNum, it);
+					setToken(token, VERTICAL_BAR, "|", lineNum, it);
 				else if(str[it] == '%')
-					setToken(token, PERIOD, "%", lineNum, it);
+					setToken(token, PERCENT, "%", lineNum, it);
 				else if(str[it] == '!')
-					setToken(token, PERIOD, "!", lineNum, it);
+					setToken(token, EXCLAMATION_POINT, "!", lineNum, it);
 				else if(str[it] == '^')
-					setToken(token, PERIOD, "^", lineNum, it);
-				else
-					std::cout << "TOKERNIZER ERROR #1\n";
+					setToken(token, CARROT, "^", lineNum, it);
+				else {
+					std::cout << "TOKERNIZER ERROR #1 (" << str[it] << ")\n";
+				}
 				storeAndReset(token, lineNum, it);
 			}
 		}
@@ -488,6 +528,9 @@ void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 		else {
 			std::cout << "TOKERNIZER ERROR #2\n";
 		}
+	}
+	if (token.type != UNKNOWN) {
+		storeAndReset(token, -1, -1);
 	}
 }
 
@@ -598,6 +641,21 @@ TokenType Tokenizer::identifierStringToEnum(std::string str) {
 	return IDENTIFIER;
 }
 
+inline void Tokenizer::popOffStack(StackState state) {
+	if (stack.size() == 0) {
+		std::cout << "TOKERNIZER ERROR #3\n";
+		exit(1);
+	}
+	else {
+		StackState back = stack.back();
+		if (back == state)
+			stack.pop_back();
+		else
+			std::cout << "TOKERNIZER ERROR #4\n";
+	}
+	
+}
+
 inline void Tokenizer::storeAndReset(Token &token, long lineNum, long charNum) {
 	rtn.push_back(token);
 	setToken(token, UNKNOWN, "", lineNum, charNum);
@@ -619,7 +677,7 @@ inline bool Tokenizer::isIdentifierLetter(char c) {
 }
 
 inline bool Tokenizer::inComment() {
-	return !stack.empty() && (stack.back() == multi_line_comment || stack.back() == single_line_comment);
+	return !stack.empty() && stack.back() == multi_line_comment;
 }
 
 std::vector<std::string> Tokenizer::split(std::string str, char delim) {

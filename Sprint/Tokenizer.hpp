@@ -25,6 +25,9 @@ public:
 	std::vector<Token> process(std::string str);
 	std::string tokenTypeToString(TokenType t);
 private:
+	enum StackState {
+		paranthesis, curly_bracket, square_brace, multi_line_comment
+	};
 	std::set<std::string> keywords;
 	
 	std::string removeComents(std::string str);
@@ -37,12 +40,10 @@ private:
 	void tokenizeLine(std::string str, long lineNum);
 	void setToken(Token &token, TokenType type, std::string str, long lineNum, long charNum);
 	TokenType identifierStringToEnum(std::string str);
+	void popOffStack(StackState state);
 	
 	std::vector<Token> rtn;
 	std::vector<int> tabs;
-	enum StackState {
-		paranthesis, curly_bracket, square_brace, single_line_comment, multi_line_comment
-	};
 	std::deque<StackState> stack;
 };
 
