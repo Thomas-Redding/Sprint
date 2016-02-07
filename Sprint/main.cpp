@@ -202,7 +202,8 @@ int main(int argc, const char * argv[]) {
 		Rule(literal, {CHARACTER_LITERAL}),
 		Rule(literal, {STRING_LITERAL}),
 		
-		Rule(function_call, {IDENTIFIER, OPEN_PARENTHESIS, expression, etc, function_arg , CLOSE_PARENTHESIS}),
+		Rule(function_call, {IDENTIFIER, OPEN_PARENTHESIS, CLOSE_PARENTHESIS}),
+		Rule(function_call, {IDENTIFIER, OPEN_PARENTHESIS, expression, etc, function_arg, CLOSE_PARENTHESIS}),
 		Rule(function_arg, {COMMA, expression}),
 		Rule(dictionary_arg, {COMMA, expression, COLON, expression}),
 		
