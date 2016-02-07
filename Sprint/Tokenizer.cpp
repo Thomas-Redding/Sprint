@@ -83,7 +83,7 @@ std::vector<Token> Tokenizer::process(std::string str) {
 		}
 	}
 	
-	// Morgan's new-line remover (this is really hacky)
+	// new-line remover (this is really hacky)
 	if (rtn[0].type == NEWLINE) {
 		rtn.erase(rtn.begin());
 	}
