@@ -119,7 +119,7 @@ int main(int argc, const char * argv[]) {
 		Rule(line, {type, IDENTIFIER, etc, assignment_expression,  NEWLINE}),
 		Rule(line, {expression, NEWLINE}),
 		
-		Rule(expression, {IDENTIFIER, etc, assignment_expression}),
+		Rule(expression, {IDENTIFIER, assignment_expression, etc, assignment_expression}),
 		Rule(expression, {or_expression}),
 		
 		Rule(assignment_set, {EQUALS}),
@@ -219,7 +219,7 @@ int main(int argc, const char * argv[]) {
     ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
     if (tree != NULL) {
-        std::cout << tree->toString(20) << std::endl << std::endl;
+        std::cout << tree->toString(30) << std::endl << std::endl;
     }
     else {
 		std::cout << "null tree" << std::endl;

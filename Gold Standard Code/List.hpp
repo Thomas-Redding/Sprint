@@ -3,7 +3,7 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 void foo()
-	int x = bar()
+	int x = foo(a(),x,y)
 
 //void bar()
 //
