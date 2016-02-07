@@ -132,6 +132,9 @@ int main(int argc, const char * argv[]) {
 		Rule(assignment_set, {GREATER_THAN, EQUALS}),
 		Rule(assignment_expression, {assignment_set, or_expression}),
 		
+		Rule(conditional_expression, {or_expression, QUESTION_MARK, expression, COLON, expression}),
+		Rule(conditional_expression, {or_expression}),
+		
 		Rule(or_expression, {and_expression, KEYWORD_OR, or_expression}),
 		Rule(or_expression, {and_expression}),
 		
