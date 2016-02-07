@@ -175,6 +175,7 @@ int main(int argc, const char * argv[]) {
 		Rule(postfix_expression, {array}),
 		Rule(postfix_expression, {dictionary}),
 		Rule(postfix_expression, {literal}),
+		Rule(postfix_expression, {function_call}),
 		Rule(postfix_expression, {IDENTIFIER, etc, pointer_value}),
 		Rule(postfix_expression, {IDENTIFIER, etc, access_value}),
 		Rule(postfix_expression, {postfix_expression_two, PLUS, PLUS}),
@@ -218,7 +219,7 @@ int main(int argc, const char * argv[]) {
     ParseTree* tree = parser.match(&tokenizedList[0], tokenizedList.size(), program_rule);
 
     if (tree != NULL) {
-        std::cout << tree->toString(3) << std::endl << std::endl;
+        std::cout << tree->toString(20) << std::endl << std::endl;
     }
     else {
 		std::cout << "null tree" << std::endl;

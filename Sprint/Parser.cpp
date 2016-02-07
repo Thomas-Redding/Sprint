@@ -9,6 +9,7 @@
 #include "Parser.hpp"
 
 ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
+	
     ParseTree* rtn = new ParseTree(std::pair<const Token*, size_t>(new Token(rule.output), 0));
     const std::vector< TokenType >& components = rule.components;
     size_t i = 0;

@@ -3,8 +3,7 @@
  * WE CAN'T USE 'return' STATEMENTS?!
  */
 void foo()
-    int x = a(b).c().foo(x, y)
-    int y = x == 5 ? x.foo(y) : foo(x, y) * 3 + 5;
+	int x = bar()
 
 //void bar()
 //
