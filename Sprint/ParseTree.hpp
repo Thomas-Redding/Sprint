@@ -13,10 +13,10 @@
 #include <vector>
 
 struct ParseTree {
-    ParseTree(const std::pair<const Token*, size_t>& value) : value(value), parent(nullptr), _number_of_leaves(0), children(_children) {};
-    ParseTree(ParseTree* parent) : parent(parent), _number_of_leaves(0), children(_children) {};
-    ParseTree() : children(_children) {
-        delete value.first;
+    ParseTree(TokenType type, const Token* A, size_t n) : type(type), A(A), n(n), parent(nullptr), _number_of_leaves(0), children(_children) {};
+//    ParseTree(ParseTree* parent) : parent(parent), _number_of_leaves(0), children(_children) {};
+    ParseTree() : children(_children) {};
+    ~ParseTree() {
         for (size_t i = 0; i < _children.size(); ++i) {
             delete _children[i];
         }
@@ -33,9 +33,6 @@ struct ParseTree {
             }
         }
     }
-    void add_child(const std::pair<const Token*, size_t>& value) {
-        add_child(new ParseTree(value));
-    }
     size_t number_of_children() const {
         return _children.size();
     }
@@ -45,7 +42,10 @@ struct ParseTree {
     ParseTree* operator[](size_t i) {
         return _children[i];
     }
-    std::pair<const Token*, size_t> value;
+    
+    const Token* A;
+    size_t n;
+    TokenType type;
     
     friend std::ostream& operator<<(std::ostream& o, const ParseTree& t) {
         return o << t.toString();
@@ -70,7 +70,7 @@ struct ParseTree {
     }
     
     std::string valueToString() const {
-        return "  " + Token::tokenTypeToString(value.first->type) + "  ";
+        return "  " + Token::tokenTypeToString(type) + "  ";
     }
     
     const std::vector<ParseTree*>& children;

@@ -9,8 +9,7 @@
 #include "Parser.hpp"
 
 ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
-	
-    ParseTree* rtn = new ParseTree(std::pair<const Token*, size_t>(new Token(rule.output), 0));
+    ParseTree* rtn = new ParseTree(rule.output, A, n);
     const std::vector< TokenType >& components = rule.components;
     size_t i = 0;
     for (size_t j = 0; j < components.size(); ++j) {
@@ -28,7 +27,7 @@ ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
                     break;
                 }
                 rtn->add_child(x);
-                i += x->value.second;
+                i += x->n;
             }
         }
         else if (components[j] == TokenType::etc_not) {
@@ -55,10 +54,10 @@ ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
                 return nullptr;
             }
             rtn->add_child(x);
-            i += x->value.second;
+            i += x->n;
         }
     }
-    rtn->value.second = i;
+    rtn->n = i;
     return rtn;
 }
 
@@ -66,7 +65,7 @@ ParseTree* Parser::match(const Token* A, size_t n, const Token& value) {
 	
     if (value.type < token_threshold) {
         if (value.type == A[0].type) {
-            return new ParseTree(std::pair<const Token*, size_t>(new Token(value), 1));
+            return new ParseTree(value.type, A, 1);
         }
         else {
             return nullptr;
