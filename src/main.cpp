@@ -53,29 +53,29 @@ int main(int argc, const char * argv[]) {
         std::cout << i << ": <" << Token::tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
     }
 
-	
+
     std::vector< Rule > rules =
     {
 		Rule(general, {klass}),
 		Rule(general, {method_declaration_and_implementation}),
 		Rule(general, {method_declaration}),
 		Rule(general, {member_variable_declaration}),
-		
+
 		// class
-		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, NEWLINE, INDENT, etc, in_class, DEDENT}),
-		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, NEWLINE, INDENT, etc, in_class, DEDENT}),
+		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, START_OF_BLOCK, etc, in_class, END_OF_BLOCK}),
+		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, START_OF_BLOCK, etc, in_class, END_OF_BLOCK}),
         Rule(in_class, {method_declaration_and_implementation}),
 		Rule(in_class, {method_declaration}),
 		Rule(in_class, {member_variable_declaration}),
         
         
 		// functions, methods & member variables
-        Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
-        Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE, block }),
-        Rule(method_declaration, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE}),
-        Rule(method_declaration, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, NEWLINE}),
-		Rule(member_variable_declaration, {type, IDENTIFIER, NEWLINE}),
-		Rule(member_variable_declaration, {type, IDENTIFIER, etc, assignment_expression, NEWLINE}),
+        Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, block }),
+        Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, block }),
+        Rule(method_declaration, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, END_OF_LINE}),
+        Rule(method_declaration, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, END_OF_LINE}),
+		Rule(member_variable_declaration, {type, IDENTIFIER, END_OF_LINE}),
+		Rule(member_variable_declaration, {type, IDENTIFIER, etc, assignment_expression, END_OF_LINE}),
         
         Rule(template_parameter, {COMMA, template_parameter}),
         Rule(template_parameter, {template_parameter_child, IDENTIFIER}),
@@ -106,21 +106,23 @@ int main(int argc, const char * argv[]) {
         
 		
 		// loops
-		Rule(while_loop, {KEYWORD_WHILE, or_expression, NEWLINE, block, NEWLINE}),
-		Rule(for_in_loop, {KEYWORD_FOR, type_name, IDENTIFIER, KEYWORD_IN, IDENTIFIER, NEWLINE, block, NEWLINE}),
+		Rule(while_loop, {KEYWORD_WHILE, or_expression, block}),
+		Rule(for_in_loop, {KEYWORD_FOR, type_name, IDENTIFIER, KEYWORD_IN, IDENTIFIER, block}),
 		
 		// if (-else)
-		Rule(if_else_statement, {if_statement, NEWLINE, KEYWORD_ELSE, NEWLINE, block, NEWLINE}),
-		Rule(if_statement, {KEYWORD_IF, or_expression, NEWLINE, block}),
+		Rule(if_else_statement, {if_statement, block, KEYWORD_ELSE, block}),
+		Rule(if_statement, {KEYWORD_IF, or_expression, block}),
 		
 		// blocks
 		Rule(block_components, {line}),
 		Rule(block_components, {block}),
-		Rule(block, {INDENT, etc, block_components, DEDENT}),
+		Rule(block, {START_OF_BLOCK, etc, block_components, END_OF_BLOCK}),
 		
 		// declarations, assignments
-		Rule(line, {type, IDENTIFIER, etc, assignment_expression,  NEWLINE}),
-		Rule(line, {expression, NEWLINE}),
+		Rule(line, {type, IDENTIFIER, etc, assignment_expression, END_OF_LINE}),
+		Rule(line, {expression, END_OF_LINE}),
+		Rule(line, {type, IDENTIFIER, etc, assignment_expression, END_OF_BLOCK}),
+		Rule(line, {expression, END_OF_BLOCK}),
 		
 		Rule(expression, {IDENTIFIER, assignment_expression, etc, assignment_expression}),
 		Rule(expression, {or_expression}),

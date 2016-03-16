@@ -68,31 +68,24 @@ std::vector<Token> Tokenizer::process(std::string str) {
 	
 	// tokenizer each line
 	std::vector<std::string> lines = split(str, '\n');
+	lines.push_back("");
+
 	for (int i=0; i<lines.size(); i++) {
 		tokenizeLine(lines[i], i);
-		if (!(stack.size() > 0 && stack.back() == paranthesis)) {
-			rtn.push_back(Token(NEWLINE, "\n", i, lines[i].length()));
+		if (!(stack.size() > 0 && stack.back() == paranthesis) && i > rtn.size() > 0 && rtn[rtn.size()-1].type != END_OF_LINE) {
+			// if not in paranthese and not an empty statement, add an END_OF_LINE token
+			rtn.push_back(Token(END_OF_LINE, "\n", i, lines[i].length()));
 		}
+		std::string out = "";
+		for (int j=0; j<rtn.size(); j++)
+			out += rtn[j].str + ", ";
 	}
-	
-	// remove excessive new lines
-	for (int i=1; i<rtn.size(); i++) {
-		if (rtn[i-1].type == NEWLINE && rtn[i].type == NEWLINE) {
-			rtn.erase(rtn.begin()+i);
-			i--;
-		}
-	}
-	
-	// new-line remover (this is really hacky)
-	if (rtn[0].type == NEWLINE) {
-		rtn.erase(rtn.begin());
-	}
+
 	return rtn;
 }
 
 void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 	int it = 0;
-	
 	if(str.length() == 0) {
 		if (inComment()) {
 			// do nothing
@@ -100,7 +93,8 @@ void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 		else {
 			if (tabs.size() != 0 && tabs.back() > 0) {
 				for (int i=0; i<tabs.back(); i++) {
-					rtn.push_back(Token(DEDENT, "", lineNum, 0));
+					rtn.push_back(Token(END_OF_LINE, "\n", lineNum, 0));
+					rtn.push_back(Token(END_OF_BLOCK, "", lineNum, 0));
 				}
 			}
 			tabs.push_back(0);
@@ -126,12 +120,14 @@ void Tokenizer::tokenizeLine(std::string str, long lineNum) {
 			if (lineNum != 0) {
 				if (it > tabs.back()) {
 					for (int i=0; i<it-tabs.back(); i++) {
-						rtn.push_back(Token(INDENT, "\t", lineNum, 0));
+						rtn.push_back(Token(END_OF_LINE, "\n", lineNum, 0));
+						rtn.push_back(Token(START_OF_BLOCK, "\t", lineNum, 0));
 					}
 				}
 				else if (it < tabs.back()) {
 					for (int i=0; i<tabs.back()-it; i++) {
-						rtn.push_back(Token(DEDENT, "\t", lineNum, 0));
+						rtn.push_back(Token(END_OF_LINE, "\n", lineNum, 0));
+						rtn.push_back(Token(END_OF_BLOCK, "\t", lineNum, 0));
 					}
 				}
 			}
@@ -434,7 +430,8 @@ std::vector<std::string> Tokenizer::split(std::string str, char delim) {
 			elems.push_back(str);
 			return elems;
 		}
-		elems.push_back(str.substr(0, index));
+		if (index != 0)
+			elems.push_back(str.substr(0, index));
 		if(index+1 == str.length())
 			return elems;
 		str = str.substr(index+1);
