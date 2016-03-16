@@ -62,16 +62,16 @@ int main(int argc, const char * argv[]) {
 		Rule(general, {member_variable_declaration}),
 
 		// class
-		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, START_OF_BLOCK, etc, in_class, END_OF_BLOCK}),
-		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, START_OF_BLOCK, etc, in_class, END_OF_BLOCK}),
+		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, END_OF_LINE, START_OF_BLOCK, etc, in_class, END_OF_BLOCK}),
+		Rule(klass, {KEYWORD_CLASS, IDENTIFIER, END_OF_LINE, START_OF_BLOCK, etc, in_class, END_OF_BLOCK}),
         Rule(in_class, {method_declaration_and_implementation}),
 		Rule(in_class, {method_declaration}),
 		Rule(in_class, {member_variable_declaration}),
         
         
 		// functions, methods & member variables
-        Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, block }),
-        Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, block }),
+        Rule(method_declaration_and_implementation, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, END_OF_LINE, block }),
+        Rule(method_declaration_and_implementation, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, END_OF_LINE, block }),
         Rule(method_declaration, {type, IDENTIFIER, LESS_THAN, etc, template_parameter, GREATER_THAN, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, END_OF_LINE}),
         Rule(method_declaration, {type, IDENTIFIER, OPEN_PARENTHESIS, etc, function_parameter, CLOSE_PARENTHESIS, END_OF_LINE}),
 		Rule(member_variable_declaration, {type, IDENTIFIER, END_OF_LINE}),
@@ -106,12 +106,12 @@ int main(int argc, const char * argv[]) {
         
 		
 		// loops
-		Rule(while_loop, {KEYWORD_WHILE, or_expression, block}),
-		Rule(for_in_loop, {KEYWORD_FOR, type_name, IDENTIFIER, KEYWORD_IN, IDENTIFIER, block}),
+		Rule(while_loop, {KEYWORD_WHILE, or_expression, END_OF_LINE, block, END_OF_LINE}),
+		Rule(for_in_loop, {KEYWORD_FOR, type_name, IDENTIFIER, KEYWORD_IN, IDENTIFIER, END_OF_LINE, block, END_OF_LINE}),
 		
 		// if (-else)
-		Rule(if_else_statement, {if_statement, block, KEYWORD_ELSE, block}),
-		Rule(if_statement, {KEYWORD_IF, or_expression, block}),
+		Rule(if_else_statement, {if_statement, END_OF_LINE, KEYWORD_ELSE, END_OF_LINE, block, END_OF_LINE}),
+		Rule(if_statement, {KEYWORD_IF, or_expression, END_OF_LINE, block}),
 		
 		// blocks
 		Rule(block_components, {line}),
@@ -119,10 +119,8 @@ int main(int argc, const char * argv[]) {
 		Rule(block, {START_OF_BLOCK, etc, block_components, END_OF_BLOCK}),
 		
 		// declarations, assignments
-		Rule(line, {type, IDENTIFIER, etc, assignment_expression, END_OF_LINE}),
+		Rule(line, {type, IDENTIFIER, etc, assignment_expression,  END_OF_LINE}),
 		Rule(line, {expression, END_OF_LINE}),
-		Rule(line, {type, IDENTIFIER, etc, assignment_expression, END_OF_BLOCK}),
-		Rule(line, {expression, END_OF_BLOCK}),
 		
 		Rule(expression, {IDENTIFIER, assignment_expression, etc, assignment_expression}),
 		Rule(expression, {or_expression}),
