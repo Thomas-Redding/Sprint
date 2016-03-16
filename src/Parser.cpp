@@ -6,7 +6,7 @@
 //  Copyright © 2015 Thomas Redding. All rights reserved.
 //
 
-#include "Parser.hpp"
+#include "../include/Parser.hpp"
 
 ParseTree* Parser::match(const Token* A, size_t n, const Rule& rule) {
     ParseTree* rtn = new ParseTree(rule.output, A, n);

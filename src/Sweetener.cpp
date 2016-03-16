@@ -6,7 +6,7 @@
 //  Copyright © 2016 Thomas Redding. All rights reserved.
 //
 
-#include "Sweetener.hpp"
+#include "../include/Sweetener.hpp"
 
 template<class T>
 void move(std::vector<T>& A, size_t from, size_t length, size_t to) {

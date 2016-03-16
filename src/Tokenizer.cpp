@@ -6,7 +6,7 @@
 //  Copyright © 2015 Thomas Redding. All rights reserved.
 //
 
-#include "Tokenizer.hpp"
+#include "../include/Tokenizer.hpp"
 
 Tokenizer::Tokenizer() {
 	keywords.insert("abstract");

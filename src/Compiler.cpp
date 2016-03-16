@@ -6,7 +6,7 @@
 //  Copyright © 2015 Thomas Redding. All rights reserved.
 //
 
-#include "Compiler.hpp"
+#include "../include/Compiler.hpp"
 
 void Compiler::compile(ParseTree* tree, std::string path) {
 	std::string newFolderPath = path + "c++ code";

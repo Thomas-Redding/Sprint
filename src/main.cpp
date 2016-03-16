@@ -8,27 +8,18 @@
 
 #include <iostream>
 #include <fstream>
-#include "Parser.hpp"
-#include "Tokenizer.hpp"
-#include "ResourcePath.hpp"
-#include "Sweetener.hpp"
-#include "Compiler.hpp"
+#include "../include/Parser.hpp"
+#include "../include/Tokenizer.hpp"
+#include "../include/Sweetener.hpp"
+#include "../include/Compiler.hpp"
 
 int main(int argc, const char * argv[]) {
     
 	std::string fileLine;
 	std::string contents = "";
-	std::string pathToDesktop = desktopPath();
 	std::string pathToFile;
-	if (pathToDesktop == "/Users/thomasredding/Desktop") {
-		// Thomas
-		pathToFile = "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/";
-	}
-	else {
-		// Morgan
-		pathToFile = "/Users/mredding/Sprint/Gold Standard Code/";
-	}
-	std::ifstream myfile(pathToFile+"List.hpp");
+
+	std::ifstream myfile("/Users/mredding/Sprint/Gold Standard Code/List.hpp");
 	if (myfile.is_open()) {
 		while(getline(myfile, fileLine)) {
 			contents += fileLine;

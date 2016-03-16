@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <vector>
 #include <iostream>
+#include <initializer_list>
 #include "ParseTree.hpp"
 
 /*
