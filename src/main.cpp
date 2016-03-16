@@ -8,20 +8,32 @@
 
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
 #include "../include/Parser.hpp"
 #include "../include/Tokenizer.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/Compiler.hpp"
+
 
 int main(int argc, const char * argv[]) {
     
 	std::string fileLine;
 	std::string contents = "";
 	std::string pathToFile;
-
-	std::ifstream myfile("/Users/mredding/Sprint/Gold Standard Code/List.hpp");
+	
+	char *rtn = getlogin();
+	
+	if(rtn[0] == 'm') {
+		pathToFile = "/Users/mredding/Sprint/Gold Standard Code/List.hpp";
+	}
+	else {
+		pathToFile = "/Users/thomasredding/Desktop/Sprint/Gold Standard Code/List.hpp";
+	}
+	
+	std::ifstream myfile(pathToFile);
 	if (myfile.is_open()) {
 		while(getline(myfile, fileLine)) {
+			std::cout << fileLine << "\n";
 			contents += fileLine;
 			contents += "\n";
 		}
