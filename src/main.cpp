@@ -15,6 +15,11 @@
 #include "../include/Compiler.hpp"
 
 
+/*
+ Error take the form:
+ {Tokenizer/Parser/Compiler} Error: {message} ({Line #} : {Char #})
+ */
+
 int main(int argc, const char * argv[]) {
     
 	std::string fileLine;
