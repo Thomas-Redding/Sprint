@@ -149,9 +149,9 @@ std::vector<Token> Tokenizer::process(std::string str) {
 					resetAndSave(cur);
 				}
 				else if (isspace(str[it]))
-					error("You cannot put a white-space character after a period. (line: " + std::to_string(getLineNum()) + ", char:" + std::to_string(getCharNum()) + ")\n");
+					error("Tokenizer: You cannot put a white-space character after a period. (line: " + std::to_string(getLineNum()) + ", char:" + std::to_string(getCharNum()) + ")\n");
 				else if (isPunc(str[it]))
-					error("You cannot put a puncutation character after a period. (line: " + std::to_string(getLineNum()) + ", char:" + std::to_string(getCharNum()) + ")\n");
+					error("Tokenizer: You cannot put a puncutation character after a period. (line: " + std::to_string(getLineNum()) + ", char:" + std::to_string(getCharNum()) + ")\n");
 			}
 			else if (isStartChar(str[it])) {
 				cur.type = IDENTIFIER;
@@ -211,7 +211,7 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			if (isdigit(str[it]))
 				cur.str += str[it];
 			else if (str[it] == '.') {
-				error("Float literal cannot contain multiple decimal points (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+				error("Tokenizer: Float literal cannot contain multiple decimal points (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
 			}
 			else if (str[it] == 'e' || str[it] == 'E') {
 				cur.type = FLOAT_LITERAL2;
@@ -261,12 +261,12 @@ std::vector<Token> Tokenizer::process(std::string str) {
 				cur.str += str[it];
 			else {
 				// todo: magically solve punctuation
-				handlePunc(cur);
+				handlePunc(cur, str[it]);
 				it--;
 			}
 		}
 		else {
-			error("Error: Type 1");
+			error("Tokenizer: Error 1 (it: " + std::to_string(it) + ")");
 		}
 	}
 
@@ -312,7 +312,7 @@ inline bool Tokenizer::isBracket(char c) {
 }
 
 void Tokenizer::error(std::string str) {
-	std::cout << str;
+	std::cout << str << "\n";
 	exit(1);
 }
 
@@ -337,7 +337,7 @@ long Tokenizer::getLineNum() {
 		if (it <= cumulativeCharsPerLine[i])
 			return i;
 	}
-	error("Error #2 (it: " + std::to_string(it) + ")");
+	error("Tokenizer: Error 2 (it: " + std::to_string(it) + ")");
 	return -1;
 }
 
@@ -370,74 +370,222 @@ c++ - maybe ours
 
 */
 
-void Tokenizer::handlePunc(Token &cur) {
+void Tokenizer::handlePunc(Token &cur, char c) {
 	// everything in cur.str is punctuation or an empty space
 
-	// "  ab  c    d" -> " ab c d"
-	int puncCount = 0;
-	std::vector<char> list;
+	// "  ab  c    d" -> [" ", "ab", " ", "c", " ", "d"]
+
+	std::vector<std::string> list;
+	std::string str;
 	for (int i=0; i<cur.str.length(); ++i) {
 		if(isspace(cur.str[i])) {
-			if(list.size() > 0 && list[list.size()-1] != ' ')
-				list.push_back(' ');
+			if (str != "") {
+				list.push_back(str);
+				str = "";
+			}
 		}
 		else {
-			list.push_back(cur.str[i]);
-			puncCount++;
+			str += cur.str[i];
 		}
 	}
+	if (str != "")
+		list.push_back(str);
 
-	if (puncCount == 1) {
-		// no punctuation character
-		cur.str.erase(remove_if(cur.str.begin(), cur.str.end(), isspace), cur.str.end());
-		if (cur.str == ".")
-			cur.type = PERIOD;
-		else if (cur.str == ":")
-			cur.type = COLON;
-		else if (cur.str == ";")
-			cur.type = SEMI_COLON;
-		else if (cur.str == "+")
-			cur.type = PLUS;
-		else if (cur.str == "-")
-			cur.type = MINUS;
-		else if (cur.str == "*")
-			cur.type = ASTERISK;
-		else if (cur.str == "/")
-			cur.type = SLASH;
-		else if (cur.str == "&")
-			cur.type = AMPERSAND;
-		else if (cur.str == "#")
-			cur.type = POUND_SIGN;
-		else if (cur.str == "<")
-			cur.type = LESS_THAN;
-		else if (cur.str == "=")
-			cur.type = EQUALS;
-		else if (cur.str == ">")
-			cur.type = GREATER_THAN;
-		else if (cur.str == ",")
-			cur.type = COMMA;
-		else if (cur.str == "|")
-			cur.type = VERTICAL_BAR;
-		else if (cur.str == "%")
-			cur.type = PERCENT;
-		else if (cur.str == "!")
-			cur.type = EXCLAMATION_POINT;
-		else if (cur.str == "^")
-			cur.type = CARROT;
-		else if (cur.str == "?")
-			cur.type = QUESTION_MARK;
-		else if (cur.str == "/")
-			cur.type = BACK_SLASH;
-		else if (cur.str == "@")
-			cur.type = AT;
-		else
-			error("Punctuation Error (" + cur.str + ")");
-		resetAndSave(cur);
+	if (list.size() == 1) {
+		TokenType cat = categorize(list[0]);
+		std::cout << list[0] << " : " << cat << "\n";
+		if (cat == PLUS_PLUS) {
+			if(c == ')' || c == '}' || c == ']' || c == ',' || c == ';') {
+				cur.type = cat;
+				cur.str = list[0];
+				resetAndSave(cur);
+			}
+			else if(isdigit(c)) {
+				cur.type = PLUS;
+				cur.str = "+";
+				resetAndSave(cur);
+				cur.type = PLUS;
+				cur.str = "+";
+				resetAndSave(cur);
+			}
+			else {
+				error("Tokenizer: Punctuation Error 5");
+			}
+		}
+		else if (cat == MINUS_MINUS) {
+			if(c == ')' || c == '}' || c == ']' || c == ',' || c == ';') {
+				cur.type = cat;
+				cur.str = list[0];
+				resetAndSave(cur);
+			}
+			else if(isdigit(c) || isStartChar(c)) {
+				cur.type = MINUS;
+				cur.str = "-";
+				resetAndSave(cur);
+				cur.type = MINUS;
+				cur.str = "-";
+				resetAndSave(cur);
+			}
+			else {
+				error("Tokenizer: Punctuation Error 5");
+			}
+		}
+		else if (cat == PUNCTUATION) {
+			// need to break up with virtual spaces
+			// this should have some punctuation followed by a "-" or "+"
+			std::string str1 = list[0].substr(0, list[0].length()-1);
+			std::string str2 = list[0].substr(list[0].length()-1);
+			TokenType cat1 = categorize(str1);
+			TokenType cat2 = categorize(str2);
+
+			// the punctuation before the "+" or "-"
+			if (cat1 == PUNCTUATION) {
+				error("Tokenizer: Punctuation Error 4 (" + str1 + ")");
+			}
+			else {
+				cur.str = str1;
+				cur.type = cat1;
+				resetAndSave(cur);
+			}
+
+			// the "+" or "-"
+			if (cat2 == PLUS) {
+				cur.str = "+";
+				cur.type = PLUS;
+			}
+			else if (cat2 == MINUS) {
+				cur.str = "-";
+				cur.type = MINUS;
+			}
+			else {
+				error("Tokenizer: Punctuation Error 3 (" + str2 + ")");
+			}
+			resetAndSave(cur);
+		}
+		else if (cat == UNKNOWN) {
+			error("Tokenizer: Punctuation Error 3 (" + cur.str + ")");
+		}
+		else {
+			cur.str = list[0];
+			cur.type = cat;
+			resetAndSave(cur);
+		}
+	}
+	else if (list.size() == 2) {
+		TokenType cat = categorize(list[0]);
+		if (cat == PLUS_PLUS)
+			error("Tokenizer: cannot follow ++ by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+		else if (cat == PLUS_PLUS)
+			error("Tokenizer: cannot follow -- by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+		else if (cat == PUNCTUATION)
+			error("Tokenizer: cannot use three strings of puncutation in a row. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+		else {
+			cur.str = list[0];
+			cur.type = cat;
+			resetAndSave(cur);
+		}
+
+		cat = categorize(list[1]);
+		if (cat == PLUS_PLUS)
+			error("Tokenizer: cannot follow ++ by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+		else if (cat == PLUS_PLUS)
+			error("Tokenizer: cannot follow -- by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+		else if (cat == PUNCTUATION)
+			error("Tokenizer: cannot use three strings of puncutation in a row. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+		else {
+			cur.str = list[1];
+			cur.type = cat;
+			resetAndSave(cur);
+		}
+	}
+	else if (list.size() == 0) {
+		error("Tokenizer: Punctuation Error 2 (" + cur.str + ")");
 	}
 	else {
-		resetAndSave(cur);
+		error("Tokenizer: More than two strings of punctuation in a row are illegal. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ", str: " + cur.str + ")");
 	}
 }
 
-
+TokenType Tokenizer::categorize(std::string &str) {
+	TokenType rtn;
+	if (str == ".")
+		rtn = PERIOD;
+	else if (str == ":")
+		rtn = COLON;
+	else if (str == ";")
+		rtn = SEMI_COLON;
+	else if (str == "+")
+		rtn = PLUS;
+	else if (str == "-")
+		rtn = MINUS;
+	else if (str == "*")
+		rtn = ASTERISK;
+	else if (str == "/")
+		rtn = SLASH;
+	else if (str == "&")
+		rtn = AMPERSAND;
+	else if (str == "#")
+		rtn = POUND_SIGN;
+	else if (str == "<")
+		rtn = LESS_THAN;
+	else if (str == "=")
+		rtn = EQUALS;
+	else if (str == ">")
+		rtn = GREATER_THAN;
+	else if (str == ",")
+		rtn = COMMA;
+	else if (str == "|")
+		rtn = VERTICAL_BAR;
+	else if (str == "%")
+		rtn = PERCENT;
+	else if (str == "!")
+		rtn = EXCLAMATION_POINT;
+	else if (str == "^")
+		rtn = CARROT;
+	else if (str == "?")
+		rtn = QUESTION_MARK;
+	else if (str == "/")
+		rtn = BACK_SLASH;
+	else if (str == "@")
+		rtn = AT;
+	else if (str == "+=")
+		rtn = PLUS_EQUALS;
+	else if (str == "-=")
+		rtn = MINUS_EQUALS;
+	else if (str == "*=")
+		rtn = ASTERISK_EQUALS;
+	else if (str == "&=")
+		rtn = AMPERSAND_EQUALS;
+	else if (str == "^=")
+		rtn = CARROT_EQUALS;
+	else if (str == ":=")
+		rtn = COLON_EQUALS;
+	else if (str == "|=")
+		rtn = VERTICAL_BAR_EQUALS;
+	else if (str == "<<")
+		rtn = SHIFT_LEFT;
+	else if (str == ">>")
+		rtn = SHIFT_RIGHT;
+	else if (str == ">=")
+		rtn = GREATER_THAN_EQUALS;
+	else if (str == "<=")
+		rtn = LESS_THAN_EQUALS;
+	else if (str == "<<=")
+		rtn = SHIFT_LEFT_EQUALS;
+	else if (str == ">>=")
+		rtn = SHIFT_RIGHT_EQUALS;
+	else if (str == "!=")
+		rtn = EXCLAMATION_POINT_EQUALS;
+	else if (str == "==")
+		rtn = EQUAL_EQUALS;
+	else if (str == "++")
+		rtn = PLUS_PLUS;
+	else if (str == "--")
+		rtn = MINUS_MINUS;
+	else if (str == "+-")
+		rtn = PUNCTUATION;
+	else
+		rtn = UNKNOWN;
+	return rtn;
+}
 
