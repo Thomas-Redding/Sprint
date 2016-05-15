@@ -64,6 +64,7 @@ Tokenizer::Tokenizer() {
 
 	punctuation.insert('.');
 	punctuation.insert(':');
+	punctuation.insert(';');
 	punctuation.insert('+');
 	punctuation.insert('-');
 	punctuation.insert('*');
@@ -79,6 +80,8 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('!');
 	punctuation.insert('^');
 	punctuation.insert('?');
+	punctuation.insert('/');
+	punctuation.insert('@');
 
 	brackets.insert('{');
 	brackets.insert('(');
@@ -258,7 +261,7 @@ std::vector<Token> Tokenizer::process(std::string str) {
 				cur.str += str[it];
 			else {
 				// todo: magically solve punctuation
-				resetAndSave(cur);
+				handlePunc(cur);
 				it--;
 			}
 		}
@@ -345,5 +348,96 @@ long Tokenizer::getCharNum() {
 	else
 		return it - cumulativeCharsPerLine[lineNum-1];
 }
+
+/*
+
+only c++
+#	##	<:	:>	<%	%>	%:	%:%:	::	.*
+->*
+
+both
+;	:	...	?	.	+	-	*	/	%	^
+&	|	~	!	=	<	>	+=	-=	*=	/=
+%=	^=	&=	|=	<<	>>	<<=	>>=	==	!=	<=
+>=	&&	||	++	--	,
+->
+
+only ours
+@
+
+c++ - maybe ours
+
+
+*/
+
+void Tokenizer::handlePunc(Token &cur) {
+	// everything in cur.str is punctuation or an empty space
+
+	// "  ab  c    d" -> " ab c d"
+	int puncCount = 0;
+	std::vector<char> list;
+	for (int i=0; i<cur.str.length(); ++i) {
+		if(isspace(cur.str[i])) {
+			if(list.size() > 0 && list[list.size()-1] != ' ')
+				list.push_back(' ');
+		}
+		else {
+			list.push_back(cur.str[i]);
+			puncCount++;
+		}
+	}
+
+	if (puncCount == 1) {
+		// no punctuation character
+		cur.str.erase(remove_if(cur.str.begin(), cur.str.end(), isspace), cur.str.end());
+		if (cur.str == ".")
+			cur.type = PERIOD;
+		else if (cur.str == ":")
+			cur.type = COLON;
+		else if (cur.str == ";")
+			cur.type = SEMI_COLON;
+		else if (cur.str == "+")
+			cur.type = PLUS;
+		else if (cur.str == "-")
+			cur.type = MINUS;
+		else if (cur.str == "*")
+			cur.type = ASTERISK;
+		else if (cur.str == "/")
+			cur.type = SLASH;
+		else if (cur.str == "&")
+			cur.type = AMPERSAND;
+		else if (cur.str == "#")
+			cur.type = POUND_SIGN;
+		else if (cur.str == "<")
+			cur.type = LESS_THAN;
+		else if (cur.str == "=")
+			cur.type = EQUALS;
+		else if (cur.str == ">")
+			cur.type = GREATER_THAN;
+		else if (cur.str == ",")
+			cur.type = COMMA;
+		else if (cur.str == "|")
+			cur.type = VERTICAL_BAR;
+		else if (cur.str == "%")
+			cur.type = PERCENT;
+		else if (cur.str == "!")
+			cur.type = EXCLAMATION_POINT;
+		else if (cur.str == "^")
+			cur.type = CARROT;
+		else if (cur.str == "?")
+			cur.type = QUESTION_MARK;
+		else if (cur.str == "/")
+			cur.type = BACK_SLASH;
+		else if (cur.str == "@")
+			cur.type = AT;
+		else
+			error("Punctuation Error (" + cur.str + ")");
+		resetAndSave(cur);
+	}
+	else {
+		resetAndSave(cur);
+	}
+}
+
 
 

@@ -50,6 +50,7 @@ private:
 	long getLineNum();
 	long getCharNum();
 	std::vector<std::string> split(std::string str, char delim);
+	void handlePunc(Token &cur);
 };
 
 #endif /* Tokenizer_cpp */
