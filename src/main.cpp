@@ -25,6 +25,12 @@ int main(int argc, const char * argv[]) {
     
     Tokenizer tokenizer;
     std::vector<Token> tokenizedList = tokenizer.process(contents);
+
+    for (int i=0; i<tokenizedList.size(); ++i)
+        std::cout << tokenizedList[i].toString() << ",";
+    std::cout << "\n";
+
+    return 0; // done with Thomas' part
     
     // syntatic sugar to switch a.b(c) to b(a,c)
     if (!addFunctionSugar(tokenizedList)) {

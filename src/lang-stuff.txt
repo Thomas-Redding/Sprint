@@ -1,0 +1,36 @@
+Matrix x = [[1, 0], [0, 1]];
+Matrix y = [7];
+Matrix@ z;		// "null pointer"
+
+z := x			// points to x
+x.det()			// returns 1
+z.det()			// returns 1
+z := y
+z.det()
+
+print(z)		// "runs" print(x)
+
+add(x, y)		// calls func1
+add(&x, &y)		// calls func2
+add(z, z)		// calls func1
+add(&z, &z)		// calls func2
+
+
+
+
+
+add<T>(T a, T b) -> T {		// func1
+	return Matrix();
+}
+
+add<T>(T &a, T &b) -> T {	// func2
+	return Matrix();
+}
+
+
+
+
+
+
+
+
