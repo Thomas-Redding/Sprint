@@ -61,6 +61,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("xor");
 	keywords.insert("float");
 	keywords.insert("double");
+	keywords.insert("void");
 
 	punctuation.insert('.');
 	punctuation.insert(':');
@@ -184,6 +185,7 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			if (isMiddleChar(str[it]))
 				cur.str += str[it];
 			else {
+				categorizeIdentifier(cur);
 				resetAndSave(cur);
 				it--;
 			}
@@ -589,3 +591,108 @@ TokenType Tokenizer::categorize(std::string &str) {
 	return rtn;
 }
 
+
+void Tokenizer::categorizeIdentifier(Token &cur) {
+	if(cur.str == "abstract")
+		cur.type = KEYWORD_ABSTRACT;
+	else if(cur.str == "break")
+		cur.type = KEYWORD_BREAK;
+	else if(cur.str == "case")
+		cur.type = KEYWORD_CASE;
+	else if(cur.str == "catch")
+		cur.type = KEYWORD_CATCH;
+	else if(cur.str == "class")
+		cur.type = KEYWORD_CLASS;
+	else if(cur.str == "const")
+		cur.type = KEYWORD_CONST;
+	else if(cur.str == "continue")
+		cur.type = KEYWORD_CONTINUE;
+	else if(cur.str == "delete")
+		cur.type = KEYWORD_DELETE;
+	else if(cur.str == "do")
+		cur.type = KEYWORD_DO;
+	else if(cur.str == "else")
+		cur.type = KEYWORD_ELSE;
+	else if(cur.str == "enum")
+		cur.type = KEYWORD_ENUM;
+	else if(cur.str == "false")
+		cur.type = KEYWORD_FALSE;
+	else if(cur.str == "for")
+		cur.type = KEYWORD_FOR;
+	else if(cur.str == "if")
+		cur.type = KEYWORD_IF;
+	else if(cur.str == "in")
+		cur.type = KEYWORD_IN;
+	else if(cur.str == "inline")
+		cur.type = KEYWORD_INLINE;
+	else if(cur.str == "new")
+		cur.type = KEYWORD_NEW;
+	else if(cur.str == "NULL")
+		cur.type = KEYWORD_NULL;
+	else if(cur.str == "protected")
+		cur.type = KEYWORD_PROTECTED;
+	else if(cur.str == "private")
+		cur.type = KEYWORD_PRIVATE;
+	else if(cur.str == "ptr")
+		cur.type = KEYWORD_PTR;
+	else if(cur.str == "public")
+		cur.type = KEYWORD_PUBLIC;
+	else if(cur.str == "ref")
+		cur.type = KEYWORD_REF;
+	else if(cur.str == "return")
+		cur.type = KEYWORD_RETURN;
+	else if(cur.str == "sizeof")
+		cur.type = KEYWORD_SIZEOF;
+	else if(cur.str == "static")
+		cur.type = KEYWORD_STATIC;
+	else if(cur.str == "struct")
+		cur.type = KEYWORD_STRUCT;
+	else if(cur.str == "switch")
+		cur.type = KEYWORD_SWITCH;
+	else if(cur.str == "this")
+		cur.type = KEYWORD_THIS;
+	else if(cur.str == "throw")
+		cur.type = KEYWORD_THROW;
+	else if(cur.str == "true")
+		cur.type = KEYWORD_TRUE;
+	else if(cur.str == "try")
+		cur.type = KEYWORD_TRY;
+	else if(cur.str == "virtual")
+		cur.type = KEYWORD_VIRTUAL;
+	else if(cur.str == "while")
+		cur.type = KEYWORD_WHILE;
+	else if(cur.str == "uint")
+		cur.type = KEYWORD_UINT;
+	else if(cur.str == "uint8")
+		cur.type = KEYWORD_UINT8;
+	else if(cur.str == "uint16")
+		cur.type = KEYWORD_UINT16;
+	else if(cur.str == "uint32")
+		cur.type = KEYWORD_UINT32;
+	else if(cur.str == "uint64")
+		cur.type = KEYWORD_UINT64;
+	else if(cur.str == "int")
+		cur.type = KEYWORD_INT;
+	else if(cur.str == "int8")
+		cur.type = KEYWORD_INT8;
+	else if(cur.str == "int16")
+		cur.type = KEYWORD_INT16;
+	else if(cur.str == "int32")
+		cur.type = KEYWORD_INT32;
+	else if(cur.str == "int64")
+		cur.type = KEYWORD_INT64;
+	else if(cur.str == "and")
+		cur.type = KEYWORD_AND;
+	else if(cur.str == "or")
+		cur.type = KEYWORD_OR;
+	else if(cur.str == "not")
+		cur.type = KEYWORD_NOT;
+	else if(cur.str == "xor")
+		cur.type = KEYWORD_XOR;
+	else if(cur.str == "float")
+		cur.type = KEYWORD_FLOAT;
+	else if(cur.str == "double")
+		cur.type = KEYWORD_DOUBLE;
+	else
+		cur.type = IDENTIFIER;
+}

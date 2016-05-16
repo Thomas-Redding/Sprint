@@ -51,6 +51,7 @@ private:
 	long getCharNum();
 	std::vector<std::string> split(std::string str, char delim);
 	void handlePunc(Token &cur, char c);
+	void categorizeIdentifier(Token &cur);
 	TokenType categorize(std::string &str);
 };
 
