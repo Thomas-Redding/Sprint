@@ -1,4 +1,4 @@
-class List
+class List {
 	List List()
 		int x = 5
 		int z = (5+2)*3
@@ -9,8 +9,9 @@ class List
 	void insert(uint index, V item)
 	V pop()
 	V remove(uint index)
-	V at(uint index)
+	V at(uint index) {
 		return arr[index]
+	}
 
 	void clear()
 		length = 0
@@ -23,8 +24,8 @@ class List
 
 	private uint capacity = 20
 	private void expand()
+}
 
 /*
-
-
+	Comment
 */

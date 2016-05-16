@@ -26,21 +26,25 @@ int main(int argc, const char * argv[]) {
     Tokenizer tokenizer;
     std::vector<Token> tokenizedList = tokenizer.process(contents);
 
-    for (int i=0; i<tokenizedList.size(); ++i)
-        std::cout << tokenizedList[i].toString() << ",";
-    std::cout << "\n";
+    if (tokenizedList.size() > 0) {
+        std::cout << tokenizedList[0].toString();
+        for (int i=1; i<tokenizedList.size(); ++i) {
+            std::cout << ", " << tokenizedList[i].toString();
+        }
+        std::cout << "\n";
+    }
 
     return 0; // done with Thomas' part
     
-    // syntatic sugar to switch a.b(c) to b(a,c)
-    if (!addFunctionSugar(tokenizedList)) {
-        return 0;
-    }
+    // // syntatic sugar to switch a.b(c) to b(a,c)
+    // if (!addFunctionSugar(tokenizedList)) {
+    //     return 0;
+    // }
     
-    std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
-    for (size_t i = 0; i < tokenizedList.size(); ++i) {
-        std::cout << i << ": <" << Token::tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
-    }
+    // std::cout << "NUMBER OF TOKENS: " << tokenizedList.size() << std::endl << std::endl;
+    // for (size_t i = 0; i < tokenizedList.size(); ++i) {
+    //     std::cout << i << ": <" << Token::tokenTypeToString(tokenizedList[i].type) << "    " << tokenizedList[i].str << "    >\n";
+    // }
 
     return 0;
 }
