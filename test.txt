@@ -1,6 +1,11 @@
-class Foo {
-	int16 bar;
-	int16 bar;
+class Foo : Parent {
+	public static int16 bar;
+	private int16 bar;
+	int32 bar;
+	~(int x, int y) -> int {
+
+	}
+	int32 x;
 }
 
 [](int x, int y) -> int {

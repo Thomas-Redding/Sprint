@@ -1,18 +1,16 @@
 #include "../include/Parser.hpp"
 
-ParseNode* Parser::parseClassVariable(const Token* tokens, uint64_t n) {
+ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
+    uint64_t i = 0;
     assert(n > 3);
-    uint64_t i = tokens[0].type == KEYWORD_STATIC ? 1 : 0;
+    while (i < n && (tokens[i].type == KEYWORD_STATIC || tokens[i].type == KEYWORD_PUBLIC || tokens[i].type == KEYWORD_PROTECTED || tokens[i].type == KEYWORD_PRIVATE)) {
+        ++i;
+    }
     assert(n > 3 + i);
 
     // check if variable is templated
     if (tokens[i + 1].type != LESS_THAN) {
         if ((tokens[i].type == IDENTIFIER || tokens[i].type == KEYWORD_INT32 || tokens[i].type == KEYWORD_INT16)) {
-            std::cout << std::endl;
-            std::cout << Token::toString(tokens[i + 0].type) << std::endl;
-            std::cout << Token::toString(tokens[i + 1].type) << std::endl;
-            std::cout << Token::toString(tokens[i + 2].type) << std::endl;
-            std::cout << std::endl;
             return new ParseNode(tokens, i + 2, variable_declaration);
         }
         else {
@@ -41,14 +39,15 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
     if (n < 4) {
         return nullptr;
     }
-    if ((tokens[0].type != KEYWORD_CLASS && tokens[0].type != KEYWORD_STRUCT) || tokens[1].type != IDENTIFIER || tokens[2].type != OPEN_CURLY_BRACE) {
+    if ((tokens[0].type != KEYWORD_CLASS && tokens[0].type != KEYWORD_STRUCT) || tokens[1].type != IDENTIFIER) {
         return nullptr;
     }
-    
-    // TODO: inheritance
+
+    // find first brace
+    uint64_t firstBrace = 1;
+    while (tokens[++firstBrace].type != OPEN_CURLY_BRACE) {};
 
     // skim through and search for the end of the class
-    const uint64_t firstBrace = 2;
     uint64_t braceDepth = 1;
     uint64_t i = firstBrace;
     while (++i < n && braceDepth > 0) {
@@ -65,7 +64,7 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
     }
 
     const uint64_t len = i;
-    ParseNode* rtn = new ParseNode(tokens, len, classImplementation);
+    ParseNode* rtn = new ParseNode(tokens, len, class_implementation);
 
     // go through the class and further break it down into member/static methods/variables
     i = firstBrace;
@@ -79,7 +78,7 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
         delete node;
 
         // if it is not a function, it may be a variable
-        node = parseClassVariable(tokens + i, len - i);
+        node = skimClassVariable(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -159,7 +158,7 @@ ParseNode* Parser::skimFunction(const Token* tokens, uint64_t n) {
     if (i == n && braceDepth != 0) {
         throw std::runtime_error("Compiler Error: curly brace from line " + std::to_string(tokens[2].lineNum) + " is never closed\n");
     }
-    return new ParseNode(tokens, i, functionImplementation);
+    return new ParseNode(tokens, i, function_implementation);
 }
 
 ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {

@@ -13,7 +13,7 @@ enum Exposure {
 };
 
 struct Parser {
-	static ParseNode* parseClassVariable(const Token* tokens, uint64_t n);
+	static ParseNode* skimClassVariable(const Token* tokens, uint64_t n);
 	static ParseNode* skimClass(const Token* tokens, uint64_t n);
 	static uint64_t isValidFunctionName(const Token* tokens, uint64_t n);
 	static ParseNode* skimFunction(const Token* tokens, uint64_t n);
