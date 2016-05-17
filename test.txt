@@ -1,4 +1,4 @@
-class List {
+/*class List {
 	List() {
 		int x = 5
 		int z = (5+2)*3
@@ -25,6 +25,11 @@ class List {
 
 	private uint capacity = 20
 	private void expand()
+}*/
+
+class Foo {
+	int16 bar;
+	int16 bar;
 }
 
 [](int x, int y) -> int {

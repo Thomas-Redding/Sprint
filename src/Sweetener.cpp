@@ -47,7 +47,7 @@ bool addFunctionSugar(std::vector<Token>& tokens) {
                 beginningOfArguments = j + 1;
             }
             else {
-                std::cout << "Expected a function call at line " << tokens[j].lineNum << " but there was not a parenthesis ( found a '" << Token::tokenTypeToString(tokens[j].type) << "' instead" << std::endl;
+                std::cout << "Expected a function call at line " << tokens[j].lineNum << " but there was not a parenthesis ( found a '" << Token::toString(tokens[j].type) << "' instead" << std::endl;
                 return false;
             }
         }
@@ -55,7 +55,7 @@ bool addFunctionSugar(std::vector<Token>& tokens) {
             beginningOfArguments = i + 2;
         }
         else {
-            std::cout << "Expected a function call at line " << tokens[i + 2].lineNum << " but there was not a parenthesis ( found a '" << Token::tokenTypeToString(tokens[i + 2].type) << "' instead" << std::endl;
+            std::cout << "Expected a function call at line " << tokens[i + 2].lineNum << " but there was not a parenthesis ( found a '" << Token::toString(tokens[i + 2].type) << "' instead" << std::endl;
             return false;
         }
         

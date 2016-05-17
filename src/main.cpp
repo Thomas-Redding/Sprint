@@ -11,6 +11,7 @@ int main(int argc, const char * argv[]) {
 
 	if (argc != 2) {
 		std::cout << "Need to pass in one argument" << std::endl;
+        return 0;
 	}
     
     std::string fileLine;
@@ -29,10 +30,8 @@ int main(int argc, const char * argv[]) {
     Tokenizer tokenizer;
     std::list<Token> list = tokenizer.process(contents);
 
-    
     // http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
     std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
-
 
     // syntatic sugar to switch a.b(c) to b(a,c)
     if (!addFunctionSugar(tokenizedList)) {
@@ -48,6 +47,10 @@ int main(int argc, const char * argv[]) {
     }
 
     ParseNode* tree = Parser::getParseTree(&tokenizedList[0], tokenizedList.size());
+    std::cout << "================" << std::endl;
+    std::cout << Token::toString(tree->type) << ": " << tree->children.size() << std::endl;
+    std::cout << Token::toString(tree->children[0]->type) << ": " << tree->children[0]->children.size() << std::endl;
+    std::cout << Token::toString(tree->children[1]->type) << ": " << tree->children[1]->children.size() << std::endl;
 
     return 0;
 }

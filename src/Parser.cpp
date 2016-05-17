@@ -1,16 +1,56 @@
 #include "../include/Parser.hpp"
 
+ParseNode* Parser::parseClassVariable(const Token* tokens, uint64_t n) {
+    assert(n > 3);
+    uint64_t i = tokens[0].type == KEYWORD_STATIC ? 1 : 0;
+    assert(n > 3 + i);
+
+    // check if variable is templated
+    if (tokens[i + 1].type != LESS_THAN) {
+        if ((tokens[i].type == IDENTIFIER || tokens[i].type == KEYWORD_INT32 || tokens[i].type == KEYWORD_INT16)) {
+            std::cout << std::endl;
+            std::cout << Token::toString(tokens[i + 0].type) << std::endl;
+            std::cout << Token::toString(tokens[i + 1].type) << std::endl;
+            std::cout << Token::toString(tokens[i + 2].type) << std::endl;
+            std::cout << std::endl;
+            return new ParseNode(tokens, i + 2, variable_declaration);
+        }
+        else {
+            throw std::runtime_error("Error on line " + std::to_string(tokens[i + 1].lineNum) + "\n");
+        }
+    }
+
+    ++i;
+    uint64_t templateDepth = 1;
+    while (++i < n && templateDepth > 0) {
+        if (tokens[i].type == LESS_THAN) {
+            ++templateDepth;
+        }
+        else if (tokens[i].type == GREATER_THAN) {
+            --templateDepth;
+        }
+    }
+    if (i == n && templateDepth != 0) {
+        throw std::runtime_error("Error on line " + std::to_string(tokens[n - 1].lineNum) + "\n");
+    }
+    return new ParseNode(tokens, i, variable_declaration);
+}
+
 ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
+
     if (n < 4) {
         return nullptr;
     }
-    if (tokens[0].type != KEYWORD_CLASS || tokens[1].type != IDENTIFIER || tokens[2].type != OPEN_CURLY_BRACE) {
+    if ((tokens[0].type != KEYWORD_CLASS && tokens[0].type != KEYWORD_STRUCT) || tokens[1].type != IDENTIFIER || tokens[2].type != OPEN_CURLY_BRACE) {
         return nullptr;
     }
     
     // TODO: inheritance
+
+    // skim through and search for the end of the class
+    const uint64_t firstBrace = 2;
     uint64_t braceDepth = 1;
-    uint64_t i = 2;
+    uint64_t i = firstBrace;
     while (++i < n && braceDepth > 0) {
         if (tokens[i].type == OPEN_CURLY_BRACE) {
             ++braceDepth;
@@ -24,7 +64,33 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
         throw std::runtime_error("Compiler Error: curly brace from line " + std::to_string(tokens[2].lineNum) + " is never closed\n");
     }
 
-    return new ParseNode(tokens, i, classImplementation);
+    const uint64_t len = i;
+    ParseNode* rtn = new ParseNode(tokens, len, classImplementation);
+
+    // go through the class and further break it down into member/static methods/variables
+    i = firstBrace;
+    while (++i < len - 1) {
+        ParseNode* node = skimFunction(tokens + i, len - i);
+        if (node != nullptr) {
+            rtn->addChild(node);
+            i += node->tokenLength;
+            continue;
+        }
+        delete node;
+
+        // if it is not a function, it may be a variable
+        node = parseClassVariable(tokens + i, len - i);
+        if (node != nullptr) {
+            rtn->addChild(node);
+            i += node->tokenLength;
+            continue;
+        }
+        delete node;
+
+        throw std::runtime_error("Token on line " + std::to_string(tokens[i].lineNum) + " is not part of a member variable or method");
+    }
+
+    return rtn;
 }
 
 // returns how many tokens form a valid function name
@@ -117,8 +183,6 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
             throw std::runtime_error("Compiler Error on line " + std::to_string(tokens[i].lineNum) + "\n");
         }
     }
-
-    std::cout << rootNode->number_of_children() << std::endl;
 
     return rootNode;
 }
