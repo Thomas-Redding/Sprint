@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <list>
 #include <iostream>
 #include <ctype.h>
 #include <set>
 #include <algorithm>
-#include <deque>
 
 #include "Token.hpp"
 
@@ -22,9 +22,9 @@ public:
 	 * @param str - the string to be converted into a vector of tokens
 	 * @return - vector of tokens created from the inputed string
 	 */
-	std::vector<Token> process(std::string str);
+	std::list<Token> process(std::string str);
 private:
-	std::vector<Token> rtn;
+	std::list<Token> rtn;
 	long it;
 	bool isInSingleQuoteString;
 	std::set<std::string> keywords;
@@ -41,7 +41,8 @@ private:
 	long getLineNum();
 	long getCharNum();
 	std::vector<std::string> split(std::string str, char delim);
-	void handlePunc(Token &cur, char c);
 	void categorizeIdentifier(Token &cur);
 	TokenType categorize(std::string &str);
+	bool isPunc(TokenType t);
+	bool isKeyWord(TokenType t);
 };

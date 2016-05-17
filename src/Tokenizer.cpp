@@ -92,7 +92,7 @@ Tokenizer::Tokenizer() {
 	brackets.insert('}');
 }
 
-std::vector<Token> Tokenizer::process(std::string str) {
+std::list<Token> Tokenizer::process(std::string str) {
 	rtn.clear();
 	it = 0;
 	bool isInMultiLineComment = false;
@@ -131,9 +131,32 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			else if (str[it] == '/' && it < str.length()-1 && str[it+1] == '/') {
 				isInSingleLineComment = true;
 			}
-			else if (isdigit(str[it]) || str[it] == '+' || str[it] == '-') {
+			else if (isdigit(str[it])) {
 				cur.type = INTEGER_LITERAL;
 				cur.str += str[it];
+			}
+			else if (str[it] == '+' || str[it] == '-') {
+				if (it == 0) {
+					error("Tokenizer: Can't begin a document with '+' or '-'.");
+				}
+				cur.str += str[it];
+
+				long i;
+				for (i=it+1; i<str.length(); i++) {
+					if (str[i] != ' ') {
+						break;
+					}
+				}
+				if (isdigit(i)) {
+					Token last = rtn.back();
+					if (isPunc(last.type) || last.type == OPEN_BRACKET || last.type == OPEN_CURLY_BRACE || last.type == OPEN_PARENTHESIS)
+						cur.type = INTEGER_LITERAL;
+					else
+						cur.type = PUNCTUATION;
+				}
+				else {
+					cur.type = PUNCTUATION;
+				}
 			}
 			else if (str[it] == '.') {
 				if (it == str.length()-1) {
@@ -262,8 +285,7 @@ std::vector<Token> Tokenizer::process(std::string str) {
 			else if (isspace(str[it]))
 				cur.str += str[it];
 			else {
-				// todo: magically solve punctuation
-				handlePunc(cur, str[it]);
+				resetAndSave(cur);
 				it--;
 			}
 		}
@@ -371,141 +393,6 @@ c++ - maybe ours
 
 
 */
-
-void Tokenizer::handlePunc(Token &cur, char c) {
-	// everything in cur.str is punctuation or an empty space
-
-	// "  ab  c    d" -> [" ", "ab", " ", "c", " ", "d"]
-
-	std::vector<std::string> list;
-	std::string str;
-	for (int i=0; i<cur.str.length(); ++i) {
-		if(isspace(cur.str[i])) {
-			if (str != "") {
-				list.push_back(str);
-				str = "";
-			}
-		}
-		else {
-			str += cur.str[i];
-		}
-	}
-	if (str != "")
-		list.push_back(str);
-
-	if (list.size() == 1) {
-		TokenType cat = categorize(list[0]);
-		if (cat == PLUS_PLUS) {
-			if(c == ')' || c == '}' || c == ']' || c == ',' || c == ';') {
-				cur.type = cat;
-				cur.str = list[0];
-				resetAndSave(cur);
-			}
-			else if(isdigit(c)) {
-				cur.type = PLUS;
-				cur.str = "+";
-				resetAndSave(cur);
-				cur.type = PLUS;
-				cur.str = "+";
-				resetAndSave(cur);
-			}
-			else {
-				error("Tokenizer: Punctuation Error 5");
-			}
-		}
-		else if (cat == MINUS_MINUS) {
-			if(c == ')' || c == '}' || c == ']' || c == ',' || c == ';') {
-				cur.type = cat;
-				cur.str = list[0];
-				resetAndSave(cur);
-			}
-			else if(isdigit(c) || isStartChar(c)) {
-				cur.type = MINUS;
-				cur.str = "-";
-				resetAndSave(cur);
-				cur.type = MINUS;
-				cur.str = "-";
-				resetAndSave(cur);
-			}
-			else {
-				error("Tokenizer: Punctuation Error 5");
-			}
-		}
-		else if (cat == PUNCTUATION) {
-			// need to break up with virtual spaces
-			// this should have some punctuation followed by a "-" or "+"
-			std::string str1 = list[0].substr(0, list[0].length()-1);
-			std::string str2 = list[0].substr(list[0].length()-1);
-			TokenType cat1 = categorize(str1);
-			TokenType cat2 = categorize(str2);
-
-			// the punctuation before the "+" or "-"
-			if (cat1 == PUNCTUATION) {
-				error("Tokenizer: Punctuation Error 4 (" + str1 + ")");
-			}
-			else {
-				cur.str = str1;
-				cur.type = cat1;
-				resetAndSave(cur);
-			}
-
-			// the "+" or "-"
-			if (cat2 == PLUS) {
-				cur.str = "+";
-				cur.type = PLUS;
-			}
-			else if (cat2 == MINUS) {
-				cur.str = "-";
-				cur.type = MINUS;
-			}
-			else {
-				error("Tokenizer: Punctuation Error 3 (" + str2 + ")");
-			}
-			resetAndSave(cur);
-		}
-		else if (cat == UNKNOWN) {
-			error("Tokenizer: Punctuation Error 3 (" + cur.str + ")");
-		}
-		else {
-			cur.str = list[0];
-			cur.type = cat;
-			resetAndSave(cur);
-		}
-	}
-	else if (list.size() == 2) {
-		TokenType cat = categorize(list[0]);
-		if (cat == PLUS_PLUS)
-			error("Tokenizer: cannot follow ++ by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
-		else if (cat == PLUS_PLUS)
-			error("Tokenizer: cannot follow -- by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
-		else if (cat == PUNCTUATION)
-			error("Tokenizer: cannot use three strings of puncutation in a row. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
-		else {
-			cur.str = list[0];
-			cur.type = cat;
-			resetAndSave(cur);
-		}
-
-		cat = categorize(list[1]);
-		if (cat == PLUS_PLUS)
-			error("Tokenizer: cannot follow ++ by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
-		else if (cat == PLUS_PLUS)
-			error("Tokenizer: cannot follow -- by more punctuation. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
-		else if (cat == PUNCTUATION)
-			error("Tokenizer: cannot use three strings of puncutation in a row. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
-		else {
-			cur.str = list[1];
-			cur.type = cat;
-			resetAndSave(cur);
-		}
-	}
-	else if (list.size() == 0) {
-		error("Tokenizer: Punctuation Error 2 (" + cur.str + ")");
-	}
-	else {
-		error("Tokenizer: More than two strings of punctuation in a row are illegal. (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ", str: " + cur.str + ")");
-	}
-}
 
 TokenType Tokenizer::categorize(std::string &str) {
 	TokenType rtn;
@@ -695,3 +582,12 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 	else
 		cur.type = IDENTIFIER;
 }
+
+bool Tokenizer::isPunc(TokenType t) {
+	return t == PUNCTUATION || t == PERIOD || t == COLON || t == SEMI_COLON || t == PLUS || t == MINUS || t == ASTERISK || t == SLASH || t == AMPERSAND || t == POUND_SIGN || t == LESS_THAN || t == EQUALS || t == GREATER_THAN || t == COMMA || t == VERTICAL_BAR || t == PERCENT || t == EXCLAMATION_POINT || t == CARROT || t == QUESTION_MARK || t == BACK_SLASH || t == AT || t == PLUS_EQUALS || t == MINUS_EQUALS || t == SLASH_EQUALS || t == ASTERISK_EQUALS || t == AMPERSAND_EQUALS || t == CARROT_EQUALS || t == VERTICAL_BAR_EQUALS || t == PLUS_PLUS || t == MINUS_MINUS || t == SHIFT_LEFT || t == SHIFT_RIGHT || t == GREATER_THAN_EQUALS || t == LESS_THAN_EQUALS || t == SHIFT_LEFT_EQUALS || t == SHIFT_RIGHT_EQUALS || t == EXCLAMATION_POINT_EQUALS || t == EQUAL_EQUALS;
+}
+
+bool Tokenizer::isKeyWord(TokenType t) {
+		return t == KEYWORD_ABSTRACT || t == KEYWORD_BREAK || t == KEYWORD_CASE || t == KEYWORD_CATCH || t == KEYWORD_CLASS || t == KEYWORD_CONST || t == KEYWORD_CONTINUE || t == KEYWORD_DELETE || t == KEYWORD_DO || t == KEYWORD_ELSE || t == KEYWORD_ENUM || t == KEYWORD_FALSE || t == KEYWORD_FOR || t == KEYWORD_IF || t == KEYWORD_IN || t == KEYWORD_INLINE || t == KEYWORD_NEW || t == KEYWORD_NULL || t == KEYWORD_PROTECTED || t == KEYWORD_PRIVATE || t == KEYWORD_PTR || t == KEYWORD_REF || t == KEYWORD_RETURN || t == KEYWORD_SIZEOF || t == KEYWORD_STATIC || t == KEYWORD_STRUCT || t == KEYWORD_SWITCH || t == KEYWORD_THIS || t == KEYWORD_THROW || t == KEYWORD_TRUE || t == KEYWORD_TRY || t == KEYWORD_VIRTUAL || t == KEYWORD_WHILE || t == KEYWORD_INT || t == KEYWORD_INT8 || t == KEYWORD_INT16 || t == KEYWORD_INT32 || t == KEYWORD_INT64 || t == KEYWORD_UINT || t == KEYWORD_UINT8 || t == KEYWORD_UINT16 || t == KEYWORD_UINT32 || t == KEYWORD_UINT64 || t == KEYWORD_AND || t == KEYWORD_OR || t == KEYWORD_NOT || t == KEYWORD_XOR || t == KEYWORD_FLOAT || t == KEYWORD_DOUBLE || t == KEYWORD_PUBLIC || t == KEYWORD_VOID;
+}
+

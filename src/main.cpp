@@ -27,7 +27,12 @@ int main(int argc, const char * argv[]) {
     }
     
     Tokenizer tokenizer;
-    std::vector<Token> tokenizedList = tokenizer.process(contents);
+    std::list<Token> list = tokenizer.process(contents);
+
+    
+    // http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
+    std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
+
 
     // syntatic sugar to switch a.b(c) to b(a,c)
     if (!addFunctionSugar(tokenizedList)) {
