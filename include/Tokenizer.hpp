@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOKENIZER_H
+#define TOKENIZER_H
 
 #include <stdio.h>
 #include <string>
@@ -42,7 +43,10 @@ private:
 	long getCharNum();
 	std::vector<std::string> split(std::string str, char delim);
 	void categorizeIdentifier(Token &cur);
-	TokenType categorize(std::string &str);
-	bool isPunc(TokenType t);
-	bool isKeyWord(TokenType t);
+	TokenType categorizePunc(const std::string &str);
+	const bool isPunc(TokenType t);
+	const bool isKeyWord(TokenType t);
+	const std::string tokenToString2(const Token& t);
 };
+
+#endif

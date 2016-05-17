@@ -149,7 +149,7 @@ std::list<Token> Tokenizer::process(std::string str) {
 				}
 				if (isdigit(i)) {
 					Token last = rtn.back();
-					if (isPunc(last.type) || last.type == OPEN_BRACKET || last.type == OPEN_CURLY_BRACE || last.type == OPEN_PARENTHESIS)
+					if (isPunc(last .type) || last.type == OPEN_BRACKET || last.type == OPEN_CURLY_BRACE || last.type == OPEN_PARENTHESIS)
 						cur.type = INTEGER_LITERAL;
 					else
 						cur.type = PUNCTUATION;
@@ -183,8 +183,6 @@ std::list<Token> Tokenizer::process(std::string str) {
 			}
 			else if (isPunc(str[it])) {
 				cur.type = PUNCTUATION;
-				if (it > 0 && isspace(str[it-1]))
-					cur.str = str[it-1];
 				cur.str += str[it];
 			}
 			else if (isBracket(str[it])) {
@@ -282,8 +280,6 @@ std::list<Token> Tokenizer::process(std::string str) {
 		else if (cur.type == PUNCTUATION) {
 			if (isPunc(str[it]))
 				cur.str += str[it];
-			else if (isspace(str[it]))
-				cur.str += str[it];
 			else {
 				resetAndSave(cur);
 				it--;
@@ -292,6 +288,51 @@ std::list<Token> Tokenizer::process(std::string str) {
 		else {
 			error("Tokenizer: Error 1 (it: " + std::to_string(it) + ")");
 		}
+	}
+
+	// handle punctuation - todo
+	std::list<Token>::iterator i;
+	for (i = rtn.begin(); i != rtn.end(); ++i) {
+		if (i->type == PUNCTUATION) {
+			TokenType t = categorizePunc(i->str);
+			if (t == UNKNOWN) {
+				error("Tokenizer: could not recognize punctuation (" + i->str + ")");
+			}
+			else if (t == PUNCTUATION) {
+				// +-
+				i->str = "+";
+				i->type = PLUS;
+				++i;
+				rtn.insert(i, Token(MINUS, "-", i->lineNum, i->charNum+1));
+			}
+			else if (t == PLUS_PLUS) {
+				// ++
+				std::list<Token>::iterator j = i;
+				++j;
+				if (j->type == CLOSE_BRACKET || j->type == CLOSE_PARENTHESIS || j->type == CLOSE_CURLY_BRACE || j->type == SEMI_COLON || j->type == COMMA)
+					i->type = PLUS_PLUS;
+				else {
+					i->type = PLUS;
+					i->str = "+";
+					rtn.insert(j, Token(PLUS, "+", i->lineNum, i->charNum+1));
+				}
+			}
+			else if (t == MINUS_MINUS) {
+				std::list<Token>::iterator j = i;
+				++j;
+				if (j->type == CLOSE_BRACKET || j->type == CLOSE_PARENTHESIS || j->type == CLOSE_CURLY_BRACE || j->type == SEMI_COLON || j->type == COMMA)
+					i->type = MINUS_MINUS;
+				else {
+					i->type = MINUS;
+					i->str = "-";
+					rtn.insert(j, Token(MINUS, "-", i->lineNum, i->charNum+1));
+				}
+			}
+			else {
+				i->type = t;
+			}
+		}
+	    
 	}
 
 	return rtn;
@@ -394,7 +435,7 @@ c++ - maybe ours
 
 */
 
-TokenType Tokenizer::categorize(std::string &str) {
+TokenType Tokenizer::categorizePunc(const std::string &str) {
 	TokenType rtn;
 	if (str == ".")
 		rtn = PERIOD;
@@ -470,6 +511,8 @@ TokenType Tokenizer::categorize(std::string &str) {
 		rtn = PLUS_PLUS;
 	else if (str == "--")
 		rtn = MINUS_MINUS;
+	else if (str == "->")
+		rtn = ARROW;
 	else if (str == "+-")
 		rtn = PUNCTUATION;
 	else
@@ -583,11 +626,19 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 		cur.type = IDENTIFIER;
 }
 
-bool Tokenizer::isPunc(TokenType t) {
+const bool Tokenizer::isPunc(TokenType t) {
 	return t == PUNCTUATION || t == PERIOD || t == COLON || t == SEMI_COLON || t == PLUS || t == MINUS || t == ASTERISK || t == SLASH || t == AMPERSAND || t == POUND_SIGN || t == LESS_THAN || t == EQUALS || t == GREATER_THAN || t == COMMA || t == VERTICAL_BAR || t == PERCENT || t == EXCLAMATION_POINT || t == CARROT || t == QUESTION_MARK || t == BACK_SLASH || t == AT || t == PLUS_EQUALS || t == MINUS_EQUALS || t == SLASH_EQUALS || t == ASTERISK_EQUALS || t == AMPERSAND_EQUALS || t == CARROT_EQUALS || t == VERTICAL_BAR_EQUALS || t == PLUS_PLUS || t == MINUS_MINUS || t == SHIFT_LEFT || t == SHIFT_RIGHT || t == GREATER_THAN_EQUALS || t == LESS_THAN_EQUALS || t == SHIFT_LEFT_EQUALS || t == SHIFT_RIGHT_EQUALS || t == EXCLAMATION_POINT_EQUALS || t == EQUAL_EQUALS;
 }
 
-bool Tokenizer::isKeyWord(TokenType t) {
+const bool Tokenizer::isKeyWord(TokenType t) {
 		return t == KEYWORD_ABSTRACT || t == KEYWORD_BREAK || t == KEYWORD_CASE || t == KEYWORD_CATCH || t == KEYWORD_CLASS || t == KEYWORD_CONST || t == KEYWORD_CONTINUE || t == KEYWORD_DELETE || t == KEYWORD_DO || t == KEYWORD_ELSE || t == KEYWORD_ENUM || t == KEYWORD_FALSE || t == KEYWORD_FOR || t == KEYWORD_IF || t == KEYWORD_IN || t == KEYWORD_INLINE || t == KEYWORD_NEW || t == KEYWORD_NULL || t == KEYWORD_PROTECTED || t == KEYWORD_PRIVATE || t == KEYWORD_PTR || t == KEYWORD_REF || t == KEYWORD_RETURN || t == KEYWORD_SIZEOF || t == KEYWORD_STATIC || t == KEYWORD_STRUCT || t == KEYWORD_SWITCH || t == KEYWORD_THIS || t == KEYWORD_THROW || t == KEYWORD_TRUE || t == KEYWORD_TRY || t == KEYWORD_VIRTUAL || t == KEYWORD_WHILE || t == KEYWORD_INT || t == KEYWORD_INT8 || t == KEYWORD_INT16 || t == KEYWORD_INT32 || t == KEYWORD_INT64 || t == KEYWORD_UINT || t == KEYWORD_UINT8 || t == KEYWORD_UINT16 || t == KEYWORD_UINT32 || t == KEYWORD_UINT64 || t == KEYWORD_AND || t == KEYWORD_OR || t == KEYWORD_NOT || t == KEYWORD_XOR || t == KEYWORD_FLOAT || t == KEYWORD_DOUBLE || t == KEYWORD_PUBLIC || t == KEYWORD_VOID;
 }
+
+const std::string Tokenizer::tokenToString2(const Token& t) {
+	if (t.str == "")
+		return "(" + Token::tokenTypeToString(t.type) + ")";
+	else
+		return "(" + Token::tokenTypeToString(t.type) + " '" + t.str + "')";
+}
+
 

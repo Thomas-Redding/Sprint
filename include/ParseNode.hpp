@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PARSENODE_H
+#define PARSENODE_H
 
 #include "Token.hpp"
 #include <vector>
@@ -17,3 +18,5 @@ struct ParseNode {
 private:
 	std::vector<ParseNode*> children;
 };
+
+#endif

@@ -33,18 +33,17 @@ int main(int argc, const char * argv[]) {
     // http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
     std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
 
-
-    // syntatic sugar to switch a.b(c) to b(a,c)
-    if (!addFunctionSugar(tokenizedList)) {
-        return 0;
-    }
-    
     if (tokenizedList.size() > 0) {
         std::cout << tokenizedList[0].toString();
         for (int i = 1; i < tokenizedList.size(); ++i) {
             std::cout << ", " << tokenizedList[i].toString();
         }
         std::cout << std::endl;
+    }
+
+    // syntatic sugar to switch a.b(c) to b(a,c)
+    if (!addFunctionSugar(tokenizedList)) {
+        return 0;
     }
 
     ParseNode* tree = Parser::getParseTree(&tokenizedList[0], tokenizedList.size());
