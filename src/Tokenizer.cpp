@@ -395,7 +395,6 @@ void Tokenizer::handlePunc(Token &cur, char c) {
 
 	if (list.size() == 1) {
 		TokenType cat = categorize(list[0]);
-		std::cout << list[0] << " : " << cat << "\n";
 		if (cat == PLUS_PLUS) {
 			if(c == ')' || c == '}' || c == ']' || c == ',' || c == ';') {
 				cur.type = cat;

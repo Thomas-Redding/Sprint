@@ -1,13 +1,4 @@
-//
-//  Tokenizer.hpp
-//  Sprint
-//
-//  Created by Thomas Redding on 10/21/15.
-//  Copyright © 2015 Thomas Redding. All rights reserved.
-//
-
-#ifndef Tokenizer_cpp
-#define Tokenizer_cpp
+#pragma once
 
 #include <stdio.h>
 #include <string>
@@ -54,5 +45,3 @@ private:
 	void categorizeIdentifier(Token &cur);
 	TokenType categorize(std::string &str);
 };
-
-#endif /* Tokenizer_cpp */
