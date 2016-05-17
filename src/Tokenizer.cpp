@@ -636,9 +636,9 @@ const bool Tokenizer::isKeyWord(TokenType t) {
 
 const std::string Tokenizer::tokenToString2(const Token& t) {
 	if (t.str == "")
-		return "(" + Token::tokenTypeToString(t.type) + ")";
+		return "(" + Token::toString(t.type) + ")";
 	else
-		return "(" + Token::tokenTypeToString(t.type) + " '" + t.str + "')";
+		return "(" + Token::toString(t.type) + " '" + t.str + "')";
 }
 
 
