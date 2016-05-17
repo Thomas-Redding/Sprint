@@ -83,6 +83,7 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('?');
 	punctuation.insert('/');
 	punctuation.insert('@');
+	punctuation.insert('~');
 
 	brackets.insert('{');
 	brackets.insert('(');
@@ -477,6 +478,8 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = BACK_SLASH;
 	else if (str == "@")
 		rtn = AT;
+	else if (str == "~")
+		rtn = TILDE;
 	else if (str == "+=")
 		rtn = PLUS_EQUALS;
 	else if (str == "-=")
