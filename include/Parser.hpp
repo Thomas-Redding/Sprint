@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PARSER_H
+#define PARSER_H
 
 #include "ParseNode.hpp"
 #include <assert.h>
@@ -18,3 +19,5 @@ struct Parser {
 	static ParseNode* skimFunction(const Token* tokens, uint64_t n);
 	static ParseNode* getParseTree(const Token* tokens, uint64_t n);
 };
+
+#endif

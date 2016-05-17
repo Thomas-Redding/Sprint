@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SWEETENER_H
+#define SWEETENER_H
 
 #include <vector>
 #include <iostream>
@@ -13,3 +14,5 @@ void move(std::vector<T>& A, size_t from, size_t length, size_t to);
 // takes member functionc alls of the form "A.B(C)" and makes them "B(A, C)"
 // note: "A.B()" will have a trailing comma: "B(A,)"
 bool addFunctionSugar(std::vector<Token>& tokens);
+
+#endif
