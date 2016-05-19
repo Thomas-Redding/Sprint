@@ -1,0 +1,38 @@
+/*
+ * how does one return pointers?
+ * this violates the principle that pointers behave like values
+ */
+
+interface Container<T> {
+    push(T v);
+    pop() -> T;
+}
+
+class Queue<T> implements Container<T> {
+    push(T v) -> void; // note, this void is optional
+    pop() -> T;
+    front() -> T {
+        return back;
+    }
+protected:
+    getFront() -> T* {
+        return @front;
+        return front;
+    }
+private:
+    class Cons {
+        T value;
+        Cons *next;
+    }
+    Cons *front;
+    Cons *back;
+}
+
+// Queue should be a pointer - right?
+push<V>(Queue<V>) {
+    // todo
+}
+
+Queue<V>.pop() -> V {
+    // todo
+}

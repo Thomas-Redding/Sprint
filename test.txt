@@ -1,4 +1,4 @@
-class Foo : Parent {
+class Foo extends Parent {
 	public static int16 bar;
 	private int16 bar;
 	int32 bar;
@@ -23,18 +23,18 @@ class Foo : Parent {
 			x = z+-y;
 		}
 	}
-	void push(V item)
-	void insert(uint index, V item)
-	V pop()
-	V remove(uint index)
-	V at(uint index) {
+	push(V item) -> void
+	insert(uint index, V item)
+	pop() -> V
+	remove(uint index) -> V
+	at(uint index) -> V {
 		return arr[index]
 	}
 
-	void clear()
+	clear()
 		length = 0
 
-	void isEmpty()
+	isEmpty()
 		return length == 0
 
 	readonly V* arr
