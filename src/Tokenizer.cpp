@@ -202,6 +202,10 @@ std::list<Token> Tokenizer::process(std::string str) {
 					cur.type = CLOSE_BRACKET;
 				resetAndSave(cur);
 			}
+			else {
+				cur.lineNum = getLineNum();
+				cur.charNum = getCharNum();
+			}
 		}
 		else if (cur.type == IDENTIFIER) {
 			if (isMiddleChar(str[it]))

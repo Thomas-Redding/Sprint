@@ -148,10 +148,7 @@ public:
 		return false;
 	}
 	const std::string toString() {
-		if (str == "")
-			return "(" + toString(type) + ")";
-		else
-			return "(" + toString(type) + " '" + str + "')";
+		return "(" + toString(type) + " '" + str + "~" + std::to_string(lineNum) + "," + std::to_string(charNum) + ")";
 	}
 	TokenType type;
 	std::string str;
