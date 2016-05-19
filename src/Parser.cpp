@@ -12,14 +12,31 @@ ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
 
     // check if variable is templated
     if (tokens[i + 1].type != LESS_THAN) {
-        if ((tokens[i].type == IDENTIFIER || tokens[i].type == KEYWORD_INT32 || tokens[i].type == KEYWORD_INT16)) {
-            return new ParseNode(tokens, i + 2, variable_declaration);
+        if ((tokens[i].type == IDENTIFIER
+            || tokens[i].type == KEYWORD_INT
+            || tokens[i].type == KEYWORD_INT8
+            || tokens[i].type == KEYWORD_INT16
+            || tokens[i].type == KEYWORD_INT32
+            || tokens[i].type == KEYWORD_INT64
+            || tokens[i].type == KEYWORD_UINT
+            || tokens[i].type == KEYWORD_UINT8
+            || tokens[i].type == KEYWORD_UINT16
+            || tokens[i].type == KEYWORD_UINT32
+            || tokens[i].type == KEYWORD_UINT64
+            )) {
+            const uint64_t startingLine = tokens[i].lineNum;
+            while (++i < n && tokens[i].type != SEMI_COLON && (tokens[i].type == IDENTIFIER || tokens[i].type == COMMA)) {}
+            if (i == n || tokens[i].type != SEMI_COLON) {
+                throw std::runtime_error("Error: no semicolon after variable declaration on line " + std::to_string(startingLine) + "\n");
+            }
+            return new ParseNode(tokens, i + 1, variable_declaration);
         }
         else {
-            throw std::runtime_error("Error on line " + std::to_string(tokens[i + 1].lineNum) + "\n");
+            throw std::runtime_error("Error in variable declaration on line " + std::to_string(tokens[i + 1].lineNum) + "\n");
         }
     }
 
+    const uint64_t templateStart = tokens[i].lineNum;
     ++i;
     uint64_t templateDepth = 1;
     while (++i < n && templateDepth > 0) {
@@ -31,9 +48,16 @@ ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
         }
     }
     if (i == n && templateDepth != 0) {
-        throw std::runtime_error("Error on line " + std::to_string(tokens[n - 1].lineNum) + "\n");
+        throw std::runtime_error("Error: variable template no closed " + std::to_string(templateStart) + "\n");
     }
-    return new ParseNode(tokens, i, variable_declaration);
+
+    while (++i < n && tokens[i].type != SEMI_COLON) {}
+
+    if (i == n || tokens[i].type != SEMI_COLON) {
+        throw std::runtime_error("Error: no semicolon after variable declaration on line " + std::to_string(templateStart) + "\n");
+    }
+
+    return new ParseNode(tokens, i + 1, variable_declaration);
 }
 
 ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
@@ -44,6 +68,8 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
     if ((tokens[0].type != KEYWORD_CLASS && tokens[0].type != KEYWORD_STRUCT) || tokens[1].type != IDENTIFIER) {
         return nullptr;
     }
+
+    std::cout << "SKIMMING CLASS @ " << Token::toString(tokens[0]) << " " << Token::toString(tokens[1]) << " " << Token::toString(tokens[2]) << std::endl;
 
     // find first brace
     uint64_t firstBrace = 1;
@@ -69,8 +95,8 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
     ParseNode* rtn = new ParseNode(tokens, len, class_implementation);
 
     // go through the class and further break it down into member/static methods/variables
-    i = firstBrace;
-    while (++i < len - 1) {
+    i = firstBrace + 1;
+    while (i < len - 1) {
         ParseNode* node = skimFunction(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
@@ -90,6 +116,8 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
 
         throw std::runtime_error("Token on line " + std::to_string(tokens[i].lineNum) + " is not part of a member variable or method");
     }
+
+    std::cout << "DONE SKIMMING CLASS\n\n";
 
     return rtn;
 }
@@ -169,6 +197,8 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
     // find all classes and global functions
     uint64_t i = 0;
     while (i < n) {
+        std::cout << "i == " << i << std::endl;
+        std::cout << tokens[i + 0] << " " << tokens[i + 1] << " " << tokens[i + 2] << std::endl;
         ParseNode* node;
         if ((node = skimClass(tokens + i, n - i)) != nullptr) {
             rootNode->addChild(node);
@@ -181,7 +211,7 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
             continue;
         }
         else {
-            throw std::runtime_error("Compiler Error on line " + std::to_string(tokens[i].lineNum) + "\n");
+            throw std::runtime_error("Compiler Error on line " + std::to_string(tokens[i].lineNum) + ".\nExpected the start of a global class, global variable, or global function, but found '" + tokens[i].str + "'");
         }
     }
 

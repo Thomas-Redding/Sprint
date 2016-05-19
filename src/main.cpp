@@ -10,7 +10,7 @@
 int main(int argc, const char * argv[]) {
 
 	if (argc != 2) {
-		std::cout << "Need to pass in one argument" << std::endl;
+		std::cout << "Error: need to pass in one argument" << std::endl;
         return 0;
 	}
     
@@ -25,6 +25,10 @@ int main(int argc, const char * argv[]) {
             contents += "\n";
         }
         myfile.close();
+    }
+    else {
+        std::cout << "Error: could not open file" << std::endl;
+        return 0;
     }
     
     Tokenizer tokenizer;
@@ -41,7 +45,20 @@ int main(int argc, const char * argv[]) {
     if (tokenizedList.size() > 0) {
         std::cout << tokenizedList[0].toString();
         for (int i = 1; i < tokenizedList.size(); ++i) {
-            std::cout << ", " << tokenizedList[i].toString();
+            // TODO: replace with the commented out code
+            // once Thomas fixes the token.lineNum bug
+            if (i < tokenizedList.size() && tokenizedList[i + 1].lineNum != tokenizedList[i].lineNum) {
+                std::cout << std::endl << std::endl << tokenizedList[i].toString();
+            }
+            else {
+                std::cout << ", " << tokenizedList[i].toString();
+            }
+            // if (tokenizedList[i].lineNum != tokenizedList[i - 1].lineNum) {
+            //     std::cout << std::endl << std::endl << tokenizedList[i].toString();
+            // }
+            // else {
+            //     std::cout << ", " << tokenizedList[i].toString();
+            // }
         }
         std::cout << std::endl;
     }

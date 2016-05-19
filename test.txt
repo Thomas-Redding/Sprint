@@ -1,6 +1,5 @@
 class Foo extends Parent {
-	public static int16 bar;
-	private int16 bar;
+	int16 bar, foo;
 	int32 bar;
 	+(int x, int y) -> int {
 

@@ -29,6 +29,9 @@ private:
 		if (tokenLength > 1) {
 			stream << "  " << Token::toString(tokens[1].type);
 		}
+		if (tokenLength > 2) {
+			stream << "  " << Token::toString(tokens[2].type);
+		}
 		stream << " ..." << std::endl;
 		for (uint64_t i = 0; i < children.size(); ++i) {
 			children[i]->print(stream, depth + 1);
