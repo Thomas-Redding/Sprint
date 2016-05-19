@@ -1,5 +1,7 @@
 #include "../include/Parser.hpp"
 
+// TODO: pointers
+// TODO: multiple variables declared in one statement
 ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
     uint64_t i = 0;
     assert(n > 3);
