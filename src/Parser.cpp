@@ -32,7 +32,7 @@ ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
             return new ParseNode(tokens, i + 1, variable_declaration);
         }
         else {
-            throw std::runtime_error("Error in variable declaration on line " + std::to_string(tokens[i + 1].lineNum) + "\n");
+            return nullptr;
         }
     }
 
@@ -48,7 +48,7 @@ ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
         }
     }
     if (i == n && templateDepth != 0) {
-        throw std::runtime_error("Error: variable template no closed " + std::to_string(templateStart) + "\n");
+        throw std::runtime_error("Error: variable template on line " + std::to_string(templateStart) + " is never closed\n");
     }
 
     while (++i < n && tokens[i].type != SEMI_COLON) {}
@@ -94,10 +94,10 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
     const uint64_t len = i;
     ParseNode* rtn = new ParseNode(tokens, len, class_implementation);
 
-    // go through the class and further break it down into member/static methods/variables
+    // go through the class and further break it down into methods/variables
     i = firstBrace + 1;
     while (i < len - 1) {
-        ParseNode* node = skimFunction(tokens + i, len - i);
+        ParseNode* node = skimClassVariable(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -105,14 +105,14 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
         }
         delete node;
 
-        // if it is not a function, it may be a variable
-        node = skimClassVariable(tokens + i, len - i);
+        node = skimFunction(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
             continue;
         }
         delete node;
+
 
         throw std::runtime_error("Token on line " + std::to_string(tokens[i].lineNum) + " is not part of a member variable or method");
     }
@@ -197,6 +197,8 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
     // find all classes and global functions
     uint64_t i = 0;
     while (i < n) {
+        std::cout << "i == " << i << std::endl;
+        std::cout << tokens[i] << " :: " << tokens[i + 1] << std::endl;
         ParseNode* node;
         if ((node = skimClass(tokens + i, n - i)) != nullptr) {
             rootNode->addChild(node);
