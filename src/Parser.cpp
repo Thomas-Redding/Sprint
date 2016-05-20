@@ -5,7 +5,7 @@
 ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
     uint64_t i = 0;
     assert(n > 3);
-    while (i < n && (tokens[i].type == KEYWORD_STATIC || tokens[i].type == KEYWORD_PUBLIC || tokens[i].type == KEYWORD_PROTECTED || tokens[i].type == KEYWORD_PRIVATE)) {
+    while (i < n && tokens[i].type == KEYWORD_STATIC) {
         ++i;
     }
     assert(n > 3 + i);
@@ -112,6 +112,20 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
             continue;
         }
         delete node;
+
+        if (tokens[i + 1].type == COLON && (tokens[i].type == KEYWORD_PUBLIC || tokens[i].type == KEYWORD_PROTECTED || tokens[i].type == KEYWORD_PRIVATE)) {
+            if (tokens[i].type == KEYWORD_PUBLIC) {
+                rtn->addChild(new ParseNode(tokens + i, 2, public_colon));
+            }
+            else if (tokens[i].type == KEYWORD_PROTECTED) {
+                rtn->addChild(new ParseNode(tokens + i, 2, protected_colon));
+            }
+            else {
+                rtn->addChild(new ParseNode(tokens + i, 2, private_colon));
+            }
+            i += 2;
+            continue;
+        }
 
 
         throw std::runtime_error("Token on line " + std::to_string(tokens[i].lineNum) + " is not part of a member variable or method");
