@@ -94,12 +94,13 @@ Tokenizer::Tokenizer() {
 }
 
 std::list<Token> Tokenizer::process(std::string str) {
+	// reset member variables to prepare for parsing
 	rtn.clear();
 	it = 0;
 	bool isInMultiLineComment = false;
 	bool isInSingleLineComment = false;
 
-
+	// split by line to figure out how getLineNum() and getCharNum() will determine which character is on which line
 	std::vector<std::string> byLine = split(str, '\n');
 	cumulativeCharsPerLine.clear();
 	for (long i=0; i<byLine.size(); i++)
@@ -107,10 +108,10 @@ std::list<Token> Tokenizer::process(std::string str) {
 	for (long i=1; i<byLine.size(); i++)
 		cumulativeCharsPerLine[i] = cumulativeCharsPerLine[i] + cumulativeCharsPerLine[i-1] + 1;
 
-
+	// set the current state of the Finite State Machine to the default
 	Token cur = Token(UNKNOWN, "", getLineNum(), getCharNum());
 
-
+	// run the Finite State Machine
 	for (it=0; it<str.length(); it++) {
 		if (isInMultiLineComment) {
 			if (str[it] == '*' && it < str.length()-1 && str[it+1] == '/') {
@@ -295,7 +296,7 @@ std::list<Token> Tokenizer::process(std::string str) {
 		}
 	}
 
-	// handle punctuation - todo
+	// split up punctuation
 	std::list<Token>::iterator i;
 	for (i = rtn.begin(); i != rtn.end(); ++i) {
 		if (i->type == PUNCTUATION) {
@@ -426,27 +427,6 @@ long Tokenizer::getCharNum() {
 	else
 		return it - cumulativeCharsPerLine[lineNum-1];
 }
-
-/*
-
-only c++
-#	##	<:	:>	<%	%>	%:	%:%:	::	.*
-->*
-
-both
-;	:	...	?	.	+	-	*	/	%	^
-&	|	~	!	=	<	>	+=	-=	*=	/=
-%=	^=	&=	|=	<<	>>	<<=	>>=	==	!=	<=
->=	&&	||	++	--	,
-->
-
-only ours
-@
-
-c++ - maybe ours
-
-
-*/
 
 TokenType Tokenizer::categorizePunc(const std::string &str) {
 	TokenType rtn;
