@@ -29,7 +29,7 @@ private:
 }
 
 // Queue should be a pointer - right?
-push<V>(Queue<V>) {
+push<V>(Queue<V>) -> void {
     // todo
 }
 
