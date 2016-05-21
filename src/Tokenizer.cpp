@@ -124,8 +124,12 @@ std::list<Token> Tokenizer::process(std::string str) {
 				isInSingleLineComment = false;
 		}
 		else if (cur.type == UNKNOWN) {
-			if (str[it] == '\"')
+			if (str[it] == '\"') {
 				cur.type = STRING_LITERAL;
+			}
+			else if (str[it] == '\'') {
+				cur.type = CHARACTER_LITERAL;
+			}
 			else if (str[it] == '/' && it < str.length()-1 && str[it+1] == '*') {
 				isInMultiLineComment = true;
 				it++;
@@ -279,6 +283,24 @@ std::list<Token> Tokenizer::process(std::string str) {
 					resetAndSave(cur);
 				else
 					cur.str += str[it];
+			}
+			else
+				cur.str += str[it];
+		}
+		else if (cur.type == CHARACTER_LITERAL) {
+			if (str[it] == '\'') {
+				if(str.length() == 0)
+					error("Tokenizer Error: character literal is Empty (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+				else if (str.length() == 1)
+					resetAndSave(cur);
+				else if (str.length() > 2)
+					error("Tokenizer Error: character literal contains multiple characters (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+				else {
+					if (str[0] == '\\')
+						resetAndSave(cur);
+					else
+						error("Tokenizer Error: character literal contains multiple characters (line: " + std::to_string(getLineNum()) + ", char: " + std::to_string(getCharNum()) + ")");
+				}
 			}
 			else
 				cur.str += str[it];
