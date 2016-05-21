@@ -526,6 +526,10 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = EXCLAMATION_POINT_EQUALS;
 	else if (str == "==")
 		rtn = EQUAL_EQUALS;
+	else if (str == "===")
+		rtn = EQUAL_EQUAL_EQUALS;
+	else if (str == "!==")
+		rtn = EXCLAMATION_POINT_EQUAL_EQUALS;
 	else if (str == "++")
 		rtn = PLUS_PLUS;
 	else if (str == "--")
