@@ -19,10 +19,10 @@ struct Parser {
 private:
 
 	static ParseNode* parseClass(const Token* tokens, uint64_t n);
-	static ParseNode* parseClassVariable(const Token* tokens, uint64_t n);
+	static ParseNode* parseMemberVariable(const Token* tokens, uint64_t n);
 	static ParseNode* parseFunction(const Token* tokens, uint64_t n);
 
-	static uint64_t isValidFunctionName(const Token* tokens, uint64_t n);
+	static uint64_t _isValidFunctionName(const Token* tokens, uint64_t n);
 };
 
 #endif
