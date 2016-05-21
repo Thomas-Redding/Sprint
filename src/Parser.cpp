@@ -1,5 +1,6 @@
 #include "../include/Parser.hpp"
 
+// get the parse tree of an array of tokens
 ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
     ParseNode* rootNode = new ParseNode(tokens, n, root);
 
@@ -19,6 +20,11 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
             i += node->tokenLength;
             continue;
         }
+        else if (false) {
+            // TODO: check for global variables
+            i++;
+            continue;
+        }
         else {
             throw std::runtime_error("Compiler Error on line " + std::to_string(tokens[i].lineNum) + ".\nExpected the start of a global class, global variable, or global function, but found '" + tokens[i].str + "'");
         }
@@ -29,7 +35,7 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
 
 // TODO: pointers
 // TODO: multiple variables declared in one statement
-ParseNode* Parser::parseClassVariable(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseMemberVariable(const Token* tokens, uint64_t n) {
     uint64_t i = 0;
     assert(n > 3);
     while (i < n && tokens[i].type == KEYWORD_STATIC) {
@@ -56,7 +62,8 @@ ParseNode* Parser::parseClassVariable(const Token* tokens, uint64_t n) {
             if (i == n || tokens[i].type != SEMI_COLON) {
                 throw std::runtime_error("Error: no semicolon after variable declaration on line " + std::to_string(startingLine) + "\n");
             }
-            return new ParseNode(tokens, i + 1, variable_declaration);
+            ParseNode* returnNode = new ParseNode(tokens, i + 1, variable_declaration);
+            return returnNode;
         }
         else {
             return nullptr;
@@ -87,6 +94,9 @@ ParseNode* Parser::parseClassVariable(const Token* tokens, uint64_t n) {
     return new ParseNode(tokens, i + 1, variable_declaration);
 }
 
+// returns parse tree of a class if the tokens form a valid class
+// otherwise returns nullptr
+// valid class looks like "class Foo implements you {...}" or "class Foo extends you {...}"
 ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
 
     if (n < 4) {
@@ -100,7 +110,11 @@ ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
 
     // find first brace
     uint64_t firstBrace = 1;
-    while (tokens[++firstBrace].type != OPEN_CURLY_BRACE) {};
+    while (++firstBrace < n && tokens[firstBrace].type != OPEN_CURLY_BRACE) {};
+
+    if (firstBrace == n) {
+        throw std::runtime_error("Compiler Error: struct declaration does not have an open curly brace");
+    }
 
     // skim through and search for the end of the class
     uint64_t braceDepth = 1;
@@ -124,7 +138,7 @@ ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
     // go through the class and further break it down into methods/variables
     i = firstBrace + 1;
     while (i < len - 1) {
-        ParseNode* node = parseClassVariable(tokens + i, len - i);
+        ParseNode* node = parseMemberVariable(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -163,9 +177,33 @@ ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
     return rtn;
 }
 
+// returns parse tree of a function if the tokens form a valid function
+// otherwise returns nullptr
+// valid function looks like "foo<T>(List<T> A, int x) -> T {}"
+ParseNode* Parser::parseFunction(const Token* tokens, uint64_t n) {
+    uint64_t i = _isValidFunctionName(tokens, n);
+    if (i == 0) {
+        return nullptr;
+    }
+    while (i < n && tokens[i].type != OPEN_CURLY_BRACE) { ++i; }
+    uint64_t braceDepth = 1;
+    while (++i < n && braceDepth > 0) {
+        if (tokens[i].type == OPEN_CURLY_BRACE) {
+            ++braceDepth;
+        }
+        else if (tokens[i].type == CLOSE_CURLY_BRACE) {
+            --braceDepth;
+        }
+    }
+    if (i == n && braceDepth != 0) {
+        throw std::runtime_error("Compiler Error: curly brace from line " + std::to_string(tokens[2].lineNum) + " is never closed\n");
+    }
+    return new ParseNode(tokens, i, function_implementation);
+}
+
 // returns how many tokens form a valid function name
 // "0" indicates it is an invalid name
-uint64_t Parser::isValidFunctionName(const Token* tokens, uint64_t n) {
+uint64_t Parser::_isValidFunctionName(const Token* tokens, uint64_t n) {
     assert(n != 0);
     if (tokens[0].type == IDENTIFIER) {
         return 1;
@@ -209,25 +247,4 @@ uint64_t Parser::isValidFunctionName(const Token* tokens, uint64_t n) {
         return 2;
     }
     return 0;
-}
-
-ParseNode* Parser::parseFunction(const Token* tokens, uint64_t n) {
-    uint64_t i = isValidFunctionName(tokens, n);
-    if (i == 0) {
-        return nullptr;
-    }
-    while (i < n && tokens[i].type != OPEN_CURLY_BRACE) { ++i; }
-    uint64_t braceDepth = 1;
-    while (++i < n && braceDepth > 0) {
-        if (tokens[i].type == OPEN_CURLY_BRACE) {
-            ++braceDepth;
-        }
-        else if (tokens[i].type == CLOSE_CURLY_BRACE) {
-            --braceDepth;
-        }
-    }
-    if (i == n && braceDepth != 0) {
-        throw std::runtime_error("Compiler Error: curly brace from line " + std::to_string(tokens[2].lineNum) + " is never closed\n");
-    }
-    return new ParseNode(tokens, i, function_implementation);
 }
