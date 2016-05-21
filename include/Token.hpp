@@ -120,8 +120,6 @@ enum TokenType {
     private_colon,
 };
 
-const size_t token_threshold = 99;
-
 class Token {
 public:
 	Token() {
