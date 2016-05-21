@@ -1,8 +1,35 @@
 #include "../include/Parser.hpp"
 
+ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
+    ParseNode* rootNode = new ParseNode(tokens, n, root);
+
+    // find all classes and global functions
+    uint64_t i = 0;
+    while (i < n) {
+        std::cout << "i == " << i << std::endl;
+        std::cout << tokens[i] << " :: " << tokens[i + 1] << std::endl;
+        ParseNode* node;
+        if ((node = parseClass(tokens + i, n - i)) != nullptr) {
+            rootNode->addChild(node);
+            i += node->tokenLength;
+            continue;
+        }
+        else if ((node = parseFunction(tokens + i, n - i)) != nullptr) {
+            rootNode->addChild(node);
+            i += node->tokenLength;
+            continue;
+        }
+        else {
+            throw std::runtime_error("Compiler Error on line " + std::to_string(tokens[i].lineNum) + ".\nExpected the start of a global class, global variable, or global function, but found '" + tokens[i].str + "'");
+        }
+    }
+
+    return rootNode;
+}
+
 // TODO: pointers
 // TODO: multiple variables declared in one statement
-ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseClassVariable(const Token* tokens, uint64_t n) {
     uint64_t i = 0;
     assert(n > 3);
     while (i < n && tokens[i].type == KEYWORD_STATIC) {
@@ -60,7 +87,7 @@ ParseNode* Parser::skimClassVariable(const Token* tokens, uint64_t n) {
     return new ParseNode(tokens, i + 1, variable_declaration);
 }
 
-ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
 
     if (n < 4) {
         return nullptr;
@@ -97,7 +124,7 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
     // go through the class and further break it down into methods/variables
     i = firstBrace + 1;
     while (i < len - 1) {
-        ParseNode* node = skimClassVariable(tokens + i, len - i);
+        ParseNode* node = parseClassVariable(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -105,7 +132,7 @@ ParseNode* Parser::skimClass(const Token* tokens, uint64_t n) {
         }
         delete node;
 
-        node = skimFunction(tokens + i, len - i);
+        node = parseFunction(tokens + i, len - i);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -143,7 +170,6 @@ uint64_t Parser::isValidFunctionName(const Token* tokens, uint64_t n) {
     if (tokens[0].type == IDENTIFIER) {
         return 1;
     }
-    // TODO: ~
     // TODO: \= (BACKSLASH_EQUALS doesn't exist yet)
     if (   tokens[0].type == EQUALS
         || tokens[0].type == PLUS
@@ -169,6 +195,7 @@ uint64_t Parser::isValidFunctionName(const Token* tokens, uint64_t n) {
         || tokens[0].type == SHIFT_RIGHT
         || tokens[0].type == SHIFT_LEFT_EQUALS
         || tokens[0].type == SHIFT_RIGHT_EQUALS
+        || tokens[0].type == TILDE
         ) {
         return 1;
     }
@@ -184,7 +211,7 @@ uint64_t Parser::isValidFunctionName(const Token* tokens, uint64_t n) {
     return 0;
 }
 
-ParseNode* Parser::skimFunction(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseFunction(const Token* tokens, uint64_t n) {
     uint64_t i = isValidFunctionName(tokens, n);
     if (i == 0) {
         return nullptr;
@@ -203,31 +230,4 @@ ParseNode* Parser::skimFunction(const Token* tokens, uint64_t n) {
         throw std::runtime_error("Compiler Error: curly brace from line " + std::to_string(tokens[2].lineNum) + " is never closed\n");
     }
     return new ParseNode(tokens, i, function_implementation);
-}
-
-ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
-    ParseNode* rootNode = new ParseNode(tokens, n, root);
-
-    // find all classes and global functions
-    uint64_t i = 0;
-    while (i < n) {
-        std::cout << "i == " << i << std::endl;
-        std::cout << tokens[i] << " :: " << tokens[i + 1] << std::endl;
-        ParseNode* node;
-        if ((node = skimClass(tokens + i, n - i)) != nullptr) {
-            rootNode->addChild(node);
-            i += node->tokenLength;
-            continue;
-        }
-        else if ((node = skimFunction(tokens + i, n - i)) != nullptr) {
-            rootNode->addChild(node);
-            i += node->tokenLength;
-            continue;
-        }
-        else {
-            throw std::runtime_error("Compiler Error on line " + std::to_string(tokens[i].lineNum) + ".\nExpected the start of a global class, global variable, or global function, but found '" + tokens[i].str + "'");
-        }
-    }
-
-    return rootNode;
 }
