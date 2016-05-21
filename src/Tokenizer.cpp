@@ -301,7 +301,15 @@ std::list<Token> Tokenizer::process(std::string str) {
 		if (i->type == PUNCTUATION) {
 			TokenType t = categorizePunc(i->str);
 			if (t == UNKNOWN) {
-				error("Tokenizer: could not recognize punctuation (" + i->str + ")");
+				std::string txt = i->str;
+				std::list<Token>::iterator k = i;
+				k++;
+				for (long j=0; j<txt.length(); j++) {
+					Token newToken = Token(categorizePunc(txt.substr(j,1)), txt.substr(j,1), i->lineNum, i->charNum + j);
+					rtn.insert(k, newToken);
+				}
+				rtn.erase(i);
+				i = k;
 			}
 			else if (t == PUNCTUATION) {
 				// +-
