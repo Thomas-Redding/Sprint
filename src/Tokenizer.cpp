@@ -352,6 +352,8 @@ std::list<Token> Tokenizer::process(std::string str) {
 	return rtn;
 }
 
+/*** PRIVATE ***/
+
 bool Tokenizer::isStartChar(char c) {
 	if (isdigit(c))
 		return false;
@@ -635,5 +637,3 @@ const std::string Tokenizer::tokenToString2(const Token& t) {
 	else
 		return "(" + Token::toString(t.type) + " '" + t.str + "')";
 }
-
-
