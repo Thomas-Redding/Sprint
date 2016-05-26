@@ -7,8 +7,6 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
     // find all classes and global functions
     uint64_t i = 0;
     while (i < n) {
-        std::cout << "i == " << i << std::endl;
-        std::cout << tokens[i] << " :: " << tokens[i + 1] << std::endl;
         ParseNode* node;
         if ((node = parseClass(tokens + i, n - i)) != nullptr) {
             rootNode->addChild(node);

@@ -6,6 +6,7 @@
 #include "../include/ParseNode.hpp"
 #include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
+#include "../include/Brace.hpp"
 
 int main(int argc, const char * argv[]) {
 
@@ -45,23 +46,43 @@ int main(int argc, const char * argv[]) {
     if (tokenizedList.size() > 0) {
         std::cout << tokenizedList[0].toString();
         for (int i = 1; i < tokenizedList.size(); ++i) {
-            // TODO: replace with the commented out code
-            // once Thomas fixes the token.lineNum bug
-            if (i < tokenizedList.size() && tokenizedList[i + 1].lineNum != tokenizedList[i].lineNum) {
+            if (tokenizedList[i].lineNum != tokenizedList[i - 1].lineNum) {
                 std::cout << std::endl << std::endl << tokenizedList[i].toString();
             }
             else {
                 std::cout << ", " << tokenizedList[i].toString();
             }
-            // if (tokenizedList[i].lineNum != tokenizedList[i - 1].lineNum) {
-            //     std::cout << std::endl << std::endl << tokenizedList[i].toString();
-            // }
-            // else {
-            //     std::cout << ", " << tokenizedList[i].toString();
-            // }
         }
         std::cout << std::endl;
     }
+
+    std::vector<Brace> braces = findBraces(&tokenizedList[0], tokenizedList.size());
+
+    std::cout << std::endl << "BRACES: ";
+    for (uint64_t i = 0; i < braces.size(); ++i) {
+        if (braces[i].type == OPEN_CURLY_BRACE) {
+            std::cout << "{";
+        }
+        else if (braces[i].type == CLOSE_CURLY_BRACE) {
+            std::cout << "}";
+        }
+        else if (braces[i].type == OPEN_PARENTHESIS) {
+            std::cout << "(";
+        }
+        else if (braces[i].type == CLOSE_PARENTHESIS) {
+            std::cout << ")";
+        }
+        else if (braces[i].type == OPEN_BRACKET) {
+            std::cout << "[";
+        }
+        else if (braces[i].type == CLOSE_BRACKET) {
+            std::cout << "]";
+        }
+        else {
+            throw std::runtime_error("Error in finding braces");
+        }
+    }
+    std::cout << std::endl << std::endl;
 
     ParseNode* tree = Parser::getParseTree(&tokenizedList[0], tokenizedList.size());
     std::cout << std::endl << "================================================" << std::endl << "================================================" << std::endl << std::endl;
