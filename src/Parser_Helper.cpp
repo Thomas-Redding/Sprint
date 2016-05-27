@@ -20,3 +20,7 @@
  TODO
  new, delete, sizeof, typeof, ++, --, -, [], (), ::
  */
+
+static ParseNode* parseLine(const Token* tokens, uint64_t n) {
+	// todo
+}
