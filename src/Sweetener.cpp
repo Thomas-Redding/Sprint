@@ -1,3 +1,6 @@
+#ifndef SWEETENER_C
+#define SWEETENER_C
+
 //
 //  Sweetener.cpp
 //  Sprint
@@ -90,3 +93,5 @@ bool addFunctionSugar(std::vector<Token>& tokens) {
     }
     return true;
 }
+
+#endif

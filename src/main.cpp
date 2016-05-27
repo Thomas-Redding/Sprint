@@ -1,3 +1,6 @@
+#ifndef SWEETENER_C
+#define SWEETENER_C
+
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -56,34 +59,6 @@ int main(int argc, const char * argv[]) {
         std::cout << std::endl;
     }
 
-    std::vector<Brace> braces = findBraces(&tokenizedList[0], tokenizedList.size());
-
-    std::cout << std::endl << "BRACES: ";
-    for (uint64_t i = 0; i < braces.size(); ++i) {
-        if (braces[i].type == OPEN_CURLY_BRACE) {
-            std::cout << "{";
-        }
-        else if (braces[i].type == CLOSE_CURLY_BRACE) {
-            std::cout << "}";
-        }
-        else if (braces[i].type == OPEN_PARENTHESIS) {
-            std::cout << "(";
-        }
-        else if (braces[i].type == CLOSE_PARENTHESIS) {
-            std::cout << ")";
-        }
-        else if (braces[i].type == OPEN_BRACKET) {
-            std::cout << "[";
-        }
-        else if (braces[i].type == CLOSE_BRACKET) {
-            std::cout << "]";
-        }
-        else {
-            throw std::runtime_error("Error in finding braces");
-        }
-    }
-    std::cout << std::endl << std::endl;
-
     ParseNode* tree = Parser::getParseTree(&tokenizedList[0], tokenizedList.size());
     std::cout << std::endl << "================================================" << std::endl << "================================================" << std::endl << std::endl;
     std::cout << (*tree) << std::endl << std::endl;
@@ -93,3 +68,6 @@ int main(int argc, const char * argv[]) {
 
     return 0;
 }
+
+
+#endif

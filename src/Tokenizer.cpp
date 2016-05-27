@@ -1,3 +1,5 @@
+#ifndef TOKENIZER_C
+#define TOKENIZER_C
 //
 //  Tokenizer.cpp
 //  Sprint
@@ -663,3 +665,5 @@ const std::string Tokenizer::tokenToString2(const Token& t) {
 	else
 		return "(" + Token::toString(t.type) + " '" + t.str + "')";
 }
+
+#endif

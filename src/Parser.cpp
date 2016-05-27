@@ -1,8 +1,41 @@
+#ifndef PARSER_C
+#define PARSER_C
+
 #include "../include/Parser.hpp"
 
 // get the parse tree of an array of tokens
 ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
     ParseNode* rootNode = new ParseNode(tokens, n, root);
+    // match braces
+    /*
+    braces = findBraces(&tokens[0], n);
+    std::cout << std::endl << "BRACES: ";
+    for (uint64_t i = 0; i < braces.size(); ++i) {
+        if (braces[i].type == OPEN_CURLY_BRACE) {
+            std::cout << "{";
+        }
+        else if (braces[i].type == CLOSE_CURLY_BRACE) {
+            std::cout << "}";
+        }
+        else if (braces[i].type == OPEN_PARENTHESIS) {
+            std::cout << "(";
+        }
+        else if (braces[i].type == CLOSE_PARENTHESIS) {
+            std::cout << ")";
+        }
+        else if (braces[i].type == OPEN_BRACKET) {
+            std::cout << "[";
+        }
+        else if (braces[i].type == CLOSE_BRACKET) {
+            std::cout << "]";
+        }
+        else {
+            throw std::runtime_error("Error in finding braces");
+        }
+    }
+    std::cout << std::endl << std::endl;
+    */
+
 
     // find all classes and global functions
     uint64_t i = 0;
@@ -246,3 +279,5 @@ uint64_t Parser::_isValidFunctionName(const Token* tokens, uint64_t n) {
     }
     return 0;
 }
+
+#endif

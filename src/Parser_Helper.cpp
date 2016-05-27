@@ -1,3 +1,5 @@
+#ifndef PARSER_HELPER_C
+#define PARSER_HELPER_C
 
 #include "../include/Tokenizer.hpp"
 
@@ -22,5 +24,7 @@
  */
 
 static ParseNode* parseLine(const Token* tokens, uint64_t n) {
-	// todo
+	std::cout << parseLine
 }
+
+#endif

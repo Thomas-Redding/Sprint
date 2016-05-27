@@ -1,9 +1,11 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "ParseNode.hpp"
 #include <assert.h>
 #include <iostream>
+
+#include "ParseNode.hpp"
+#include "Brace.hpp"
 
 enum Exposure {
 	PUBLIC,
@@ -13,11 +15,10 @@ enum Exposure {
 };
 
 struct Parser {
-
 	static ParseNode* getParseTree(const Token* tokens, uint64_t n);
 
 private:
-
+	// static std::vector<Brace> braces;
 	static ParseNode* parseClass(const Token* tokens, uint64_t n);
 	static ParseNode* parseMemberVariable(const Token* tokens, uint64_t n);
 	static ParseNode* parseFunction(const Token* tokens, uint64_t n);

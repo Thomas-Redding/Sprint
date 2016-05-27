@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BRACE_H
+#define BRACE_H
+// #pragma once
 
 #include "Token.hpp"
 #include <stack>
@@ -69,3 +71,5 @@ std::vector<Brace> findBraces(const Token* tokens, const uint64_t n) {
 
 	return rtn;
 }
+
+#endif
