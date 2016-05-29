@@ -1,5 +1,4 @@
-#ifndef TOKENIZER_HPP
-#define TOKENIZER_HPP
+#pragma once
 
 #include <stdio.h>
 #include <string>
@@ -48,5 +47,3 @@ private:
 	const bool isKeyWord(TokenType t);
 	const std::string tokenToString2(const Token& t);
 };
-
-#endif

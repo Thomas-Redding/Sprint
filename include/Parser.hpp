@@ -1,11 +1,9 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#pragma once
 
 #include <assert.h>
 #include <iostream>
 
 #include "ParseNode.hpp"
-#include "Brace.hpp"
 
 enum Exposure {
 	PUBLIC,
@@ -25,5 +23,3 @@ private:
 	static uint64_t _isValidFunctionName(const Token* tokens, uint64_t n);
 	static ParseNode* parseLine(const Token* tokens, uint64_t n);
 };
-
-#endif
