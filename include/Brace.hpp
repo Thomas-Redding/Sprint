@@ -4,6 +4,8 @@
 
 #include "Token.hpp"
 #include <stack>
+#include <vector>
+#include <iostream>
 
 struct Brace {
 	Brace() {};
