@@ -1,15 +1,13 @@
-#ifndef SWEETENER_C
-#define SWEETENER_C
+#ifndef MAIN_CPP
+#define MAIN_CPP
 
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
 #include <map>
 #include "../include/Tokenizer.hpp"
-#include "../include/ParseNode.hpp"
 #include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
-#include "../include/Brace.hpp"
 
 int main(int argc, const char * argv[]) {
 

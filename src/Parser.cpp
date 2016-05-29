@@ -1,5 +1,5 @@
-#ifndef PARSER_C
-#define PARSER_C
+#ifndef PARSER_CPP
+#define PARSER_CPP
 
 #include "../include/Parser.hpp"
 

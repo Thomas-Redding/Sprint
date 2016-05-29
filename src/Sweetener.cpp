@@ -1,5 +1,5 @@
-#ifndef SWEETENER_C
-#define SWEETENER_C
+#ifndef SWEETENER_CPP
+#define SWEETENER_CPP
 
 //
 //  Sweetener.cpp

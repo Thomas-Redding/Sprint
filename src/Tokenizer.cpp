@@ -1,5 +1,5 @@
-#ifndef TOKENIZER_C
-#define TOKENIZER_C
+#ifndef TOKENIZER_CPP
+#define TOKENIZER_CPP
 //
 //  Tokenizer.cpp
 //  Sprint

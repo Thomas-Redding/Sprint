@@ -1,5 +1,5 @@
-#ifndef PARSE_NODE_H
-#define PARSE_NODE_H
+#ifndef PARSENODE_HPP
+#define PARSENODE_HPP
 
 #include "Token.hpp"
 #include <vector>

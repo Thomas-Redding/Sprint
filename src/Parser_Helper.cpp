@@ -1,7 +1,7 @@
-#ifndef PARSER_HELPER_C
-#define PARSER_HELPER_C
+#ifndef PARSER_HELPER_CPP
+#define PARSER_HELPER_CPP
 
-#include "../include/Tokenizer.hpp"
+// #include "../include/Parser.hpp"
 
 /*
  * expression, assignment-expression
@@ -22,9 +22,10 @@
  TODO
  new, delete, sizeof, typeof, ++, --, -, [], (), ::
  */
-
+/*
 static ParseNode* parseLine(const Token* tokens, uint64_t n) {
-	std::cout << parseLine
+	std::cout << "foo";
+	return new ParseNode(nullptr, 0, UNKNOWN);
 }
-
+*/
 #endif

@@ -1,5 +1,5 @@
-#ifndef SWEETENER_H
-#define SWEETENER_H
+#ifndef SWEETENER_HPP
+#define SWEETENER_HPP
 
 #include <vector>
 #include <iostream>
