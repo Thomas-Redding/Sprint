@@ -1,6 +1,3 @@
-#ifndef MAIN_CPP
-#define MAIN_CPP
-
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -8,9 +5,10 @@
 #include "../include/Tokenizer.hpp"
 #include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
+#include <functional>
+
 
 int main(int argc, const char * argv[]) {
-
 	if (argc != 2) {
 		std::cout << "Error: need to pass in one argument" << std::endl;
         return 0;
@@ -63,9 +61,5 @@ int main(int argc, const char * argv[]) {
     // std::cout << Token::toString(tree->type) << ": " << tree->children.size() << std::endl;
     // std::cout << Token::toString(tree->children[0]->type) << ": " << tree->children[0]->children.size() << std::endl;
     // std::cout << Token::toString(tree->children[1]->type) << ": " << tree->children[1]->children.size() << std::endl;
-
     return 0;
 }
-
-
-#endif

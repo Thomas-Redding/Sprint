@@ -1,13 +1,3 @@
-#ifndef TOKENIZER_CPP
-#define TOKENIZER_CPP
-//
-//  Tokenizer.cpp
-//  Sprint
-//
-//  Created by Thomas Redding on 10/21/15.
-//  Copyright © 2015 Thomas Redding. All rights reserved.
-//
-
 #include "../include/Tokenizer.hpp"
 
 /*** PUBLIC ***/
@@ -665,5 +655,3 @@ const std::string Tokenizer::tokenToString2(const Token& t) {
 	else
 		return "(" + Token::toString(t.type) + " '" + t.str + "')";
 }
-
-#endif

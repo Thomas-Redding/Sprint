@@ -1,14 +1,3 @@
-#ifndef SWEETENER_CPP
-#define SWEETENER_CPP
-
-//
-//  Sweetener.cpp
-//  Sprint
-//
-//  Created by Morgan Redding on 1/28/16.
-//  Copyright © 2016 Thomas Redding. All rights reserved.
-//
-
 #include "../include/Sweetener.hpp"
 
 template<class T>
@@ -93,5 +82,3 @@ bool addFunctionSugar(std::vector<Token>& tokens) {
     }
     return true;
 }
-
-#endif
