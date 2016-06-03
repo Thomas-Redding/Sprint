@@ -2,7 +2,7 @@
 
 #include <assert.h>
 #include <iostream>
-#include <vector>
+#include <unordered_map>
 
 #include "../include/ParseNode.hpp"
 
@@ -38,11 +38,10 @@ struct Parser {
 
 private:
 
-	static std::vector<Brace> braces;
-	static ParseNode* parseClass(const Token* tokens, uint64_t n);
-	static ParseNode* parseMemberVariable(const Token* tokens, uint64_t n);
-	static ParseNode* parseFunction(const Token* tokens, uint64_t n);
+	static ParseNode* parseClass(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces);
+	static ParseNode* parseMemberVariable(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces);
+	static ParseNode* parseFunction(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces);
 	static uint64_t _isValidFunctionName(const Token* tokens, uint64_t n);
-	static ParseNode* parseLine(const Token* tokens, uint64_t n);
-	static std::vector<Brace> findBraces(const Token* tokens, const uint64_t n);
+	static ParseNode* parseLine(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces);
+	static std::unordered_map<const Token*, const Token*> findBraces(const Token* tokens, const uint64_t n);
 };
