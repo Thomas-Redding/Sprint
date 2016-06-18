@@ -1,52 +1,22 @@
-#ifndef PARSER_CPP
-#define PARSER_CPP
-
 #include "../include/Parser.hpp"
+#include <stack>
 
 // get the parse tree of an array of tokens
 ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
     ParseNode* rootNode = new ParseNode(tokens, n, root);
-    // match braces
-    /*
-    braces = findBraces(&tokens[0], n);
-    std::cout << std::endl << "BRACES: ";
-    for (uint64_t i = 0; i < braces.size(); ++i) {
-        if (braces[i].type == OPEN_CURLY_BRACE) {
-            std::cout << "{";
-        }
-        else if (braces[i].type == CLOSE_CURLY_BRACE) {
-            std::cout << "}";
-        }
-        else if (braces[i].type == OPEN_PARENTHESIS) {
-            std::cout << "(";
-        }
-        else if (braces[i].type == CLOSE_PARENTHESIS) {
-            std::cout << ")";
-        }
-        else if (braces[i].type == OPEN_BRACKET) {
-            std::cout << "[";
-        }
-        else if (braces[i].type == CLOSE_BRACKET) {
-            std::cout << "]";
-        }
-        else {
-            throw std::runtime_error("Error in finding braces");
-        }
-    }
-    std::cout << std::endl << std::endl;
-    */
 
+    std::unordered_map<const Token*, const Token*> braces = findBraces(tokens, n);
 
     // find all classes and global functions
     uint64_t i = 0;
     while (i < n) {
         ParseNode* node;
-        if ((node = parseClass(tokens + i, n - i)) != nullptr) {
+        if ((node = parseClass(tokens + i, n - i, braces)) != nullptr) {
             rootNode->addChild(node);
             i += node->tokenLength;
             continue;
         }
-        else if ((node = parseFunction(tokens + i, n - i)) != nullptr) {
+        else if ((node = parseFunction(tokens + i, n - i, braces)) != nullptr) {
             rootNode->addChild(node);
             i += node->tokenLength;
             continue;
@@ -66,7 +36,7 @@ ParseNode* Parser::getParseTree(const Token* tokens, uint64_t n) {
 
 // TODO: pointers
 // TODO: multiple variables declared in one statement
-ParseNode* Parser::parseMemberVariable(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseMemberVariable(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces) {
     uint64_t i = 0;
     assert(n > 3);
     while (i < n && tokens[i].type == KEYWORD_STATIC) {
@@ -128,7 +98,7 @@ ParseNode* Parser::parseMemberVariable(const Token* tokens, uint64_t n) {
 // returns parse tree of a class if the tokens form a valid class
 // otherwise returns nullptr
 // valid class looks like "class Foo implements you {...}" or "class Foo extends you {...}"
-ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseClass(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces) {
 
     if (n < 4) {
         return nullptr;
@@ -169,7 +139,7 @@ ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
     // go through the class and further break it down into methods/variables
     i = firstBrace + 1;
     while (i < len - 1) {
-        ParseNode* node = parseMemberVariable(tokens + i, len - i);
+        ParseNode* node = parseMemberVariable(tokens + i, len - i, braces);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -177,7 +147,7 @@ ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
         }
         delete node;
 
-        node = parseFunction(tokens + i, len - i);
+        node = parseFunction(tokens + i, len - i, braces);
         if (node != nullptr) {
             rtn->addChild(node);
             i += node->tokenLength;
@@ -211,7 +181,7 @@ ParseNode* Parser::parseClass(const Token* tokens, uint64_t n) {
 // returns parse tree of a function if the tokens form a valid function
 // otherwise returns nullptr
 // valid function looks like "foo<T>(List<T> A, int x) -> T {}"
-ParseNode* Parser::parseFunction(const Token* tokens, uint64_t n) {
+ParseNode* Parser::parseFunction(const Token* tokens, uint64_t n, const std::unordered_map<const Token*, const Token*>& braces) {
     uint64_t i = _isValidFunctionName(tokens, n);
     if (i == 0) {
         return nullptr;
@@ -280,4 +250,55 @@ uint64_t Parser::_isValidFunctionName(const Token* tokens, uint64_t n) {
     return 0;
 }
 
-#endif
+std::unordered_map<const Token*, const Token*> Parser::findBraces(const Token* tokens, const uint64_t n) {
+    
+    uint64_t count = 0;
+    for (uint64_t i = 0; i < n; ++i) {
+        if (tokens[i].type == OPEN_CURLY_BRACE || tokens[i].type == OPEN_PARENTHESIS || tokens[i].type == OPEN_BRACKET) {
+            count += 2;
+        }
+    }
+
+    std::stack<uint64_t> unclosed;
+
+    std::unordered_map<const Token*, const Token*> braces;
+    uint64_t i = -1;
+    while (++i < n && tokens[i].type != OPEN_PARENTHESIS && tokens[i].type != OPEN_BRACKET && tokens[i].type != OPEN_CURLY_BRACE) {}
+    unclosed.push(i);
+
+    while (++i < n) {
+        if (tokens[i].type == OPEN_CURLY_BRACE || tokens[i].type == OPEN_PARENTHESIS || tokens[i].type == OPEN_BRACKET) {
+            unclosed.push(i);
+        }
+        else if (tokens[i].type == CLOSE_CURLY_BRACE || tokens[i].type == CLOSE_PARENTHESIS || tokens[i].type == CLOSE_BRACKET) {
+            uint64_t x = unclosed.top();
+            unclosed.pop();
+            if (tokens[i].type == CLOSE_CURLY_BRACE) {
+                if (tokens[x].type != OPEN_CURLY_BRACE) {
+                    throw std::runtime_error("Error: open curly brace on line " + std::to_string(tokens[x].lineNum) + ", character " + std::to_string(tokens[x].charNum) + " is not closed.");
+                }
+                braces[tokens + x] = tokens + i;
+                braces[tokens + i] = tokens + x;
+            }
+            else if (tokens[i].type == CLOSE_PARENTHESIS) {
+                if (tokens[x].type != OPEN_PARENTHESIS) {
+                    throw std::runtime_error("Error: open parenthesis on line " + std::to_string(tokens[x].lineNum) + ", character " + std::to_string(tokens[x].charNum) + " is not closed.");
+                }
+                braces[tokens + x] = tokens + i;
+                braces[tokens + i] = tokens + x;
+            }
+            else if (tokens[i].type == CLOSE_BRACKET) {
+                if (tokens[x].type != OPEN_BRACKET) {
+                    throw std::runtime_error("Error: open bracket on line " + std::to_string(tokens[x].lineNum) + ", character " + std::to_string(tokens[x].charNum) + " is not closed.");
+                }
+                braces[tokens + x] = tokens + i;
+                braces[tokens + i] = tokens + x;
+            }
+            else {
+                std::cout << Token::toString(tokens[i].type) << std::endl;
+                throw std::runtime_error("????");
+            }
+        }
+    }
+    return braces;
+}

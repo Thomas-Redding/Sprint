@@ -1,5 +1,4 @@
-#ifndef PARSENODE_HPP
-#define PARSENODE_HPP
+#pragma once
 
 #include "Token.hpp"
 #include <vector>
@@ -41,5 +40,3 @@ private:
 
 	std::vector<ParseNode*> _children;
 };
-
-#endif

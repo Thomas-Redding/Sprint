@@ -1,6 +1,3 @@
-#ifndef PARSER_HELPER_CPP
-#define PARSER_HELPER_CPP
-
 // #include "../include/Parser.hpp"
 
 /*
@@ -28,4 +25,3 @@ static ParseNode* parseLine(const Token* tokens, uint64_t n) {
 	return new ParseNode(nullptr, 0, UNKNOWN);
 }
 */
-#endif
