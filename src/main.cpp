@@ -5,6 +5,7 @@
 #include "../include/Tokenizer.hpp"
 #include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
+#include "../include/ThomasParser.hpp"
 #include <functional>
 
 
@@ -61,5 +62,8 @@ int main(int argc, const char * argv[]) {
     // std::cout << Token::toString(tree->type) << ": " << tree->children.size() << std::endl;
     // std::cout << Token::toString(tree->children[0]->type) << ": " << tree->children[0]->children.size() << std::endl;
     // std::cout << Token::toString(tree->children[1]->type) << ": " << tree->children[1]->children.size() << std::endl;
+
+    ThomasParser foo;
+
     return 0;
 }
