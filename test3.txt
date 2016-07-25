@@ -1,0 +1,49 @@
+
+
+// a() { b c d } e ( f g ) h i { j k l }
+
+
+main(string x) {
+    int x = a * b * c * d;
+/*
+    int x = 42;
+    {
+        a = b * c * (d * e) * f;
+        x = x + 5 + 7 + 2;
+    }
+    x = 3;
+    */
+}
+/*
+foo(int y) -> int {
+    int z = y + 52;
+    z = z * y;
+    return 52;
+}
+*/
+
+/*
+
+
+<general main T_OPEN_PARENTHESIS T_CLOSE_PARENTHESIS
+    <curly_brace_block { T_KEYWORD_INT x T_EQUALS T_INTEGER_LITERAL T_SEMI_COLON x T_EQUALS x T_PLUS T_INTEGER_LITERAL T_SEMI_COLON }>
+    foo T_OPEN_PARENTHESIS T_KEYWORD_INT y T_CLOSE_PARENTHESIS T_ARROW T_KEYWORD_INT { T_KEYWORD_INT z T_EQUALS T_KEYWORD_INT y T_PLUS T_INTEGER_LITERAL T_SEMI_COLON T_KEYWORD_RETURN T_INTEGER_LITERAL T_SEMI_COLON }>
+
+
+Rule(uint precedence, std::vector<TreeType> from, TreeType to)
+
+<general main ( )
+    <curly_brace_block { int x = 42 ;
+        <curly_brace_block { x = x + 5 ; }>
+        x = 3 ; }
+    >
+    foo ( int y ) -> int
+    <curly_brace_block { int z = int y + 52 ; return 52 ; }>
+>
+
+
+
+
+
+*/
+

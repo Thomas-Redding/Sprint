@@ -1,26 +1,26 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#ifndef THOMAS_PARSER_HPP
+#define THOMAS_PARSER_HPP
 
 #include <assert.h>
 #include <iostream>
 #include <stack>
 #include <list>
-
+#include <vector>
 
 #include "Token.hpp"
 
 enum TreeType {
-    T_KEYWORD,
-    T_IDENTIFIER,
-    T_INTEGER_LITERAL,
-    T_FLOAT_LITERAL,
-    T_FLOAT_LITERAL2,
-    T_CHARACTER_LITERAL,
-    T_STRING_LITERAL,
-    T_PUNCTUATION,
-    T_BRACKET,
-    T_UNKNOWN,
-    T_NULL_TOKEN_TYPE,
+	T_KEYWORD,
+	T_IDENTIFIER,
+	T_INTEGER_LITERAL,
+	T_FLOAT_LITERAL,
+	T_FLOAT_LITERAL2,
+	T_CHARACTER_LITERAL,
+	T_STRING_LITERAL,
+	T_PUNCTUATION,
+	T_BRACKET,
+	T_UNKNOWN,
+	T_NULL_TOKEN_TYPE,
 	T_OPEN_PARENTHESIS,
 	T_CLOSE_PARENTHESIS,
 	T_OPEN_BRACKET,
@@ -121,9 +121,19 @@ enum TreeType {
 	T_ARROW,
 	T_EQUAL_EQUAL_EQUALS,
 	T_EXCLAMATION_POINT_EQUAL_EQUALS,
-	general
+	end,
+	general,
+	curly_brace_block,
+	parenthesis_block,
+	bracket_block,
+	mult_clause,
+	add_clause,
+	params,
+	var_dec,
+	value,
 };
 
+std::string treeTypeToString(TreeType t);
 
 TreeType translateType(TokenType t);
 
@@ -134,10 +144,44 @@ struct ThomasNode {
 	ThomasNode(TreeType tt) {
 		type = tt;
 	}
-	ThomasNode(Token t) {
-		token = t;
-		type = translateType(t.type);
+	ThomasNode(Token t);
+	void print() {
+		print(0);
 	}
+	void print(int depth) {
+		std::string indent = "";
+		for (int i = 0; i < depth; i++)
+			indent += "   ";
+		std::cout << indent << treeTypeToString(type) << " : " << token.str << "\n";
+		for (std::list<ThomasNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
+		    (*it)->print(depth+1);
+	}
+};
+
+class ThomasParseRule {
+public:
+	ThomasParseRule(int p, TreeType par, std::vector<TreeType> f, TreeType t) {
+		precedence = p;
+		parent = par;
+		from = f;
+		to = t;
+	}
+	std::string toString() {
+		std::string rtn = treeTypeToString(parent);
+		rtn += " : ";
+		for (int i = 0; i < from.size(); i++) {
+			if (i != 0)
+				rtn += ", ";
+			rtn += treeTypeToString(from[i]);
+		}
+		rtn += " : ";
+		rtn += treeTypeToString(to);
+		return rtn;
+	}
+	int precedence;
+	TreeType parent;
+	std::vector<TreeType> from;
+	TreeType to;
 };
 
 class ThomasParser {
@@ -146,10 +190,23 @@ private:
 	uint64_t len;
 	ThomasNode* mainTree;
 	void doCurlyBracePass(ThomasNode* tree);
+	void doParenthesesPass(ThomasNode* tree);
+	void doBracketPass(ThomasNode* tree);
+	void doAnglePass(ThomasNode* tree);
+	std::vector<ThomasParseRule> rules;
+	std::vector<bool>leftRight;
+	std::vector<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, add_clause, params};
 public:
+	ThomasParser(std::vector<bool> lr, std::vector<ThomasParseRule> r) {
+		rules = r;
+		leftRight = lr;
+	}
+	int mainLRCounter = 1000000;
+	int mainRLCounter = 1000000;
 	ThomasNode* getParseTree(const Token* t, uint64_t n);
+	void parse();
+	void parseLeftRight(ThomasNode *tree, int from, int to);
+	void parseRightLeft(ThomasNode *tree, int from, int to);
 };
-
-
 
 #endif
