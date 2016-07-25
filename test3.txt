@@ -5,6 +5,7 @@
 
 main(string x) {
     int x = a * b * c * d;
+    int y = e + f + g + h;
 /*
     int x = 42;
     {

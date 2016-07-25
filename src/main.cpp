@@ -59,7 +59,7 @@ int main(int argc, const char * argv[]) {
 
 	std::cout << "\n\n\n";
 	std::vector<bool> leftToRight = {
-		true, false
+		true, false, false
 	};
 	std::vector<ThomasParseRule> listOfRules;
 	listOfRules.push_back(ThomasParseRule(10, general, {T_INTEGER_LITERAL}, value));
@@ -85,27 +85,19 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule(20, general, {value, T_ASTERISK, parenthesis_block}, mult_clause));
 	listOfRules.push_back(ThomasParseRule(20, general, {mult_clause, T_ASTERISK, mult_clause}, mult_clause));
 	listOfRules.push_back(ThomasParseRule(20, general, {parenthesis_block, T_ASTERISK, mult_clause}, mult_clause));
-	// listOfRules.push_back(ThomasParseRule(20, general, {value, T_ASTERISK, value}, mult_clause));
-	// listOfRules.push_back(ThomasParseRule(20, general, {mult_clause, T_ASTERISK, value}, mult_clause));
-	// listOfRules.push_back(ThomasParseRule(20, general, {parenthesis_block, T_ASTERISK, value}, mult_clause));
-	// listOfRules.push_back(ThomasParseRule(20, general, {mult_clause, T_ASTERISK, mult_clause}, mult_clause));
-	// listOfRules.push_back(ThomasParseRule(20, general, {mult_clause, T_ASTERISK, parenthesis_block}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(20, general, {parenthesis_block, T_ASTERISK, parenthesis_block}, mult_clause));
 
-	// listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, value}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, mult_clause}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, add_clause}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, parenthesis_block}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, value}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, mult_clause}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, add_clause}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, parenthesis_block}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, value}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, mult_clause}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, add_clause}, add_clause));
-	// listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, parenthesis_block}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, value}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, mult_clause}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, add_clause}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {value, T_PLUS, parenthesis_block}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, mult_clause}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, add_clause}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {mult_clause, T_PLUS, parenthesis_block}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, add_clause}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, parenthesis_block}, add_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {parenthesis_block, T_PLUS, parenthesis_block}, add_clause));
 
-	/*
-	*/
 	ThomasParser foo(leftToRight, listOfRules);
 	ThomasNode* bar = foo.getParseTree(&tokenizedList[0], tokenizedList.size());
 	bar->print();
