@@ -6,6 +6,7 @@
 #include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
+#include "MorganRules.cpp"
 #include <functional>
 
 
@@ -97,6 +98,8 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, add_clause}, add_clause));
 	listOfRules.push_back(ThomasParseRule(30, general, {add_clause, T_PLUS, parenthesis_block}, add_clause));
 	listOfRules.push_back(ThomasParseRule(30, general, {parenthesis_block, T_PLUS, parenthesis_block}, add_clause));
+
+	addMorganRules(listOfRules);
 
 	ThomasParser foo(leftToRight, listOfRules);
 	ThomasNode* bar = foo.getParseTree(&tokenizedList[0], tokenizedList.size());
