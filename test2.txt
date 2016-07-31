@@ -1,16 +1,5 @@
-/*
- * how does one return pointers?
- * this violates the principle that pointers behave like values
- */
+// queues
 
-foo(int x) {
-    int a = b * c * d;
-    int e = f * g * (h * i + (j) * (k * l) * m) * n;
-    // int g = h * i;
-}
-
-
-/*
 interface Container<T> {
     push(T v);
     pop() -> T;
@@ -44,4 +33,3 @@ push<V>(Queue<V>) -> void {
 Queue<V>.pop() -> V {
     // todo
 }
-*/
