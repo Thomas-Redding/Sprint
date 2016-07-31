@@ -9,6 +9,11 @@
 #include "MorganRules.cpp"
 #include <functional>
 
+struct Class {
+	Class() {};
+	Class(std::string base_name) : base_name(base_name) {};
+	std::string base_name;
+};
 
 int main(int argc, const char * argv[]) {
 	if (argc != 2) {
@@ -40,9 +45,15 @@ int main(int argc, const char * argv[]) {
 	std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
 
 	// syntatic sugar to switch a.b(c) to b(a,c)
-
 	if (!addFunctionSugar(tokenizedList)) {
 		return 0;
+	}
+
+	std::vector<Class> classes;
+	for (uint64_t i = 0; i < classes.size(); ++i) {
+		if (tokenizedList[i] == KEYWORD_CLASS) {
+			
+		}
 	}
 
 	if (tokenizedList.size() > 0) {

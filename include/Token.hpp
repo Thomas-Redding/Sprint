@@ -114,6 +114,8 @@ enum TokenType {
 	ARROW,
 	EQUAL_EQUAL_EQUALS,
 	EXCLAMATION_POINT_EQUAL_EQUALS,
+	IDENTIFIER_CLASS,
+	IDENTIFIER_NONCLASS,
 	root,
 	class_implementation,
 	function_implementation,
