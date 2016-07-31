@@ -301,66 +301,32 @@ std::list<Token> Tokenizer::process(std::string str) {
 			if (isPunc(str[it]))
 				cur.str += str[it];
 			else {
-				resetAndSave(cur);
-				it--;
+				int i;
+				for (i = 0; i < cur.str.length(); ++i) {
+					if (cur.str.length() - i >= 2) {
+						TokenType tt = categorizePunc(cur.str.substr(i, 2));
+						if (tt != UNKNOWN) {
+							rtn.push_back(Token(tt, cur.str.substr(i, 2)));
+							++i;
+							continue;
+						}
+					}
+					TokenType tt = categorizePunc(cur.str.substr(i, 1));
+					if (tt != UNKNOWN) {
+						rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+						continue;
+					}
+				}
+				cur.type = UNKNOWN;
+				cur.str = "";
+				cur.lineNum = getLineNum();
+				cur.charNum = getCharNum();
+				--it;
 			}
 		}
 		else {
 			error("Tokenizer: Error 1 (it: " + std::to_string(it) + ")");
 		}
-	}
-
-	// split up punctuation
-	std::list<Token>::iterator i;
-	for (i = rtn.begin(); i != rtn.end(); ++i) {
-		if (i->type == PUNCTUATION) {
-			TokenType t = categorizePunc(i->str);
-			if (t == UNKNOWN) {
-				std::string txt = i->str;
-				std::list<Token>::iterator k = i;
-				k++;
-				for (long j=0; j<txt.length(); j++) {
-					Token newToken = Token(categorizePunc(txt.substr(j,1)), txt.substr(j,1), i->lineNum, i->charNum + j);
-					rtn.insert(k, newToken);
-				}
-				rtn.erase(i);
-				i = k;
-			}
-			else if (t == PUNCTUATION) {
-				// +-
-				i->str = "+";
-				i->type = PLUS;
-				++i;
-				rtn.insert(i, Token(MINUS, "-", i->lineNum, i->charNum+1));
-			}
-			else if (t == PLUS_PLUS) {
-				// ++
-				std::list<Token>::iterator j = i;
-				++j;
-				if (j->type == CLOSE_BRACKET || j->type == CLOSE_PARENTHESIS || j->type == CLOSE_CURLY_BRACE || j->type == SEMI_COLON || j->type == COMMA)
-					i->type = PLUS_PLUS;
-				else {
-					i->type = PLUS;
-					i->str = "+";
-					rtn.insert(j, Token(PLUS, "+", i->lineNum, i->charNum+1));
-				}
-			}
-			else if (t == MINUS_MINUS) {
-				std::list<Token>::iterator j = i;
-				++j;
-				if (j->type == CLOSE_BRACKET || j->type == CLOSE_PARENTHESIS || j->type == CLOSE_CURLY_BRACE || j->type == SEMI_COLON || j->type == COMMA)
-					i->type = MINUS_MINUS;
-				else {
-					i->type = MINUS;
-					i->str = "-";
-					rtn.insert(j, Token(MINUS, "-", i->lineNum, i->charNum+1));
-				}
-			}
-			else {
-				i->type = t;
-			}
-		}
-	    
 	}
 
 	return rtn;
@@ -529,7 +495,7 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 	else if (str == "->")
 		rtn = ARROW;
 	else if (str == "+-")
-		rtn = PUNCTUATION;
+		rtn = UNKNOWN;
 	else
 		rtn = UNKNOWN;
 	return rtn;
