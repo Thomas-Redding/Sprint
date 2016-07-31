@@ -313,7 +313,20 @@ std::list<Token> Tokenizer::process(std::string str) {
 					}
 					TokenType tt = categorizePunc(cur.str.substr(i, 1));
 					if (tt != UNKNOWN) {
-						rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+						if (tt == PLUS) {
+							if (rtn.back().type == IDENTIFIER || rtn.back().type == CLOSE_PARENTHESIS || rtn.back().type == CLOSE_BRACKET)
+								rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+							else
+								rtn.push_back(Token(POSITIVE, cur.str.substr(i, 1)));
+						}
+						else if (tt == MINUS) {
+							if (rtn.back().type == IDENTIFIER || rtn.back().type == CLOSE_PARENTHESIS || rtn.back().type == CLOSE_BRACKET)
+								rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+							else
+								rtn.push_back(Token(NEGATIVE, cur.str.substr(i, 1)));
+						}
+						else
+							rtn.push_back(Token(tt, cur.str.substr(i, 1)));
 						continue;
 					}
 				}
