@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <map>
 #include "../include/Tokenizer.hpp"
-#include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
 #include "MorganRules.cpp"
@@ -55,10 +54,10 @@ int main(int argc, const char * argv[]) {
 	// 	return 0;
 	// }
 
-	// for (uint64_t i = 0; i < tokenizedList.size(); ++i) {
-	// 	std::cout << tokenizedList[i] << " | ";
-	// }
-	// std::cout << std::endl;
+	for (uint64_t i = 0; i < tokenizedList.size(); ++i) {
+		std::cout << tokenizedList[i] << " | ";
+	}
+	std::cout << std::endl;
 
 	std::vector<Class> classes;
 	for (uint64_t i = 0; i < classes.size(); ++i) {
