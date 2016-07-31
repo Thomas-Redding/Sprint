@@ -117,14 +117,7 @@ enum TokenType {
 	POSITIVE,
 	NEGATIVE,
 	IDENTIFIER_CLASS,
-	IDENTIFIER_NONCLASS,
-	root,
-	class_implementation,
-	function_implementation,
-    variable_declaration,
-    public_colon,
-    protected_colon,
-    private_colon,
+	IDENTIFIER_NONCLASS
 };
 
 class Token {

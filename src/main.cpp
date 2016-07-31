@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <map>
 #include "../include/Tokenizer.hpp"
-#include "../include/Parser.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
 #include "MorganRules.cpp"
