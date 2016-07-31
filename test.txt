@@ -12,7 +12,7 @@ class Foo extends Parent {
 	
 }
 
-/*class List {
+class List<V> {
 	List() {
 		int x = 5;
 		int z = (5+2)*3;
@@ -42,4 +42,4 @@ class Foo extends Parent {
 
 	private uint capacity = 20
 	private void expand()
-}*/
+}

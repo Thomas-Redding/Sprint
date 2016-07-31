@@ -13,7 +13,10 @@ struct Class {
 	Class() {};
 	Class(std::string base_name) : base_name(base_name) {};
 	Class(Token* tokens, const uint64_t n) {
-		base_name = "foo";
+		base_name = tokens[1].str;
+		if (tokens[2].type == LESS_THAN) {
+			// TODO
+		}
 	}
 	friend std::ostream& operator<<(std::ostream& stream, const Class& c) {
 		return stream << c.base_name;
@@ -55,13 +58,13 @@ int main(int argc, const char * argv[]) {
 	// 	return 0;
 	// }
 
-	// for (uint64_t i = 0; i < tokenizedList.size(); ++i) {
-	// 	std::cout << tokenizedList[i] << " | ";
-	// }
-	// std::cout << std::endl;
+	for (uint64_t i = 0; i < tokenizedList.size(); ++i) {
+		std::cout << tokenizedList[i] << " | ";
+	}
+	std::cout << std::endl << std::endl;
 
 	std::vector<Class> classes;
-	for (uint64_t i = 0; i < classes.size(); ++i) {
+	for (uint64_t i = 0; i < tokenizedList.size(); ++i) {
 		if (tokenizedList[i].type == KEYWORD_CLASS) {
 			classes.push_back(Class(&tokenizedList[i], tokenizedList.size() - i));
 			std::cout << classes.back() << std::endl;
