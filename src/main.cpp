@@ -51,8 +51,8 @@ int main(int argc, const char * argv[]) {
 
 	std::vector<Class> classes;
 	for (uint64_t i = 0; i < classes.size(); ++i) {
-		if (tokenizedList[i] == KEYWORD_CLASS) {
-			
+		if (tokenizedList[i].type == KEYWORD_CLASS) {
+
 		}
 	}
 
