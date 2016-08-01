@@ -154,7 +154,9 @@ enum TreeType {
 	bitwise_or_clause,
 	setting_value,
 	setting_clause,
-	ternary_clause
+	ternary_clause,
+	comma_value,
+	comma_clause
 };
 
 std::string treeTypeToString(TreeType t);
@@ -236,6 +238,7 @@ public:
 		shortcuts[bitwise_xor_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause};
 		shortcuts[bitwise_or_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause};
 		shortcuts[setting_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause};
+		shortcuts[comma_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause, comma_clause};
 
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));
