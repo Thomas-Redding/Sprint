@@ -1,7 +1,3 @@
-#include <assert.h>
-#include <iostream>
-#include <stack>
-#include <list>
 #include "../include/ThomasParser.hpp"
 
 
@@ -228,10 +224,6 @@ std::string treeTypeToString(TreeType t) {
 		return "T_EQUAL_EQUAL_EQUALS";
 	else if (t == T_EXCLAMATION_POINT_EQUAL_EQUALS)
 		return "T_EXCLAMATION_POINT_EQUAL_EQUALS";
-	else if (t == end)
-		return "end";
-	else if (t == general)
-		return "general";
 	else if (t == curly_brace_block)
 		return "curly_brace_block";
 	else if (t == parenthesis_block)
@@ -240,14 +232,10 @@ std::string treeTypeToString(TreeType t) {
 		return "bracket_block";
 	else if (t == mult_clause)
 		return "mult_clause";
-	else if (t == add_clause)
-		return "add_clause";
-	else if (t == params)
-		return "params";
-	else if (t == var_dec)
-		return "var_dec";
-	else if (t == value)
-		return "value";
+	else if (t == plus_clause)
+		return "plus_clause";
+	else if (t == general)
+		return "general";
 	else
 		return std::to_string(static_cast<TreeType>(t));
 }
@@ -480,6 +468,18 @@ TreeType translateType(TokenType t) {
 		return T_EQUAL_EQUAL_EQUALS;
 	else if (t == EXCLAMATION_POINT_EQUAL_EQUALS)
 		return T_EXCLAMATION_POINT_EQUAL_EQUALS;
+	else if (t == POSITIVE)
+		return T_POSITIVE;
+	else if (t == NEGATIVE)
+		return T_NEGATIVE;
+	else if (t == PTR)
+		return T_PTR;
+	else if (t == KEYWORD_BOOL)
+		return T_KEYWORD_BOOL;
+	else if (t == KEYWORD_CHAR)
+		return T_KEYWORD_CHAR;
+	else if (t == KEYWORD_VAR)
+		return T_KEYWORD_VAR;
 	else
 		return T_UNKNOWN;
 }
@@ -545,8 +545,14 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
 				for (j = 0; j < rules[i].from.size(); j++) {
-					if ((*it2)->type != rules[i].from[j])  {
-						break;
+					if (shortcuts.find(rules[i].from[j]) == shortcuts.end()) {
+						if ((*it2)->type != rules[i].from[j])
+							break;
+					}
+					else {
+						// alias
+						if (shortcuts[rules[i].from[j]].find((*it2)->type) == shortcuts[rules[i].from[j]].end())
+							break;
 					}
 					++it2;
 					if (it2 == tree->children.end()) {
@@ -623,8 +629,13 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
 				for (j = 0; j < rules[i].from.size(); j++) {
-					if ((*it2)->type != rules[i].from[j])  {
-						break;
+					if (shortcuts.find(rules[i].from[j]) == shortcuts.end()) {
+						if ((*it2)->type != rules[i].from[j])
+							break;
+					}
+					else {
+						if (shortcuts[rules[i].from[j]].find((*it2)->type) == shortcuts[rules[i].from[j]].end())
+							break;
 					}
 					++it2;
 					if (it2 == tree->children.end()) {

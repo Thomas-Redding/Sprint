@@ -5,6 +5,8 @@
 #include <iostream>
 #include <stack>
 #include <list>
+#include <set>
+#include <map>
 #include <vector>
 
 #include "Token.hpp"
@@ -121,16 +123,20 @@ enum TreeType {
 	T_ARROW,
 	T_EQUAL_EQUAL_EQUALS,
 	T_EXCLAMATION_POINT_EQUAL_EQUALS,
-	end,
+	T_POSITIVE,
+	T_NEGATIVE,
+	T_PTR,
+	T_KEYWORD_BOOL,
+	T_KEYWORD_CHAR,
+	T_KEYWORD_VAR,
 	general,
 	curly_brace_block,
 	parenthesis_block,
 	bracket_block,
 	mult_clause,
-	add_clause,
-	params,
-	var_dec,
-	value,
+	mult_value,
+	plus_value,
+	plus_clause
 };
 
 std::string treeTypeToString(TreeType t);
@@ -195,11 +201,19 @@ private:
 	void doAnglePass(ThomasNode* tree);
 	std::vector<ThomasParseRule> rules;
 	std::vector<bool>leftRight;
-	std::vector<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, add_clause, params};
+	std::vector<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
+	std::map<TreeType, std::set<TreeType>> shortcuts;
 public:
 	ThomasParser(std::vector<bool> lr, std::vector<ThomasParseRule> r) {
 		rules = r;
 		leftRight = lr;
+		// shortcuts[value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER};
+		shortcuts[mult_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, mult_clause, parenthesis_block};
+		shortcuts[plus_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, mult_clause, parenthesis_block, plus_clause};
+
+	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
+	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));
+	// listOfRules.push_back(ThomasParseRule(10, general, {T_STRING_LITERAL
 	}
 	int mainLRCounter = 1000000;
 	int mainRLCounter = 1000000;
