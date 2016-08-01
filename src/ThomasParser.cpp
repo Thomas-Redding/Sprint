@@ -196,6 +196,8 @@ std::string treeTypeToString(TreeType t) {
 		return "T_COLON_EQUALS";
 	else if (t == T_VERTICAL_BAR_EQUALS)
 		return "T_VERTICAL_BAR_EQUALS";
+	else if (t == T_PERCENT_EQUALS)
+		return "T_PERCENT_EQUALS";
 	else if (t == T_PLUS_PLUS)
 		return "T_PLUS_PLUS";
 	else if (t == T_MINUS_MINUS)
@@ -440,6 +442,8 @@ TreeType translateType(TokenType t) {
 		return T_COLON_EQUALS;
 	else if (t == VERTICAL_BAR_EQUALS)
 		return T_VERTICAL_BAR_EQUALS;
+	else if (t == PERCENT_EQUALS)
+		return T_PERCENT_EQUALS;
 	else if (t == PLUS_PLUS)
 		return T_PLUS_PLUS;
 	else if (t == MINUS_MINUS)

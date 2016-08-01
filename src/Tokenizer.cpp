@@ -476,6 +476,10 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = MINUS_EQUALS;
 	else if (str == "*=")
 		rtn = ASTERISK_EQUALS;
+	else if (str == "/=")
+		rtn = SLASH_EQUALS;
+	else if (str == "%=")
+		rtn = PERCENT_EQUALS;
 	else if (str == "&=")
 		rtn = AMPERSAND_EQUALS;
 	else if (str == "^=")
@@ -510,8 +514,6 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = MINUS_MINUS;
 	else if (str == "->")
 		rtn = ARROW;
-	else if (str == "+-")
-		rtn = UNKNOWN;
 	else
 		rtn = UNKNOWN;
 	return rtn;

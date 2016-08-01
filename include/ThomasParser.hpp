@@ -109,6 +109,7 @@ enum TreeType {
 	T_CARROT_EQUALS,
 	T_COLON_EQUALS,
 	T_VERTICAL_BAR_EQUALS,
+	T_PERCENT_EQUALS,
 	T_PLUS_PLUS,
 	T_MINUS_MINUS,
 	T_SHIFT_LEFT,
@@ -133,10 +134,27 @@ enum TreeType {
 	curly_brace_block,
 	parenthesis_block,
 	bracket_block,
-	mult_clause,
+	unary_value,
+	unary_clause,
 	mult_value,
+	mult_clause,
 	plus_value,
-	plus_clause
+	plus_clause,
+	shift_value,
+	shift_clause,
+	inequality_value,
+	inequality_clause,
+	equality_value,
+	equality_clause,
+	bitwise_and_value,
+	bitwise_and_clause,
+	bitwise_xor_value,
+	bitwise_xor_clause,
+	bitwise_or_value,
+	bitwise_or_clause,
+	setting_value,
+	setting_clause,
+	ternary_clause
 };
 
 std::string treeTypeToString(TreeType t);
@@ -208,8 +226,16 @@ public:
 		rules = r;
 		leftRight = lr;
 		// shortcuts[value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER};
-		shortcuts[mult_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, mult_clause, parenthesis_block};
-		shortcuts[plus_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, mult_clause, parenthesis_block, plus_clause};
+		shortcuts[unary_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause};
+		shortcuts[mult_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause};
+		shortcuts[plus_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause};
+		shortcuts[shift_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, shift_clause};
+		shortcuts[inequality_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause};
+		shortcuts[equality_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause};
+		shortcuts[bitwise_and_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause};
+		shortcuts[bitwise_xor_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause};
+		shortcuts[bitwise_or_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause};
+		shortcuts[setting_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause, mult_clause, plus_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause};
 
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));

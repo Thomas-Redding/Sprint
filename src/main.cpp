@@ -143,46 +143,72 @@ int main(int argc, const char * argv[]) {
 		}
 	}
 
-	if (tokenizedList.size() > 0) {
-		std::cout << tokenizedList[0].toString();
-		for (int i = 1; i < tokenizedList.size(); ++i) {
-			if (tokenizedList[i].lineNum != tokenizedList[i - 1].lineNum) {
-				std::cout << std::endl << std::endl << tokenizedList[i].toString();
-			}
-			else {
-				std::cout << ", " << tokenizedList[i].toString();
-			}
-		}
-		std::cout << std::endl;
-	}
+	// if (tokenizedList.size() > 0) {
+	// 	std::cout << tokenizedList[0].toString();
+	// 	for (int i = 1; i < tokenizedList.size(); ++i) {
+	// 		if (tokenizedList[i].lineNum != tokenizedList[i - 1].lineNum) {
+	// 			std::cout << std::endl << std::endl << tokenizedList[i].toString();
+	// 		}
+	// 		else {
+	// 			std::cout << ", " << tokenizedList[i].toString();
+	// 		}
+	// 	}
+	// 	std::cout << std::endl;
+	// }
 
 	std::cout << "\n\n\n";
 	std::vector<bool> leftToRight = {
-		false, false
+		true, false, false, false, false, false, false, false, false, true
 	};
 	std::vector<ThomasParseRule> listOfRules;
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_INTEGER_LITERAL}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_STRING_LITERAL}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_INT}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_INT8}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_INT16}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_INT32}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_INT64}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_UINT}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_UINT8}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_UINT16}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_UINT32}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_UINT64}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_FLOAT}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_DOUBLE}, value));
-	// listOfRules.push_back(ThomasParseRule(10, general, {T_STRING_LITERAL}, value));
+	listOfRules.push_back(ThomasParseRule(10, general, {T_POSITIVE, unary_value}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(10, general, {T_NEGATIVE, unary_value}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(10, general, {T_PLUS_PLUS, unary_value}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(10, general, {T_MINUS_MINUS, unary_value}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(10, general, {unary_value, T_PLUS_PLUS}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(10, general, {unary_value, T_MINUS_MINUS}, mult_clause));
 
 	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_ASTERISK, mult_value}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_SLASH, mult_value}, mult_clause));
+	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_PERCENT, mult_value}, mult_clause));
 
 	listOfRules.push_back(ThomasParseRule(30, general, {plus_value, T_PLUS, plus_value}, plus_clause));
+	listOfRules.push_back(ThomasParseRule(30, general, {plus_value, T_MINUS, plus_value}, plus_clause));
 
+	listOfRules.push_back(ThomasParseRule(40, general, {shift_value, T_SHIFT_LEFT, shift_value}, shift_clause));
+
+	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_LESS_THAN, inequality_value}, inequality_clause));
+	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_GREATER_THAN, inequality_value}, inequality_clause));
+	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_LESS_THAN_EQUALS, inequality_value}, inequality_clause));
+	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_GREATER_THAN_EQUALS, inequality_value}, inequality_clause));
+
+	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EQUAL_EQUALS, equality_value}, equality_clause));
+	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EXCLAMATION_POINT_EQUALS, equality_value}, equality_clause));
+	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EQUAL_EQUAL_EQUALS, equality_value}, equality_clause));
+	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EXCLAMATION_POINT_EQUAL_EQUALS, equality_value}, equality_clause));
+
+	listOfRules.push_back(ThomasParseRule(70, general, {bitwise_and_value, T_KEYWORD_AND, bitwise_and_value}, bitwise_and_clause));
+
+	listOfRules.push_back(ThomasParseRule(80, general, {bitwise_xor_value, T_KEYWORD_XOR, bitwise_xor_value}, bitwise_xor_clause));
+
+	listOfRules.push_back(ThomasParseRule(90, general, {bitwise_or_value, T_KEYWORD_OR, bitwise_or_value}, bitwise_or_clause));
+
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_QUESTION_MARK, setting_value, T_COLON, setting_value}, ternary_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_PLUS_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_MINUS_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_ASTERISK_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_SLASH_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_PERCENT_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_PERCENT_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_AMPERSAND_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_CARROT_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_VERTICAL_BAR_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_COLON_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));
+	listOfRules.push_back(ThomasParseRule(90, general, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));
+
+	
 	addMorganRules(listOfRules);
 
 	ThomasParser foo(leftToRight, listOfRules);

@@ -4,7 +4,7 @@
 
 
 main(string x) {
-    int x = a * b * c * d * e;
+    int x = a * b * c + d * e * f + g + h;
 /*
     int x = 42;
     {
