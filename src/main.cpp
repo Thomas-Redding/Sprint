@@ -161,6 +161,9 @@ int main(int argc, const char * argv[]) {
 		false, true, false, false, false, false, false, false, false, false, true, false
 	};
 	std::vector<ThomasParseRule> listOfRules;
+	// todo: templates
+	// listOfRules.push_back(ThomasParseRule(-1, general, {unary_value, T_PLUS_PLUS}, unary_clause));												// <T>
+
 	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, T_PLUS_PLUS}, unary_clause));													// x++
 	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, T_MINUS_MINUS}, unary_clause));													// x--
 	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, parenthesis_block}, unary_clause));												// x(y)

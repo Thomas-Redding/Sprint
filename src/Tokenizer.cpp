@@ -141,16 +141,16 @@ std::list<Token> Tokenizer::process(std::string str) {
 					error("Tokenizer: Can't begin a document with '+' or '-'.");
 				}
 				cur.str += str[it];
-
 				long i;
 				for (i=it+1; i<str.length(); i++) {
 					if (str[i] != ' ') {
 						break;
 					}
 				}
-				if (isdigit(i)) {
+
+				if (isdigit(str[i])) {
 					Token last = rtn.back();
-					if (isPunc(last .type) || last.type == OPEN_BRACKET || last.type == OPEN_CURLY_BRACE || last.type == OPEN_PARENTHESIS)
+					if (isPunc(last.type) || last.type == OPEN_BRACKET || last.type == OPEN_CURLY_BRACE || last.type == OPEN_PARENTHESIS)
 						cur.type = INTEGER_LITERAL;
 					else
 						cur.type = PUNCTUATION;

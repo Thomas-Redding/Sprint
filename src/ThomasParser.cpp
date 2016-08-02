@@ -238,6 +238,64 @@ std::string treeTypeToString(TreeType t) {
 		return "plus_clause";
 	else if (t == general)
 		return "general";
+	else if (t == unary_value)
+		return "unary_value";
+	else if (t == unary_clause)
+		return "unary_clause";
+	else if (t == mult_value)
+		return "mult_value";
+	else if (t == mult_clause)
+		return "mult_clause";
+	else if (t == plus_value)
+		return "plus_value";
+	else if (t == plus_clause)
+		return "plus_clause";
+	else if (t == shift_value)
+		return "shift_value";
+	else if (t == shift_clause)
+		return "shift_clause";
+	else if (t == inequality_value)
+		return "inequality_value";
+	else if (t == inequality_clause)
+		return "inequality_clause";
+	else if (t == equality_value)
+		return "equality_value";
+	else if (t == equality_clause)
+		return "equality_clause";
+	else if (t == bitwise_and_value)
+		return "bitwise_and_value";
+	else if (t == bitwise_and_clause)
+		return "bitwise_and_clause";
+	else if (t == bitwise_xor_value)
+		return "bitwise_xor_value";
+	else if (t == bitwise_xor_clause)
+		return "bitwise_xor_clause";
+	else if (t == bitwise_or_value)
+		return "bitwise_or_value";
+	else if (t == bitwise_or_clause)
+		return "bitwise_or_clause";
+	else if (t == setting_value)
+		return "setting_value";
+	else if (t == setting_clause)
+		return "setting_clause";
+	else if (t == ternary_clause)
+		return "ternary_clause";
+	else if (t == comma_value)
+		return "comma_value";
+	else if (t == comma_clause)
+		return "comma_clause";
+	else if (t == T_POSITIVE)
+		return "T_POSITIVE";
+	else if (t == T_NEGATIVE)
+		return "T_NEGATIVE";
+	else if (t == T_PTR)
+		return "T_PTR";
+	else if (t == T_KEYWORD_BOOL)
+		return "T_KEYWORD_BOOL";
+	else if (t == T_KEYWORD_CHAR)
+		return "T_KEYWORD_CHAR";
+	else if (t == T_KEYWORD_VAR)
+		return "T_KEYWORD_VAR";
 	else
 		return std::to_string(static_cast<TreeType>(t));
 }
