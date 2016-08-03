@@ -551,7 +551,7 @@ ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
 	tokens = t;
 	len = n;
 	mainTree = new ThomasNode(general);
-	for (int i=0; i<len; i++) {
+	for (int i=0; i<len; ++i) {
 		mainTree->children.push_back(new ThomasNode(tokens[i]));
 	}
 	auto timeSetUp = std::chrono::high_resolution_clock::now();
@@ -567,23 +567,23 @@ ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
 	/*
 	 * set-up: 6%
 	 * brackets: 5%
-	 * other parsing: 89%
+	 * adding new nodes to the tree: 27%
+	 * other parsing: 62%
 	 */
 	return mainTree;
 }
 
-bool thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseRule r2) {
+bool ThomasParser::thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseRule r2) {
 	return r1.precedence < r2.precedence;
 }
 
 void ThomasParser::parse() {
-	std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 	int from = 0;
 	int to = 0;
-	for (int i=0; i<leftRight.size(); i++) {
+	for (int i=0; i<leftRight.size(); ++i) {
 		from = to;
 		int j;
-		for (j=from; j<rules.size(); j++) {
+		for (j=from; j<rules.size(); ++j) {
 			if (rules[j].precedence != rules[from].precedence)
 				break;
 		}
@@ -602,11 +602,9 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 			parseLeftRight(*it, from, to);
 			if ((*it)->children.size() == 1) {
 				if ((*it)->type == parenthesis_block) {
-					for (int i = 0; i < parCollapse.size(); i++) {
-						if (parCollapse[i] == (*((*it)->children.begin()))->type) {
-							(*it) = *((*it)->children.begin());
-							break;
-						}
+					if (parCollapse.find((*((*it)->children.begin()))->type) != parCollapse.end()) {
+						(*it) = *((*it)->children.begin());
+						break;
 					}
 				}
 			}
@@ -614,11 +612,11 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 
 		int ruleToApply = -1;
 		int ruleSize = 0;
-		for (int i = from; i < to; i++) {
+		for (int i = from; i < to; ++i) {
 			if (rules[i].parent == general || rules[i].parent == tree->type) {
-				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
-				for (j = 0; j < rules[i].from.size(); j++) {
+				std::list<ThomasNode*>::iterator it2 = it;
+				for (j = 0; j < rules[i].from.size(); ++j) {
 					if (rules[i].from[j] < unary_value) {
 						if ((*it2)->type != rules[i].from[j])
 							break;
@@ -630,7 +628,7 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 					}
 					++it2;
 					if (it2 == tree->children.end()) {
-						j++;
+						++j;
 						break;
 					}
 				}
@@ -645,7 +643,7 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 			int ruleSize = rules[ruleToApply].from.size();
 			std::list<ThomasNode*>::iterator it2 = it;
 			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to);
-			for (int i= 0; i < ruleSize; i++) {
+			for (int i= 0; i < ruleSize; ++i) {
 				newTree->children.push_back(*it2);
 				++it2;
 			}
@@ -683,11 +681,9 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 			parseRightLeft(*it, from, to);
 			if ((*it)->children.size() == 1) {
 				if ((*it)->type == parenthesis_block) {
-					for (int i = 0; i < parCollapse.size(); i++) {
-						if (parCollapse[i] == (*((*it)->children.begin()))->type) {
-							(*it) = *((*it)->children.begin());
-							break;
-						}
+					if (parCollapse.find((*((*it)->children.begin()))->type) != parCollapse.end()) {
+						(*it) = *((*it)->children.begin());
+						break;
 					}
 				}
 			}
@@ -695,11 +691,11 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 
 		int ruleToApply = -1;
 		int ruleSize = 0;
-		for (int i = from; i < to; i++) {
+		for (int i = from; i < to; ++i) {
 			if (rules[i].parent == general || rules[i].parent == tree->type) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
-				for (j = 0; j < rules[i].from.size(); j++) {
+				for (j = 0; j < rules[i].from.size(); ++j) {
 					if (rules[i].from[j] < unary_value) {
 						if ((*it2)->type != rules[i].from[j])
 							break;
@@ -711,7 +707,7 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 					}
 					++it2;
 					if (it2 == tree->children.end()) {
-						j++;
+						++j;
 						break;
 					}
 				}
@@ -727,7 +723,7 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 			int ruleSize = rules[ruleToApply].from.size();
 			std::list<ThomasNode*>::iterator it2 = it;
 			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to);
-			for (int i= 0; i < ruleSize; i++) {
+			for (int i= 0; i < ruleSize; ++i) {
 				newTree->children.push_back(*it2);
 				++it2;
 			}

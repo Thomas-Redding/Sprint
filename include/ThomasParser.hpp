@@ -224,16 +224,17 @@ private:
 	void doAnglePass(ThomasNode* tree);
 	std::vector<ThomasParseRule> rules;
 	std::vector<bool>leftRight;
-	std::vector<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
+	std::set<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
 	int firstToken = unary_value;
 	int lastToken = comma_value;
-	std::set<TreeType> shortcuts[145];
+	std::set<TreeType> shortcuts[200];
+	static bool thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseRule r2);
 public:
 	ThomasParser(std::vector<bool> lr, std::vector<ThomasParseRule> r) {
 		std::cout << firstToken << "\n";
 		std::cout << lastToken << "\n";
-
 		rules = r;
+		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 		leftRight = lr;
 		// shortcuts[value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER};
 		shortcuts[unary_value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary_clause};
