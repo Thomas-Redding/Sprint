@@ -547,23 +547,16 @@ TreeType translateType(TokenType t) {
 }
 
 ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
-	auto timeStart = std::chrono::high_resolution_clock::now();
 	tokens = t;
 	len = n;
 	mainTree = new ThomasNode(general);
 	for (int i=0; i<len; ++i) {
 		mainTree->children.push_back(new ThomasNode(tokens[i]));
 	}
-	auto timeSetUp = std::chrono::high_resolution_clock::now();
 	doCurlyBracePass(mainTree);
 	doParenthesesPass(mainTree);
 	doBracketPass(mainTree);
-	auto timeBrackets = std::chrono::high_resolution_clock::now();
 	parse();
-	auto timeEnd = std::chrono::high_resolution_clock::now();
-	std::cout << "Parser Set Up: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeSetUp - timeStart).count() / 1000 << " µs\n";
-	std::cout << "Parser Brackets: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeBrackets - timeSetUp).count() / 1000 << " µs\n";
-	std::cout << "Parser Grammar: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeEnd - timeBrackets).count() / 1000 << " µs\n";
 	/*
 	 * set-up: 6%
 	 * brackets: 5%

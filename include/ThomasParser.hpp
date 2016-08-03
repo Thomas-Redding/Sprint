@@ -8,7 +8,6 @@
 #include <set>
 #include <map>
 #include <vector>
-#include <chrono>
 
 #include "Token.hpp"
 
@@ -231,8 +230,6 @@ private:
 	static bool thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseRule r2);
 public:
 	ThomasParser(std::vector<bool> lr, std::vector<ThomasParseRule> r) {
-		std::cout << firstToken << "\n";
-		std::cout << lastToken << "\n";
 		rules = r;
 		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 		leftRight = lr;
