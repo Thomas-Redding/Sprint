@@ -9,6 +9,8 @@
 #include "MorganRules.cpp"
 #include <functional>
 
+#include <chrono>
+
 struct Class {
 	Class() {};
 	Class(std::string base_name) : base_name(base_name) {};
@@ -73,6 +75,9 @@ struct Class {
 };
 
 int main(int argc, const char * argv[]) {
+
+	auto timeStart = std::chrono::high_resolution_clock::now();
+
 	if (argc != 2) {
 		std::cout << "Error: need to pass in one argument" << std::endl;
 		return 0;
@@ -94,12 +99,18 @@ int main(int argc, const char * argv[]) {
 		std::cout << "Error: could not open file" << std::endl;
 		return 0;
 	}
+
+	auto timeOpenedFile = std::chrono::high_resolution_clock::now();
 	
 	Tokenizer tokenizer;
 	std::list<Token> list = tokenizer.process(contents);
 
+	auto timeTokenized = std::chrono::high_resolution_clock::now();
+
 	// http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
 	std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
+
+	auto timeListToVector = std::chrono::high_resolution_clock::now();
 
 	// syntatic sugar to switch a.b(c) to b(a,c)
 	// if (!addFunctionSugar(tokenizedList)) {
@@ -142,6 +153,8 @@ int main(int argc, const char * argv[]) {
 			}
 		}
 	}
+
+	auto timeAsteriskPtr = std::chrono::high_resolution_clock::now();
 
 	// if (tokenizedList.size() > 0) {
 	// 	std::cout << tokenizedList[0].toString();
@@ -224,8 +237,24 @@ int main(int argc, const char * argv[]) {
 	addMorganRules(listOfRules);
 
 	ThomasParser foo(leftToRight, listOfRules);
+
+	auto timeParseRules = std::chrono::high_resolution_clock::now();
+
 	ThomasNode* bar = foo.getParseTree(&tokenizedList[0], tokenizedList.size());
-	bar->print();
+
+	// timeStart, timeOpenedFile, timeTokenized, timeListToVector, timeAsteriskPtr, timeParsed
+	auto timeParsed = std::chrono::high_resolution_clock::now();
+
+	// bar->print();
 	std::cout << "\n\n\n";
+
+	std::cout << "Reading File(s): " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeOpenedFile - timeStart).count() / 1000 << " µs\n";
+	std::cout << "Tokenizing: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeTokenized - timeOpenedFile).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(timeTokenized - timeOpenedFile).count() / list.size() << " ns per token)\n";
+	std::cout << "List-to-Vector: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeListToVector - timeTokenized).count() / 1000 << " µs\n";
+	std::cout << "Asterisk-Ptr: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeAsteriskPtr - timeListToVector).count() / 1000 << " µs\n";
+	std::cout << "Parse Rules: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeParseRules - timeAsteriskPtr).count() / 1000 << " µs\n";
+	std::cout << "Parsing: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeParsed - timeParseRules).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(timeParsed - timeParseRules).count() / list.size() << " ns per token)\n";
+	std::cout << "Tokens: " << list.size() << "\n";
+
 	return 0;
 }

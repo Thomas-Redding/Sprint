@@ -547,16 +547,28 @@ TreeType translateType(TokenType t) {
 }
 
 ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
+	auto timeStart = std::chrono::high_resolution_clock::now();
 	tokens = t;
 	len = n;
 	mainTree = new ThomasNode(general);
 	for (int i=0; i<len; i++) {
 		mainTree->children.push_back(new ThomasNode(tokens[i]));
 	}
+	auto timeSetUp = std::chrono::high_resolution_clock::now();
 	doCurlyBracePass(mainTree);
 	doParenthesesPass(mainTree);
 	doBracketPass(mainTree);
+	auto timeBrackets = std::chrono::high_resolution_clock::now();
 	parse();
+	auto timeEnd = std::chrono::high_resolution_clock::now();
+	std::cout << "Parser Set Up: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeSetUp - timeStart).count() / 1000 << " µs\n";
+	std::cout << "Parser Brackets: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeBrackets - timeSetUp).count() / 1000 << " µs\n";
+	std::cout << "Parser Grammar: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeEnd - timeBrackets).count() / 1000 << " µs\n";
+	/*
+	 * set-up: 6%
+	 * brackets: 5%
+	 * other parsing: 89%
+	 */
 	return mainTree;
 }
 
@@ -607,13 +619,13 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
 				for (j = 0; j < rules[i].from.size(); j++) {
-					if (shortcuts.find(rules[i].from[j]) == shortcuts.end()) {
+					if (rules[i].from[j] < unary_value) {
 						if ((*it2)->type != rules[i].from[j])
 							break;
 					}
 					else {
 						// alias
-						if (shortcuts[rules[i].from[j]].find((*it2)->type) == shortcuts[rules[i].from[j]].end())
+						if(shortcuts[rules[i].from[j]].find((*it2)->type) == shortcuts[rules[i].from[j]].end())
 							break;
 					}
 					++it2;
@@ -630,9 +642,6 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 		}
 
 		if (-1 < ruleToApply) {
-			--mainLRCounter;
-			if (mainLRCounter < 0)
-				return;
 			int ruleSize = rules[ruleToApply].from.size();
 			std::list<ThomasNode*>::iterator it2 = it;
 			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to);
@@ -691,12 +700,13 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
 				for (j = 0; j < rules[i].from.size(); j++) {
-					if (shortcuts.find(rules[i].from[j]) == shortcuts.end()) {
+					if (rules[i].from[j] < unary_value) {
 						if ((*it2)->type != rules[i].from[j])
 							break;
 					}
 					else {
-						if (shortcuts[rules[i].from[j]].find((*it2)->type) == shortcuts[rules[i].from[j]].end())
+						// alias
+						if(shortcuts[rules[i].from[j]].find((*it2)->type) == shortcuts[rules[i].from[j]].end())
 							break;
 					}
 					++it2;
@@ -714,9 +724,6 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 
 		// int a = b * c * d;
 		if (-1 < ruleToApply) {
-			--mainRLCounter;
-			if (mainRLCounter < 0)
-				return;
 			int ruleSize = rules[ruleToApply].from.size();
 			std::list<ThomasNode*>::iterator it2 = it;
 			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to);

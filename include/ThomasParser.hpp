@@ -8,6 +8,7 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <chrono>
 
 #include "Token.hpp"
 
@@ -134,29 +135,31 @@ enum TreeType {
 	curly_brace_block,
 	parenthesis_block,
 	bracket_block,
-	unary_value,
 	unary_clause,
-	mult_value,
 	mult_clause,
-	plus_value,
 	plus_clause,
-	shift_value,
 	shift_clause,
-	inequality_value,
 	inequality_clause,
-	equality_value,
 	equality_clause,
-	bitwise_and_value,
 	bitwise_and_clause,
-	bitwise_xor_value,
 	bitwise_xor_clause,
-	bitwise_or_value,
 	bitwise_or_clause,
-	setting_value,
 	setting_clause,
 	ternary_clause,
-	comma_value,
-	comma_clause
+	comma_clause,
+
+
+	unary_value,			// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
+	plus_value,
+	mult_value,
+	shift_value,
+	inequality_value,
+	equality_value,
+	bitwise_and_value,
+	bitwise_xor_value,
+	bitwise_or_value,
+	setting_value,
+	comma_value				// make sure I'm the last enum
 };
 
 std::string treeTypeToString(TreeType t);
@@ -222,9 +225,14 @@ private:
 	std::vector<ThomasParseRule> rules;
 	std::vector<bool>leftRight;
 	std::vector<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
-	std::map<TreeType, std::set<TreeType>> shortcuts;
+	int firstToken = unary_value;
+	int lastToken = comma_value;
+	std::set<TreeType> shortcuts[145];
 public:
 	ThomasParser(std::vector<bool> lr, std::vector<ThomasParseRule> r) {
+		std::cout << firstToken << "\n";
+		std::cout << lastToken << "\n";
+
 		rules = r;
 		leftRight = lr;
 		// shortcuts[value] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_CHAR, T_KEYWORD_VAR, T_IDENTIFIER};
@@ -244,8 +252,6 @@ public:
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_STRING_LITERAL
 	}
-	int mainLRCounter = 1000000;
-	int mainRLCounter = 1000000;
 	ThomasNode* getParseTree(const Token* t, uint64_t n);
 	void parse();
 	void parseLeftRight(ThomasNode *tree, int from, int to);
