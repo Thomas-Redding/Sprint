@@ -15,7 +15,7 @@ This language is generally similar to C++. Here are it's planned noteworthy feat
 2. Compiler-enforced garbage collection.
     - This is done by having two kinds of variables: owners and pointers. Pointers are like C++ pointers in that they can be null and can be reassigned. We do not allow pointer arithmetic. Owners can be thought of as pointers to objects on the Heap that are garbage collected once they exit scope. An owner can give its object away prior to exiting scope to maintain it's existence. This is, more-or-less, a compiler-verified version of the RAII paradigm, typically used in C++.
 3. Abstraction away from Stack v. Heap without loss of speed
-    - As noted directly above, you can think of every object as being on the Heap. However, the compiler will detect when an object is both small enough and short-lived enough to be able to be on the Stack. (Apparently GO does this to?)
+    - As noted directly above, you can think of every object as being on the Heap. However, the compiler will detect when an object is both small enough and short-lived enough to be able to be on the Stack. (Apparently Go does this to?)
 4. Interchangability between functions and public methods (including operator-overrides)
     - For instance, these are equivalent: myMatrix.det(); det(myMatrix);
     - In lieu of a toString() operator, conversion to strings is done by creating your own string constructor: str(myObj)
