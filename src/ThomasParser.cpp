@@ -596,7 +596,9 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 			if ((*it)->children.size() == 1) {
 				if ((*it)->type == parenthesis_block) {
 					if (parCollapse.find((*((*it)->children.begin()))->type) != parCollapse.end()) {
+						ThomasNode *toDelete = *it;
 						(*it) = *((*it)->children.begin());
+						delete toDelete;
 						break;
 					}
 				}
@@ -675,8 +677,9 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 			if ((*it)->children.size() == 1) {
 				if ((*it)->type == parenthesis_block) {
 					if (parCollapse.find((*((*it)->children.begin()))->type) != parCollapse.end()) {
+						ThomasNode *toDelete = *it;
 						(*it) = *((*it)->children.begin());
-						break;
+						delete toDelete;
 					}
 				}
 			}
