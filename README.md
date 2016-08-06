@@ -1,14 +1,14 @@
 # Sprint
 Compiler for New Language
 
-PROGRESS
+## PROGRESS
 1. Tokenizer        - DONE
 2. Parser           - DONE
 3. Parse Rules      - IN PROGRESS as of Aug 5, 2016; expected completion is Aug 12.
 4. Compiler         - TODO
 5. Standard Library - TODO
 
-FEATURES
+## FEATURES
 This language is generally similar to C++. Here are it's planned noteworthy features
 
 1. Will support all C++ libraries.
