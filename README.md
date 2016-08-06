@@ -29,5 +29,6 @@ This language is generally similar to C++. Here are it's planned noteworthy feat
     - Pointer comparsion: x === y and x !== y are equivalent to &x == &y and &x != &y in C++
     - Use of "and", "or", and "not" instead of &&, ||, and !
     - Tuples can be used like any other types and have native suppor: (int, float) foo = (42, 3.14);
+    - More concise primitive int classes: int8, int16, int32, int64, int, uint8, uint 16, etc.
 9. Inheritance from primitives. For instance, once can say that Meter and Foot both inherit from Double, thereby allowing you to override the + operator to add these two different types properly. Alternatively, don't override the + operator to forbid the addition of two types, such as Meter and Kilogram.
 10. Large, but moduralized standard library. Because we will support all C++ libraries, we can incorporate a wide variety of Open Source libraries as part of our standard library. For instance, we plan to use wxWidgets to provide cross-platform UI buiding. Ultimately, we want to allow full-stack development after a single installation of our language.
