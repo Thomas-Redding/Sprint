@@ -19,7 +19,7 @@ This language is generally similar to C++. Here are it's planned noteworthy feat
 4. Interchangability between functions and public methods (including operator-overrides)
     - For instance, these are equivalent: myMatrix.det(); det(myMatrix);
     - In lieu of a toString() operator, conversion to strings is done by creating your own string constructor: str(myObj)
-5. The keyword "var" in lieu of "void".
+5. The keyword "var" in lieu of void pointers.
     - Example: var x = int(42); type(x) == int;
     - The special "var" type is significantly slower than statically typed objects. However, it makes it much easer to implement a JSON parser, a DOM hierarchy, or a standard library print() function.
 6. Currying
