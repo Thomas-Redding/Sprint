@@ -238,10 +238,14 @@ std::string treeTypeToString(TreeType t) {
 		return "plus_clause";
 	else if (t == general)
 		return "general";
-	else if (t == unary_value)
-		return "unary_value";
-	else if (t == unary_clause)
-		return "unary_clause";
+	else if (t == unary1_value)
+		return "unary1_value";
+	else if (t == unary1_clause)
+		return "unary1_clause";
+	else if (t == unary2_value)
+		return "unary2_value";
+	else if (t == unary2_clause)
+		return "unary2_clause";
 	else if (t == mult_value)
 		return "mult_value";
 	else if (t == mult_clause)
@@ -296,6 +300,10 @@ std::string treeTypeToString(TreeType t) {
 		return "T_KEYWORD_CHAR";
 	else if (t == T_KEYWORD_VAR)
 		return "T_KEYWORD_VAR";
+	else if (t == statement)
+		return "statement";
+	else if (t == statements)
+		return "statements";
 	else
 		return std::to_string(static_cast<TreeType>(t));
 }
@@ -612,7 +620,7 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 				int j;
 				std::list<ThomasNode*>::iterator it2 = it;
 				for (j = 0; j < rules[i].from.size(); ++j) {
-					if (rules[i].from[j] < unary_value) {
+					if (rules[i].from[j] < firstToken) {
 						if ((*it2)->type != rules[i].from[j])
 							break;
 					}
@@ -692,7 +700,7 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
 				for (j = 0; j < rules[i].from.size(); ++j) {
-					if (rules[i].from[j] < unary_value) {
+					if (rules[i].from[j] < firstToken) {
 						if ((*it2)->type != rules[i].from[j])
 							break;
 					}

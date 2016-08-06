@@ -169,28 +169,31 @@ int main(int argc, const char * argv[]) {
 	// 	std::cout << std::endl;
 	// }
 
+	int y = true ? 5 : 3;
+	std::cout << y;
+
 	std::cout << "\n\n\n";
 	std::vector<bool> leftToRight = {
-		false, true, false, false, false, false, false, false, false, false, true, false
+		true, false, true, true, true, true, true, true, true, true, false, true, false
 	};
 	std::vector<ThomasParseRule> listOfRules;
 	// todo: templates
 	// listOfRules.push_back(ThomasParseRule(-1, general, {unary_value, T_PLUS_PLUS}, unary_clause));												// <T>
 
-	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, T_PLUS_PLUS}, unary_clause));													// x++
-	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, T_MINUS_MINUS}, unary_clause));													// x--
-	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, parenthesis_block}, unary_clause));												// x(y)
-	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, bracket_block}, unary_clause));													// x[y]
-	listOfRules.push_back(ThomasParseRule(0, general, {unary_value, T_PERIOD}, unary_clause));														// x.y
+	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
+	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, T_MINUS_MINUS}, unary1_clause));													// x--
+	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
+	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, bracket_block}, unary1_clause));													// x[y]
+	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, T_PERIOD}, unary1_clause));														// x.y
 
-	listOfRules.push_back(ThomasParseRule(10, general, {T_POSITIVE, unary_value}, unary_clause));													// +x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_NEGATIVE, unary_value}, unary_clause));													// -x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_PLUS_PLUS, unary_value}, unary_clause));													// ++x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_MINUS_MINUS, unary_value}, unary_clause));												// --x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_TILDE, unary_value}, unary_clause));														// ~x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_NOT, unary_value}, unary_clause));												// not x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_PTR, unary_value}, unary_clause));														// *x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_NEW, unary_value}, unary_clause));												// new x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_POSITIVE, unary2_value}, unary2_clause));													// +x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_NEGATIVE, unary2_value}, unary2_clause));													// -x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_PLUS_PLUS, unary2_value}, unary2_clause));													// ++x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_MINUS_MINUS, unary2_value}, unary2_clause));												// --x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_TILDE, unary2_value}, unary2_clause));														// ~x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_PTR, unary2_value}, unary2_clause));														// *x
+	listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
 
 	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_ASTERISK, mult_value}, mult_clause));											// x * y
 	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_SLASH, mult_value}, mult_clause));											// x / y
@@ -233,7 +236,12 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule(100, general, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 
 	listOfRules.push_back(ThomasParseRule(110, general, {comma_value, T_COMMA, comma_value}, comma_clause));										// x, y
-	
+	listOfRules.push_back(ThomasParseRule(110, general, {comma_value, T_SEMI_COLON}, statement));													// x;
+
+	listOfRules.push_back(ThomasParseRule(120, general, {statement, statement}, statements));														// x y
+
+	// listOfRules.push_back(ThomasParseRule(120, general, {unary_clause, statement}, statements));														// x y
+
 	addMorganRules(listOfRules);
 
 	ThomasParser foo(leftToRight, listOfRules);
