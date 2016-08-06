@@ -28,4 +28,5 @@ This language is generally similar to C++. Here are it's planned noteworthy feat
     - Pointer assignment: myPtr := myObj
     - Pointer comparsion: x === y and x !== y are equivalent to &x == &y and &x != &y in C++
     - Use of "and", "or", and "not" instead of &&, ||, and !
+    - Tuples can be used like any other types and have native suppor: (int, float) foo = (42, 3.14);
 9. Large, but moduralized standard library. Because we will support all C++ libraries, we can incorporate a wide variety of Open Source libraries as part of our standard library. For instance, we plan to use wxWidgets to provide cross-platform UI buiding. Ultimately, we want to allow full-stack development after a single installation of our language.
