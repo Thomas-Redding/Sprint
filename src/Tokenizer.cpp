@@ -309,7 +309,7 @@ std::list<Token> Tokenizer::process(std::string str) {
 					if (cur.str.length() - i >= 2) {
 						TokenType tt = categorizePunc(cur.str.substr(i, 2));
 						if (tt != UNKNOWN) {
-							rtn.push_back(Token(tt, cur.str.substr(i, 2)));
+							rtn.push_back(Token(tt, cur.str.substr(i, 2), getLineNum(), getCharNum()));
 							++i;
 							continue;
 						}
@@ -318,18 +318,18 @@ std::list<Token> Tokenizer::process(std::string str) {
 					if (tt != UNKNOWN) {
 						if (tt == PLUS) {
 							if (rtn.back().type == IDENTIFIER || rtn.back().type == CLOSE_PARENTHESIS || rtn.back().type == CLOSE_BRACKET)
-								rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+								rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(), getCharNum()));
 							else
-								rtn.push_back(Token(POSITIVE, cur.str.substr(i, 1)));
+								rtn.push_back(Token(POSITIVE, cur.str.substr(i, 1), getLineNum(), getCharNum()));
 						}
 						else if (tt == MINUS) {
 							if (rtn.back().type == IDENTIFIER || rtn.back().type == CLOSE_PARENTHESIS || rtn.back().type == CLOSE_BRACKET)
-								rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+								rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(), getCharNum()));
 							else
-								rtn.push_back(Token(NEGATIVE, cur.str.substr(i, 1)));
+								rtn.push_back(Token(NEGATIVE, cur.str.substr(i, 1), getLineNum(), getCharNum()));
 						}
 						else
-							rtn.push_back(Token(tt, cur.str.substr(i, 1)));
+							rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(), getCharNum()));
 						continue;
 					}
 				}
