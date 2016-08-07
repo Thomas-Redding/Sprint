@@ -3,7 +3,9 @@
 // a() { b c d } e ( f g ) h i { j k l }
 
 
-main<T>(string x) {
+class
+
+function main<T>(string x) {
     int x = a * b * c + d * e * f + g + h;
     int *y = 42;
 /*
