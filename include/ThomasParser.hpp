@@ -130,6 +130,7 @@ enum TreeType {
 	T_KEYWORD_BOOL,
 	T_KEYWORD_CHAR,
 	T_KEYWORD_VAR,
+	T_KEYWORD_FUNCTION,
 	general,
 	curly_brace_block,
 	parenthesis_block,
