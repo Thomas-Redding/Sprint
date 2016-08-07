@@ -64,11 +64,21 @@ void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& 
 				it->type = OPEN_TEMPLATE;
 				++template_depth;
 			}
-			++it;
+			else {
+				++it;
+			}
 		}
-		else if (it->type == GREATER_THAN) {
-			if (template_depth > 0) {
+		else if (template_depth > 0) {
+			if (it->type == GREATER_THAN) {
 				it->type = CLOSE_TEMPLATE;
+				--template_depth;
+			}
+			else if (it->type == SHIFT_RIGHT) {
+				list.insert(it, Token(CLOSE_TEMPLATE, ">", it->lineNum, it->charNum));
+				it->type = GREATER_THAN;
+				it->charNum++;
+				it->str = ">";
+				--it;
 				--template_depth;
 			}
 		}
