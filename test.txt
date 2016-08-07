@@ -1,3 +1,22 @@
+
+{
+	class Foo : Parent {
+		int x;
+	}
+}
+
+class List<F, int x> {
+	int data;
+}
+
+List<List<int>> x;
+if (x < 7) {
+	if (Foo<5> > 4) {
+
+	}
+}
+
+/*
 class Foo extends Parent {
 	int16 bar, foo;
 	public:
@@ -43,3 +62,4 @@ class List<V, int x, F> {
 	private uint capacity = 20
 	private void expand()
 }
+*/
