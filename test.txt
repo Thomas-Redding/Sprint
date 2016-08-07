@@ -1,3 +1,19 @@
+
+
+class List<T> {
+	T* x;
+}
+
+List<List<double>> x;
+
+List<int>* foo;
+
+int* x = 5 * y;
+y = y * y;
+
+List* y;
+
+/*
 class Foo extends Parent {
 	int16 bar, foo;
 	public:
@@ -43,3 +59,4 @@ class List<V, int x, F> {
 	private uint capacity = 20
 	private void expand()
 }
+*/

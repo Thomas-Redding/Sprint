@@ -22,7 +22,7 @@ void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& 
 
 	numberOfClassesAddedAtCurrentDepth.push(0);
 	numberOfClassesOverwritten.push(0);
-	uint64_t template_depth = 0;
+	int64_t template_depth = 0;
 	for (auto it = list.begin(); it != list.end(); ++it) {
 		if (it->type == OPEN_CURLY_BRACE) {
 			numberOfClassesAddedAtCurrentDepth.push(0);
@@ -57,81 +57,40 @@ void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& 
 				classesAdded.push(c.base_name);
 			}
 		}
-		else if (it->type == LESS_THAN) {
-			--it;
+		else if (template_depth > 0 && it->type == GREATER_THAN) {
+			it->type = CLOSE_TEMPLATE;
+			--template_depth;
+		}
+		else if (template_depth > 1 && it->type == SHIFT_RIGHT) {
+			it->type = CLOSE_TEMPLATE;
+			it->str = ">";
+			list.insert(it, *it);
+			it->charNum++;
+			template_depth -= 2;
+		}
+		else if (it->type == IDENTIFIER) {
 			if (currentClasses.count(it->str) > 0) {
+				it->type = TYPE;
 				++it;
-				it->type = OPEN_TEMPLATE;
-				++template_depth;
+				if (it->type == LESS_THAN) {
+					it->type = OPEN_TEMPLATE;
+					++template_depth;
+				}
+				else {
+					--it;
+				}
+			}
+		}
+		else if (it->type == ASTERISK) {
+			--it;
+			if (it->type != CLOSE_PARENTHESIS && it->type != CLOSE_BRACKET && it->type != CLOSE_CURLY_BRACE && it->type != IDENTIFIER && !(it->isLiteral())) {
+				++it;
+				it->type = PTR;
 			}
 			else {
 				++it;
 			}
 		}
-		else if (template_depth > 0) {
-			if (it->type == GREATER_THAN) {
-				it->type = CLOSE_TEMPLATE;
-				--template_depth;
-			}
-			else if (it->type == SHIFT_RIGHT) {
-				list.insert(it, Token(CLOSE_TEMPLATE, ">", it->lineNum, it->charNum));
-				it->type = GREATER_THAN;
-				it->charNum++;
-				it->str = ">";
-				--it;
-				--template_depth;
-			}
-		}
-	}
-
-	// TODO: something like "convert_asterisk_to_PTR(list, classes);"
-}
-
-void convert_asterisk_to_PTR(std::list<Token>& list, const std::unordered_map<std::string, Class>& classes) {
-	for (auto it = ++list.begin(); it != list.end(); ++it) {
-		if (it->type == CLOSE_PARENTHESIS || it->type == CLOSE_BRACKET) {
-			continue;
-		}
-		Token t = *(it++);
-		if (it == list.end()) {
-			break;
-		}
-		if (it->type != ASTERISK) {
-			continue;
-		}
-		if (t.isPrimitive()) {
-			it->type = PTR;
-			continue;
-		}
-		if (classes.count(t.str) != 0) {
-			it->type = PTR;
-			continue;
-		}
-		if (t.type != GREATER_THAN) {
-			continue;
-		}
-
-		// store for later
-		auto currentIterator = it;
-		uint64_t lineNum = it->lineNum;
-
-		uint64_t depth = 1;
-		--it;
-		while (--it != list.begin() && depth > 0) {
-			if (it->type == GREATER_THAN) ++depth;
-			else if (it->type == LESS_THAN) --depth;
-		}
-		if (it == list.begin()) {
-			throw std::runtime_error("Error determining type of templated class on line " + std::to_string(lineNum));
-		}
-		--it;
-		if (it == list.begin()) {
-			throw std::runtime_error("Error determining type of templated class on line " + std::to_string(lineNum));
-		}
-		if (classes.count(it->str) != 0) {
-			currentIterator->type = PTR;
-		}
-		it = currentIterator;
 	}
 }
 
