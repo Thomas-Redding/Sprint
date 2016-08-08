@@ -1,17 +1,6 @@
-
-
 class List<T> {
 	T* x;
 }
-
-List<List<double>> x;
-
-List<int>* foo;
-
-int* x = 5 * y;
-y = y * y;
-
-List* y;
 
 /*
 class Foo extends Parent {

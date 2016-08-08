@@ -45,6 +45,7 @@ void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& 
 			numberOfClassesOverwritten.pop();
 		}
 		else if (it->type == KEYWORD_CLASS) {
+			auto startIt = it;
 			Class c(list, it);
 			if (currentClasses.count(c.base_name) > 0) {
 				classesOverwritten.push(currentClasses.find(c.base_name)->second);
@@ -55,6 +56,27 @@ void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& 
 				currentClasses.insert(std::pair<std::string, Class>(c.base_name, c));
 				numberOfClassesAddedAtCurrentDepth.top()++;
 				classesAdded.push(c.base_name);
+			}
+			++it;
+			if (it->type == OPEN_CURLY_BRACE) {
+				// add template parameters to the class-stack
+				numberOfClassesAddedAtCurrentDepth.push(0);
+				numberOfClassesOverwritten.push(0);
+				for (uint64_t i = 0; i < c.template_parameters.size(); ++i) {
+					if (c.template_parameters[i].first == KEYWORD_CLASS) {
+						std::string name = c.template_parameters[i].second;
+						if (currentClasses.count(name) > 0) {
+							classesOverwritten.push(currentClasses.find(c.base_name)->second);
+							currentClasses[name] = Class(name);
+							numberOfClassesOverwritten.top()++;
+						}
+						else {
+							currentClasses.insert(std::pair<std::string, Class>(name, Class(name)));
+							numberOfClassesAddedAtCurrentDepth.top()++;
+							classesAdded.push(c.base_name);
+						}
+					}
+				}
 			}
 		}
 		else if (template_depth > 0 && it->type == GREATER_THAN) {
