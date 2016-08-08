@@ -304,6 +304,8 @@ std::string treeTypeToString(TreeType t) {
 		return "statement";
 	else if (t == statements)
 		return "statements";
+	else if (t == T_KEYWORD_FUNCTION)
+		return "T_KEYWORD_FUNCTION";
 	else
 		return std::to_string(static_cast<TreeType>(t));
 }
@@ -550,6 +552,8 @@ TreeType translateType(TokenType t) {
 		return T_KEYWORD_CHAR;
 	else if (t == KEYWORD_VAR)
 		return T_KEYWORD_VAR;
+	else if (t == KEYWORD_FUNCTION)
+		return T_KEYWORD_FUNCTION;
 	else
 		return T_UNKNOWN;
 }

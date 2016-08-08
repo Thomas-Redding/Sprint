@@ -3,8 +3,11 @@
 // a() { b c d } e ( f g ) h i { j k l }
 
 
-main(string x) {
+class
+
+function main<T>(string x) {
     int x = a * b * c + d * e * f + g + h;
+    int *y = 42;
 /*
     int x = 42;
     {
@@ -20,9 +23,7 @@ foo(int y) -> int {
     z = z * y;
     return 52;
 }
-*/
 
-/*
 
 
 <general main T_OPEN_PARENTHESIS T_CLOSE_PARENTHESIS
