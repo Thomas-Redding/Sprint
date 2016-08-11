@@ -79,6 +79,27 @@ void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& 
 				}
 			}
 		}
+		else if (it->type == KEYWORD_FUNCTION) {
+			++it;
+			if (it->type != IDENTIFIER) {
+				throw std::runtime_error("Error: expected IDENTIFIER after keyword 'func', but found '" + Token::toString(it->type) + "'");
+			}
+			++it;
+			if (it->type != LESS_THAN) {
+				continue;
+			}
+			it->type = OPEN_TEMPLATE;
+			while (it != list.end()) {
+				++it;
+				if (it->type == GREATER_THAN) {
+					it->type = CLOSE_TEMPLATE;
+					break;
+				}
+			}
+			if (it == list.end()) {
+				throw std::runtime_error("Template that was opened on line " + std::to_string(it->lineNum) + " is never closed");
+			}
+		}
 		else if (template_depth > 0 && it->type == GREATER_THAN) {
 			it->type = CLOSE_TEMPLATE;
 			--template_depth;

@@ -2,6 +2,10 @@ class List<T> {
 	T* x;
 }
 
+function foo<T, int>() {
+	
+}
+
 /*
 class Foo extends Parent {
 	int16 bar, foo;
