@@ -4,7 +4,7 @@ Compiler for New Language
 ## PROGRESS
 1. Tokenizer        - DONE
 2. Parser           - DONE
-3. Parse Rules      - IN PROGRESS as of Aug 5, 2016; expected completion is Aug 12.
+3. Parse Rules      - IN PROGRESS as of Aug 5, 2016; expected completion is Aug 14.
 4. Compiler         - TODO
 5. Standard Library - TODO
 
