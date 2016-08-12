@@ -191,7 +191,7 @@ int main(int argc, const char * argv[]) {
 	}
 
 	std::vector<bool> leftToRight = {
-		true, false, true, true, true, true, true, true, true, true, false, true, false
+		true, false, true, true, true, true, true, true, true, true, false, true, true, false
 	};
 	std::vector<ThomasParseRule> listOfRules;
 	// todo: templates
@@ -253,9 +253,10 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule(100, general, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 
 	listOfRules.push_back(ThomasParseRule(110, general, {comma_value, T_COMMA, comma_value}, comma_clause));										// x, y
-	listOfRules.push_back(ThomasParseRule(110, general, {comma_value, T_SEMI_COLON}, statement));													// x;
+	
+	listOfRules.push_back(ThomasParseRule(120, general, {comma_value, T_SEMI_COLON}, statement));													// x;
 
-	listOfRules.push_back(ThomasParseRule(120, general, {statement, statement}, statements));														// x y
+	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
 
 	// listOfRules.push_back(ThomasParseRule(120, general, {unary_clause, statement}, statements));														// x y
 

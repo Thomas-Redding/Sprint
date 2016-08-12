@@ -154,8 +154,8 @@ enum TreeType {
 	statement,
 	statements,
 
-
-	unary1_value,			// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
+	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
+	unary1_value,
 	unary2_value,
 	plus_value,
 	mult_value,
@@ -232,7 +232,7 @@ private:
 	std::vector<ThomasParseRule> rules;
 	std::vector<bool>leftRight;
 	std::set<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
-	int firstToken = unary1_value;
+	int firstToken = raw_type;
 	int lastToken = comma_value;
 	std::set<TreeType> shortcuts[200];
 	static bool thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseRule r2);
@@ -242,6 +242,7 @@ public:
 		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 		leftRight = lr;
 		// shortcuts[value] = {T_IDENTIFIER};
+		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_CHAR, T_TYPE, T_KEYWORD_BOOL, T_KEYWORD_VAR};
 		shortcuts[unary1_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause};
 		shortcuts[unary2_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause};
 		shortcuts[mult_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause};
