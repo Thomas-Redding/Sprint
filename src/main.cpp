@@ -8,134 +8,10 @@
 #include <chrono>
 
 #include "../include/Tokenizer.hpp"
+#include "../include/PostTokenizer.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
-#include "../include/Class.hpp"
 
-void convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(std::list<Token>& list) {
-
-	std::unordered_map<std::string, Class> currentClasses;
-	std::stack<uint64_t> numberOfClassesAddedAtCurrentDepth;
-	std::stack<uint64_t> numberOfClassesOverwritten;
-	std::stack<std::string> classesAdded;
-	std::stack<Class> classesOverwritten;
-
-	numberOfClassesAddedAtCurrentDepth.push(0);
-	numberOfClassesOverwritten.push(0);
-	int64_t template_depth = 0;
-	for (auto it = list.begin(); it != list.end(); ++it) {
-		if (it->type == OPEN_CURLY_BRACE) {
-			numberOfClassesAddedAtCurrentDepth.push(0);
-			numberOfClassesOverwritten.push(0);
-		}
-		else if (it->type == CLOSE_CURLY_BRACE) {
-
-			// remove added classes
-			for (uint64_t i = 0; i < numberOfClassesAddedAtCurrentDepth.top(); ++i) {
-				currentClasses.erase(classesAdded.top());
-				classesAdded.pop();
-			}
-			numberOfClassesAddedAtCurrentDepth.pop();
-
-			// re-overwrite overwritten classes
-			for (uint64_t i = 0; i < numberOfClassesOverwritten.top(); ++i) {
-				currentClasses[classesOverwritten.top().base_name] = classesOverwritten.top();
-				classesOverwritten.pop();
-			}
-			numberOfClassesOverwritten.pop();
-		}
-		else if (it->type == KEYWORD_CLASS) {
-			auto startIt = it;
-			Class c(list, it);
-			if (currentClasses.count(c.base_name) > 0) {
-				classesOverwritten.push(currentClasses.find(c.base_name)->second);
-				currentClasses[c.base_name] = c;
-				numberOfClassesOverwritten.top()++;
-			}
-			else {
-				currentClasses.insert(std::pair<std::string, Class>(c.base_name, c));
-				numberOfClassesAddedAtCurrentDepth.top()++;
-				classesAdded.push(c.base_name);
-			}
-			++it;
-			if (it->type == OPEN_CURLY_BRACE) {
-				// add template parameters to the class-stack
-				numberOfClassesAddedAtCurrentDepth.push(0);
-				numberOfClassesOverwritten.push(0);
-				for (uint64_t i = 0; i < c.template_parameters.size(); ++i) {
-					if (c.template_parameters[i].first == KEYWORD_CLASS) {
-						std::string name = c.template_parameters[i].second;
-						if (currentClasses.count(name) > 0) {
-							classesOverwritten.push(currentClasses.find(c.base_name)->second);
-							currentClasses[name] = Class(name);
-							numberOfClassesOverwritten.top()++;
-						}
-						else {
-							currentClasses.insert(std::pair<std::string, Class>(name, Class(name)));
-							numberOfClassesAddedAtCurrentDepth.top()++;
-							classesAdded.push(c.base_name);
-						}
-					}
-				}
-			}
-		}
-		else if (it->type == KEYWORD_FUNCTION) {
-			++it;
-			if (it->type != IDENTIFIER) {
-				throw std::runtime_error("Error: expected IDENTIFIER after keyword 'func', but found '" + Token::toString(it->type) + "'");
-			}
-			++it;
-			if (it->type != LESS_THAN) {
-				continue;
-			}
-			it->type = OPEN_TEMPLATE;
-			while (it != list.end()) {
-				++it;
-				if (it->type == GREATER_THAN) {
-					it->type = CLOSE_TEMPLATE;
-					break;
-				}
-			}
-			if (it == list.end()) {
-				throw std::runtime_error("Template that was opened on line " + std::to_string(it->lineNum) + " is never closed");
-			}
-		}
-		else if (template_depth > 0 && it->type == GREATER_THAN) {
-			it->type = CLOSE_TEMPLATE;
-			--template_depth;
-		}
-		else if (template_depth > 1 && it->type == SHIFT_RIGHT) {
-			it->type = CLOSE_TEMPLATE;
-			it->str = ">";
-			list.insert(it, *it);
-			it->charNum++;
-			template_depth -= 2;
-		}
-		else if (it->type == IDENTIFIER) {
-			if (currentClasses.count(it->str) > 0) {
-				it->type = TYPE;
-				++it;
-				if (it->type == LESS_THAN) {
-					it->type = OPEN_TEMPLATE;
-					++template_depth;
-				}
-				else {
-					--it;
-				}
-			}
-		}
-		else if (it->type == ASTERISK) {
-			--it;
-			if (it->type != CLOSE_PARENTHESIS && it->type != CLOSE_BRACKET && it->type != CLOSE_CURLY_BRACE && it->type != IDENTIFIER && !(it->isLiteral())) {
-				++it;
-				it->type = PTR;
-			}
-			else {
-				++it;
-			}
-		}
-	}
-}
 
 int main(int argc, const char * argv[]) {
 
@@ -170,7 +46,7 @@ int main(int argc, const char * argv[]) {
 
 	auto timeTokenized = std::chrono::high_resolution_clock::now();
 
-	convert_LESSTHANs_to_TEMPLATE_OPENs_and_asterisks_to_PTR(list);
+	postTokenize(list);
 
 	auto timeFindingClasses = std::chrono::high_resolution_clock::now();
 

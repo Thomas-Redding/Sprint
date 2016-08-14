@@ -230,8 +230,6 @@ std::string treeTypeToString(TreeType t) {
 		return "T_OPEN_TEMPLATE";
 	else if (t == T_CLOSE_TEMPLATE)
 		return "T_CLOSE_TEMPLATE";
-	else if (t == T_TYPE)
-		return "T_TYPE";
 	else if (t == curly_brace_block)
 		return "curly_brace_block";
 	else if (t == parenthesis_block)
@@ -564,8 +562,6 @@ TreeType translateType(TokenType t) {
 		return T_OPEN_TEMPLATE;
 	else if (t == CLOSE_TEMPLATE)
 		return T_CLOSE_TEMPLATE;
-	else if (t == TYPE)
-		return T_TYPE;
 	else
 		return T_UNKNOWN;
 }

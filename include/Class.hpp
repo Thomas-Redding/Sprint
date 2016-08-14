@@ -1,3 +1,9 @@
+#ifndef CLASS_HPP
+#define CLASS_HPP
+
+#include <iostream>
+#include "Token.hpp"
+
 struct Class {
 	Class() {};
 	Class(std::string base_name) : base_name(base_name) {};
@@ -69,3 +75,5 @@ struct Class {
 	std::string base_name;
 	std::vector<std::pair<TokenType, std::string>> template_parameters;
 };
+
+#endif

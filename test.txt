@@ -1,9 +1,13 @@
-class List<T> {
-	T* x;
-}
+class List<T> { T* x; }
 
-function foo<T, int>() {
-	
+class Foo { int bar; }
+
+Foo* x;
+
+foo<T, int>() -> double {
+	int* x;
+	double* y;
+	Foo* z;
 }
 
 /*
