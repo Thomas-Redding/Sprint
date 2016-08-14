@@ -137,6 +137,7 @@ enum TreeType {
 	curly_brace_block,
 	parenthesis_block,
 	bracket_block,
+	template_block,
 	unary1_clause,
 	unary2_clause,
 	mult_clause,
@@ -227,7 +228,7 @@ private:
 	void doCurlyBracePass(ThomasNode* tree);
 	void doParenthesesPass(ThomasNode* tree);
 	void doBracketPass(ThomasNode* tree);
-	void doAnglePass(ThomasNode* tree);
+	void doTemplatePass(ThomasNode* tree);
 	std::vector<ThomasParseRule> rules;
 	std::vector<bool>leftRight;
 	std::set<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
@@ -241,7 +242,7 @@ public:
 		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 		leftRight = lr;
 		// shortcuts[value] = {T_IDENTIFIER};
-		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_VAR};
+		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_INT64, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_UINT64, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_VAR, T_IDENTIFIER};
 		shortcuts[unary1_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause};
 		shortcuts[unary2_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause};
 		shortcuts[mult_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause};

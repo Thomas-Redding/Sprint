@@ -236,6 +236,8 @@ std::string treeTypeToString(TreeType t) {
 		return "parenthesis_block";
 	else if (t == bracket_block)
 		return "bracket_block";
+	else if (t == template_block)
+		return "template_block";
 	else if (t == mult_clause)
 		return "mult_clause";
 	else if (t == plus_clause)
@@ -768,7 +770,7 @@ void ThomasParser::doCurlyBracePass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
 	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->children.size() > 0) {
-			doParenthesesPass(*it);
+			doCurlyBracePass(*it);
 		}
 		else {
 			if ((*it)->type == T_OPEN_CURLY_BRACE) {
@@ -791,6 +793,35 @@ void ThomasParser::doCurlyBracePass(ThomasNode* tree) {
 		}
 	}
 }
+
+void ThomasParser::doTemplatePass(ThomasNode* tree) {
+	std::stack<std::list<ThomasNode*>::iterator> st;
+	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
+		if ((*it)->children.size() > 0) {
+			doTemplatePass(*it);
+		}
+		else {
+			if ((*it)->type == T_OPEN_TEMPLATE) {
+				st.push(it);
+			}
+			else if ((*it)->type == T_CLOSE_TEMPLATE) {
+				// create new parenthesis_block
+				ThomasNode* newTree = new ThomasNode(template_block);
+				std::list<ThomasNode*>::iterator leftPar = st.top();
+				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
+				std::list<ThomasNode*>::iterator rightPar = it;
+				std::list<ThomasNode*>::iterator end = ++it;
+				--it;
+				st.pop();
+				for (std::list<ThomasNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
+					newTree->children.push_back(*it2);
+				tree->children.insert(leftPar, newTree);
+				tree->children.erase(leftPar, end);
+			}
+		}
+	}
+}
+
 
 void ThomasParser::doParenthesesPass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
@@ -824,7 +855,7 @@ void ThomasParser::doBracketPass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
 	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->children.size() > 0) {
-			doParenthesesPass(*it);
+			doBracketPass(*it);
 		}
 		else {
 			if ((*it)->type == T_OPEN_BRACKET) {

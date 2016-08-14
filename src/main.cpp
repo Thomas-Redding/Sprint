@@ -67,6 +67,7 @@ int main(int argc, const char * argv[]) {
 	}
 
 	std::vector<bool> leftToRight = {
+		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
 		true, false, true, true, true, true, true, true, true, true, false, true, true, false
 	};
 	std::vector<ThomasParseRule> listOfRules;
@@ -135,6 +136,16 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
 
 	// listOfRules.push_back(ThomasParseRule(120, general, {unary_clause, statement}, statements));														// x y
+
+	// listOfRules.push_back(ThomasParseRule())
+
+
+
+
+
+
+
+
 
 	ThomasParser foo(leftToRight, listOfRules);
 
