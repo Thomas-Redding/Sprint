@@ -578,6 +578,7 @@ ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
 	doCurlyBracePass(mainTree);
 	doParenthesesPass(mainTree);
 	doBracketPass(mainTree);
+	doTemplatePass(mainTree);
 	parse();
 	/*
 	 * set-up: 6%
