@@ -39,8 +39,14 @@ void postTokenize(std::list<Token>& list) {
 			numberOfClassesOverwritten.pop();
 		}
 		else if (it->type == KEYWORD_CLASS) {
+
+			// add a class to the stack
+
 			auto startIt = it;
 			Class c(list, it);
+			++startIt;
+			startIt->type = CLASS_IDENTIFIER;
+			--startIt;
 			if (currentClasses.count(c.base_name) > 0) {
 				classesOverwritten.push(currentClasses.find(c.base_name)->second);
 				currentClasses[c.base_name] = c;
@@ -74,6 +80,10 @@ void postTokenize(std::list<Token>& list) {
 			}
 		}
 		else if (it->type == ARROW) {
+
+			// convert function name to type 'FUNC_DECL_IDENTIFOER'
+			// add any template-classes declared by a functio to the stack
+
 			uint64_t lineNum = it->lineNum;
 			auto it_copy = it;
 			while (--it != list.begin()) {
@@ -147,6 +157,16 @@ void postTokenize(std::list<Token>& list) {
 				throw std::runtime_error("Error: function declared at line " + std::to_string(lineNum) + " does not end in a semicolon or a '{'");
 			}
 		}
+		else if (it->type == IDENTIFIER && currentClasses.count(it->str) > 0) {
+			it->type = CLASS_IDENTIFIER;
+			++it;
+			if (it->type != LESS_THAN) {
+				--it;
+				continue;
+			}
+			it->type = OPEN_TEMPLATE;
+			++template_depth;
+		}
 		else if (template_depth > 0 && it->type == GREATER_THAN) {
 			it->type = CLOSE_TEMPLATE;
 			--template_depth;
@@ -160,7 +180,7 @@ void postTokenize(std::list<Token>& list) {
 		}
 		else if (it->type == ASTERISK) {
 			--it;
-			if (it->isPrimitive() || currentClasses.count(it->str) > 0) {
+			if (it->isPrimitive() || it->type == CLOSE_TEMPLATE || currentClasses.count(it->str) > 0) {
 				++it;
 				it->type = PTR;
 			}

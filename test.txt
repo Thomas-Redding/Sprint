@@ -1,14 +1,6 @@
 class List<T> { T* x; }
 
-class Foo { int bar; }
-
-Foo* x;
-
-foo<T, int>() -> double {
-	int* x;
-	double* y;
-	Foo* z;
-}
+List<double, double> A;
 
 /*
 class Foo extends Parent {

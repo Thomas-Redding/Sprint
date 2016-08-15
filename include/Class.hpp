@@ -37,6 +37,7 @@ struct Class {
 				}
 			}
 			else if ((*it).type == IDENTIFIER) {
+				it->type = CLASS_IDENTIFIER;
 				templateName = (it++)->str;
 				if (it == tokens.end()) {
 					throw std::runtime_error("Error: unexpected token on line " + std::to_string(base_name_token.lineNum) + "; expected a ',' or '>' following a template parameter, but found EOF");

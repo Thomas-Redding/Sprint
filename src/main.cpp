@@ -74,46 +74,45 @@ int main(int argc, const char * argv[]) {
 	// todo: templates
 	// listOfRules.push_back(ThomasParseRule(-1, general, {unary_value, T_PLUS_PLUS}, unary_clause));												// <T>
 
-	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
-	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, T_MINUS_MINUS}, unary1_clause));													// x--
-	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
-	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, bracket_block}, unary1_clause));													// x[y]
-	listOfRules.push_back(ThomasParseRule(0, general, {unary1_value, T_PERIOD}, unary1_clause));														// x.y
+	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
+	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_MINUS_MINUS}, unary1_clause));													// x--
+	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
+	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, bracket_block}, unary1_clause));													// x[y]
+	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PERIOD}, unary1_clause));														// x.y
 
-	listOfRules.push_back(ThomasParseRule(10, general, {T_POSITIVE, unary2_value}, unary2_clause));													// +x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_NEGATIVE, unary2_value}, unary2_clause));													// -x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_PLUS_PLUS, unary2_value}, unary2_clause));													// ++x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_MINUS_MINUS, unary2_value}, unary2_clause));												// --x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_TILDE, unary2_value}, unary2_clause));														// ~x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_PTR, unary2_value}, unary2_clause));														// *x
-	listOfRules.push_back(ThomasParseRule(10, general, {T_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_POSITIVE, unary2_value}, unary2_clause));													// +x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_NEGATIVE, unary2_value}, unary2_clause));													// -x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_PLUS_PLUS, unary2_value}, unary2_clause));													// ++x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_MINUS_MINUS, unary2_value}, unary2_clause));												// --x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_TILDE, unary2_value}, unary2_clause));														// ~x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
+	listOfRules.push_back(ThomasParseRule( 10, general, {T_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
 
-	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_ASTERISK, mult_value}, mult_clause));											// x * y
-	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_SLASH, mult_value}, mult_clause));											// x / y
-	listOfRules.push_back(ThomasParseRule(20, general, {mult_value, T_PERCENT, mult_value}, mult_clause));											// x % y
+	listOfRules.push_back(ThomasParseRule( 20, general, {mult_value, T_ASTERISK, mult_value}, mult_clause));											// x * y
+	listOfRules.push_back(ThomasParseRule( 20, general, {mult_value, T_SLASH, mult_value}, mult_clause));											// x / y
+	listOfRules.push_back(ThomasParseRule( 20, general, {mult_value, T_PERCENT, mult_value}, mult_clause));											// x % y
 
-	listOfRules.push_back(ThomasParseRule(30, general, {plus_value, T_PLUS, plus_value}, plus_clause));												// x + y
-	listOfRules.push_back(ThomasParseRule(30, general, {plus_value, T_MINUS, plus_value}, plus_clause));											// x - y
+	listOfRules.push_back(ThomasParseRule( 30, general, {plus_value, T_PLUS, plus_value}, plus_clause));												// x + y
+	listOfRules.push_back(ThomasParseRule( 30, general, {plus_value, T_MINUS, plus_value}, plus_clause));											// x - y
 
-	listOfRules.push_back(ThomasParseRule(40, general, {shift_value, T_SHIFT_LEFT, shift_value}, shift_clause));									// x << y
-	listOfRules.push_back(ThomasParseRule(40, general, {shift_value, T_SHIFT_RIGHT, shift_value}, shift_clause));									// x >> y
+	listOfRules.push_back(ThomasParseRule( 40, general, {shift_value, T_SHIFT_LEFT, shift_value}, shift_clause));									// x << y
+	listOfRules.push_back(ThomasParseRule( 40, general, {shift_value, T_SHIFT_RIGHT, shift_value}, shift_clause));									// x >> y
 
-	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_LESS_THAN, inequality_value}, inequality_clause));						// x < y
-	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_GREATER_THAN, inequality_value}, inequality_clause));					// x > y
-	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_LESS_THAN_EQUALS, inequality_value}, inequality_clause));				// x <= y
-	listOfRules.push_back(ThomasParseRule(50, general, {inequality_value, T_GREATER_THAN_EQUALS, inequality_value}, inequality_clause));			// x >= y
+	listOfRules.push_back(ThomasParseRule( 50, general, {inequality_value, T_LESS_THAN, inequality_value}, inequality_clause));						// x < y
+	listOfRules.push_back(ThomasParseRule( 50, general, {inequality_value, T_GREATER_THAN, inequality_value}, inequality_clause));					// x > y
+	listOfRules.push_back(ThomasParseRule( 50, general, {inequality_value, T_LESS_THAN_EQUALS, inequality_value}, inequality_clause));				// x <= y
+	listOfRules.push_back(ThomasParseRule( 50, general, {inequality_value, T_GREATER_THAN_EQUALS, inequality_value}, inequality_clause));			// x >= y
 
-	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EQUAL_EQUALS, equality_value}, equality_clause));							// x == y
-	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EXCLAMATION_POINT_EQUALS, equality_value}, equality_clause));				// x != y
-	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EQUAL_EQUAL_EQUALS, equality_value}, equality_clause));					// x === y
-	listOfRules.push_back(ThomasParseRule(60, general, {equality_value, T_EXCLAMATION_POINT_EQUAL_EQUALS, equality_value}, equality_clause));		// x !== y
+	listOfRules.push_back(ThomasParseRule( 60, general, {equality_value, T_EQUAL_EQUALS, equality_value}, equality_clause));							// x == y
+	listOfRules.push_back(ThomasParseRule( 60, general, {equality_value, T_EXCLAMATION_POINT_EQUALS, equality_value}, equality_clause));				// x != y
+	listOfRules.push_back(ThomasParseRule( 60, general, {equality_value, T_EQUAL_EQUAL_EQUALS, equality_value}, equality_clause));					// x === y
+	listOfRules.push_back(ThomasParseRule( 60, general, {equality_value, T_EXCLAMATION_POINT_EQUAL_EQUALS, equality_value}, equality_clause));		// x !== y
 
-	listOfRules.push_back(ThomasParseRule(70, general, {bitwise_and_value, T_KEYWORD_AND, bitwise_and_value}, bitwise_and_clause));					// x & y
+	listOfRules.push_back(ThomasParseRule( 70, general, {bitwise_and_value, T_KEYWORD_AND, bitwise_and_value}, bitwise_and_clause));					// x & y
 
-	listOfRules.push_back(ThomasParseRule(80, general, {bitwise_xor_value, T_KEYWORD_XOR, bitwise_xor_value}, bitwise_xor_clause));					// x ^ y
+	listOfRules.push_back(ThomasParseRule( 80, general, {bitwise_xor_value, T_KEYWORD_XOR, bitwise_xor_value}, bitwise_xor_clause));					// x ^ y
 
-	listOfRules.push_back(ThomasParseRule(90, general, {bitwise_or_value, T_KEYWORD_OR, bitwise_or_value}, bitwise_or_clause));						// x | y
+	listOfRules.push_back(ThomasParseRule( 90, general, {bitwise_or_value, T_KEYWORD_OR, bitwise_or_value}, bitwise_or_clause));						// x | y
 
 	listOfRules.push_back(ThomasParseRule(100, general, {setting_value, T_QUESTION_MARK, setting_value, T_COLON, setting_value}, ternary_clause));	// x ? y : z
 	listOfRules.push_back(ThomasParseRule(100, general, {setting_value, T_EQUALS, setting_value}, setting_clause));									// x = y
@@ -137,9 +136,9 @@ int main(int argc, const char * argv[]) {
 
 	// listOfRules.push_back(ThomasParseRule(120, general, {unary_clause, statement}, statements));														// x y
 
-	// listOfRules.push_back(ThomasParseRule())
-
-
+	listOfRules.push_back(ThomasParseRule(-10, template_block, {T_INTEGER_LITERAL}, template_instance_arg));
+	listOfRules.push_back(ThomasParseRule(-10, template_block, {raw_type}, template_instance_arg));
+	listOfRules.push_back(ThomasParseRule( -9, template_block, {T_COMMA, template_instance_arg}, comma_and_template_instance_arg));
 
 
 
