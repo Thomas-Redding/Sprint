@@ -15,6 +15,7 @@ enum TreeType {
 	T_KEYWORD,
 	T_IDENTIFIER,
 	T_CLASS_IDENTIFIER,
+	T_FUNC_DECL_IDENTIFIER,
 	T_INTEGER_LITERAL,
 	T_FLOAT_LITERAL,
 	T_FLOAT_LITERAL2,
@@ -162,6 +163,8 @@ enum TreeType {
 	template_decl_arg, // "int A", "T", "uint64 B", etc
 	comma_and_template_decl_arg,
 	template_decl_args,
+
+	function_decl,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	unary1_value,

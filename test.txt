@@ -1,6 +1,9 @@
-class List<T> { T* x; }
+class List<T>;
 
-List<double, double> A;
+sum<T>(List<T> list) -> double {
+	T rtn;
+	return  List<double>(rtn) < 5;
+}
 
 /*
 class Foo extends Parent {

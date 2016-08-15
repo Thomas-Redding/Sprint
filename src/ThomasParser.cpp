@@ -157,7 +157,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == T_KEYWORD_VAR) return "T_KEYWORD_VAR";
 	else if (t == statement) return "statement";
 	else if (t == statements) return "statements";
-	else if (t == T_KEYWORD_FUNCTION) return "T_KEYWORD_FUNCTION";
+	else if (t == T_FUNC_DECL_IDENTIFIER) return "T_FUNC_DECL_IDENTIFIER";
 
 	else if (t == comma_and_template_instance_arg) return "comma_and_template_instance_arg";
 	else if (t == template_instance_arg) return "template_instance_arg";
@@ -166,6 +166,8 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == template_decl_arg) return "template_decl_arg";
 	else if (t == comma_and_template_decl_arg) return "comma_and_template_decl_arg";
 	else if (t == template_decl_args) return "template_decl_args";
+
+	else if (t == function_decl) return "function_decl";
 
 	else return std::to_string(static_cast<TreeType>(t));
 }
@@ -179,6 +181,7 @@ TreeType translateType(TokenType t) {
 	if (t == KEYWORD) return T_KEYWORD;
 	else if (t == IDENTIFIER) return T_IDENTIFIER;
 	else if (t == CLASS_IDENTIFIER) return T_CLASS_IDENTIFIER;
+	else if (t == FUNC_DECL_IDENTIFIER) return T_FUNC_DECL_IDENTIFIER;
 	else if (t == INTEGER_LITERAL) return T_INTEGER_LITERAL;
 	else if (t == FLOAT_LITERAL) return T_FLOAT_LITERAL;
 	else if (t == FLOAT_LITERAL2) return T_FLOAT_LITERAL2;

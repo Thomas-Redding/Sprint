@@ -23,7 +23,6 @@ void postTokenize(std::list<Token>& list) {
 			numberOfClassesOverwritten.push(0);
 		}
 		else if (it->type == CLOSE_CURLY_BRACE) {
-
 			// remove added classes
 			for (uint64_t i = 0; i < numberOfClassesAddedAtCurrentDepth.top(); ++i) {
 				currentClasses.erase(classesAdded.top());
@@ -81,25 +80,33 @@ void postTokenize(std::list<Token>& list) {
 		}
 		else if (it->type == ARROW) {
 
-			// convert function name to type 'FUNC_DECL_IDENTIFOER'
+			// convert function name to type 'FUNC_DECL_IDENTIFIER'
 			// add any template-classes declared by a functio to the stack
 
-			uint64_t lineNum = it->lineNum;
-			auto it_copy = it;
+			std::string lineNum = std::to_string(it->lineNum);
+			auto it_arrow = it;
+			--it;
+			if (it->type != CLOSE_PARENTHESIS) {
+				std::runtime_error("Error: expected ')' before '->' on line " + lineNum + " but found '" + it->str + "'");
+			}
+
+			// move iterator to '('
 			while (--it != list.begin()) {
 				if (it->type == OPEN_PARENTHESIS) {
 					break;
 				}
 			}
-
-			if (it->type != OPEN_PARENTHESIS) {
-				throw std::runtime_error("Error: found '->' on line " + std::to_string(lineNum) + " but could not find accompanying arguments for the function");
+			if (it == list.begin()) {
+				std::runtime_error("Error: expected arguments '( ... )' before '->' on line " + lineNum + " but couldn't find '('");
 			}
+
+			auto it_openP = it;
+			
 			--it;
-			if (it->type == GREATER_THAN) {
+			bool isTemplated = (it->type == GREATER_THAN);
+			if (isTemplated) {
 				it->type = CLOSE_TEMPLATE;
-				numberOfClassesAddedAtCurrentDepth.push(0);
-				numberOfClassesOverwritten.push(0);
+				// add classes in the template to 'currentClasses'
 				while (--it != list.begin()) {
 					if (it->type == LESS_THAN) {
 						it->type = OPEN_TEMPLATE;
@@ -119,42 +126,65 @@ void postTokenize(std::list<Token>& list) {
 					}
 				}
 				if (it == list.begin()) {
-					throw std::runtime_error("Error: found '...>(...) ->' on line " + std::to_string(lineNum) + " but could not find accompanying '<' for the templates of the function");
+					throw std::runtime_error("Error: expected function's template arguments to begin with '<' on line " + lineNum);
 				}
 				--it;
 			}
-			if (it->type != IDENTIFIER) {
-				throw std::runtime_error("Error: expected IDENTIFIER at the start of a function declaration on line " + std::to_string(lineNum) + " but found '" + it->str + "'");
-			}
 			it->type = FUNC_DECL_IDENTIFIER;
-			it = it_copy;
+
+
+			// convert 'IDENTIFIER's between the parentheses into 'CLASS_IDENTIFIER'
+			it = it_openP;
 			while (++it != list.end()) {
-				if (it->type == SEMI_COLON) {
-					// remove added classes
-					for (uint64_t i = 0; i < numberOfClassesAddedAtCurrentDepth.top(); ++i) {
-						currentClasses.erase(classesAdded.top());
-						classesAdded.pop();
-					}
-					std::cout << "#un-add " << numberOfClassesAddedAtCurrentDepth.top() << std::endl;
-					numberOfClassesAddedAtCurrentDepth.pop();
-
-					// re-overwrite overwritten classes
-					for (uint64_t i = 0; i < numberOfClassesOverwritten.top(); ++i) {
-						currentClasses[classesOverwritten.top().base_name] = classesOverwritten.top();
-						classesOverwritten.pop();
-					}
-					std::cout << "#un-overwrite" << numberOfClassesOverwritten.top() << std::endl;
-					numberOfClassesOverwritten.pop();
-
-					std::cout << "function decl (';')" << std::endl;
+				if (it->type == CLOSE_PARENTHESIS) {
 					break;
 				}
-				else if (it->type == OPEN_CURLY_BRACE) {
-					break;
+				if (it->type == IDENTIFIER && currentClasses.count(it->str) > 0) {
+					it->type = CLASS_IDENTIFIER;
 				}
 			}
 			if (it == list.end()) {
-				throw std::runtime_error("Error: function declared at line " + std::to_string(lineNum) + " does not end in a semicolon or a '{'");
+				throw std::runtime_error("Error: expected arguments '( ... )' before '->' on line " + lineNum + " but couldn't find ')'");
+			}
+
+			it = it_arrow;
+			while (++it != list.end()) {
+				if (it->type == IDENTIFIER && currentClasses.count(it->str) > 0) {
+					it->type = CLASS_IDENTIFIER;
+				}
+				else if (it->type == OPEN_CURLY_BRACE || it->type == SEMI_COLON) {
+					break;
+				}
+				else if (it->type == GREATER_THAN) {
+					it->type = CLOSE_TEMPLATE;
+				}
+				else if (it->type == LESS_THAN) {
+					it->type = OPEN_TEMPLATE;
+				}
+				else if (it->type == SHIFT_RIGHT) {
+					it->type = CLOSE_TEMPLATE;
+					it->str = ">";
+					list.insert(it, *it);
+				}
+			}
+			if (it == list.end()) {
+				throw std::runtime_error("Error: expected function on line " + lineNum + " to end with either a '{' or a ';'");
+			}
+
+			if (isTemplated && it->type == SEMI_COLON) {
+				// remove classes added by the template
+				for (uint64_t i = 0; i < numberOfClassesAddedAtCurrentDepth.top(); ++i) {
+					currentClasses.erase(classesAdded.top());
+					classesAdded.pop();
+				}
+				numberOfClassesAddedAtCurrentDepth.pop();
+
+				// re-overwrite overwritten classes
+				for (uint64_t i = 0; i < numberOfClassesOverwritten.top(); ++i) {
+					currentClasses[classesOverwritten.top().base_name] = classesOverwritten.top();
+					classesOverwritten.pop();
+				}
+				numberOfClassesOverwritten.pop();
 			}
 		}
 		else if (it->type == IDENTIFIER && currentClasses.count(it->str) > 0) {

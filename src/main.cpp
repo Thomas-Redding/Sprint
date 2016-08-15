@@ -68,7 +68,7 @@ int main(int argc, const char * argv[]) {
 
 	std::vector<bool> leftToRight = {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		true, true, true, true, false, true, true, true, true, true, true, true, true, false, true, true, false
+		true, true, true, true, false, true, true, true, true, true, true, true, true, false, true, true, false, true
 	};
 	std::vector<ThomasParseRule> listOfRules;
 	// todo: templates
@@ -143,13 +143,15 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule( -9, template_block, {template_instance_arg}, template_instance_args));
 	listOfRules.push_back(ThomasParseRule( -8, template_block, {template_instance_args, comma_and_template_instance_arg}, template_instance_args));
 
-
+	// parse template declarations
 	listOfRules.push_back(ThomasParseRule(-10, template_block, {T_KEYWORD_FLOAT}, template_decl_arg));
 	listOfRules.push_back(ThomasParseRule(-10, template_block, {T_IDENTIFIER}, template_decl_arg));
 	listOfRules.push_back(ThomasParseRule( -9, template_block, {T_COMMA, template_decl_arg}, comma_and_template_decl_arg));
 	listOfRules.push_back(ThomasParseRule( -9, template_block, {template_decl_arg}, template_decl_args));
 	listOfRules.push_back(ThomasParseRule( -8, template_block, {template_decl_args, comma_and_template_decl_arg}, template_decl_args));
 
+	listOfRules.push_back(ThomasParseRule(140, general, {T_FUNC_DECL_IDENTIFIER, parenthesis_block, T_ARROW}, function_decl));														// foo (int x, int y) -> int
+	listOfRules.push_back(ThomasParseRule(140, general, {T_FUNC_DECL_IDENTIFIER, template_block, parenthesis_block, T_ARROW}, function_decl));														// foo (int x, int y) -> int
 
 
 
