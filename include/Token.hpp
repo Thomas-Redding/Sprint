@@ -161,10 +161,10 @@ public:
 		return "(" + toString(type) + " '" + str + "' ~ " + std::to_string(lineNum) + "," + std::to_string(charNum) + ")";
 	}
 	bool isIntKeyword() const {
-		return type == KEYWORD_INT || type == KEYWORD_INT8 || type == KEYWORD_INT16 || type == KEYWORD_INT32 || type == KEYWORD_INT64 || type == KEYWORD_UINT || type == KEYWORD_UINT8 || type == KEYWORD_UINT16 || type == KEYWORD_UINT32 || type == KEYWORD_UINT64;
+		return type == KEYWORD_INT || type == KEYWORD_INT8 || type == KEYWORD_INT16 || type == KEYWORD_INT32 || type == KEYWORD_INT64 || type == KEYWORD_UINT || type == KEYWORD_UINT8 || type == KEYWORD_UINT16 || type == KEYWORD_UINT32 || type == KEYWORD_UINT64 || type == KEYWORD_BOOL || type == KEYWORD_CHAR;
 	}
 	bool isPrimitive() const {
-		return isIntKeyword() || type == KEYWORD_DOUBLE || type == KEYWORD_FLOAT || type == KEYWORD_BOOL || type == KEYWORD_CHAR || type == KEYWORD_VAR;
+		return isIntKeyword() || type == KEYWORD_DOUBLE || type == KEYWORD_FLOAT || type == KEYWORD_VAR;
 	}
 	bool isLiteral() const {
 		return type == INTEGER_LITERAL || type == FLOAT_LITERAL || type == FLOAT_LITERAL2 || type == CHARACTER_LITERAL || type == STRING_LITERAL;
