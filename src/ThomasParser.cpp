@@ -115,6 +115,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == T_ARROW) return "T_ARROW";
 	else if (t == T_EQUAL_EQUAL_EQUALS) return "T_EQUAL_EQUAL_EQUALS";
 	else if (t == T_EXCLAMATION_POINT_EQUAL_EQUALS) return "T_EXCLAMATION_POINT_EQUAL_EQUALS";
+	else if (t == T_KEYWORD_REPEAT) return "T_KEYWORD_REPEAT";
 	else if (t == T_OPEN_TEMPLATE) return "T_OPEN_TEMPLATE";
 	else if (t == T_CLOSE_TEMPLATE) return "T_CLOSE_TEMPLATE";
 	else if (t == curly_brace_block) return "curly_brace_block";
@@ -248,6 +249,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_DOUBLE) return T_KEYWORD_DOUBLE;
 	else if (t == KEYWORD_PUBLIC) return T_KEYWORD_PUBLIC;
 	else if (t == KEYWORD_VOID) return T_KEYWORD_VOID;
+	else if (t == KEYWORD_REPEAT) return T_KEYWORD_REPEAT;
 	else if (t == PERIOD) return T_PERIOD;
 	else if (t == COLON) return T_COLON;
 	else if (t == SEMI_COLON) return T_SEMI_COLON;
