@@ -9,7 +9,7 @@ function main<A, int B, C>(string x) {
     Foo z;
 }
 
-main<double, 42, var>("apple");
+main<double, 42, List<int>>("apple");
 Foo<char, 91, char[]> bar = Foo<int>();
 
 /*
