@@ -8,7 +8,6 @@
 #include <chrono>
 
 #include "../include/Tokenizer.hpp"
-#include "../include/PostTokenizer.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
 
@@ -46,8 +45,6 @@ int main(int argc, const char * argv[]) {
 
 	auto timeTokenized = std::chrono::high_resolution_clock::now();
 
-	postTokenize(list);
-
 	auto timeFindingClasses = std::chrono::high_resolution_clock::now();
 
 	// syntatic sugar to switch a.b(c) to b(a,c)
@@ -68,18 +65,20 @@ int main(int argc, const char * argv[]) {
 
 	std::vector<bool> leftToRight = {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		true, true, true, true, false, true, true, true, true, true, true, true, true, false, true, true, false, true
+		true, false, true, true, true, true, true, true, true, true, false, true, true, false
 	};
 	std::vector<ThomasParseRule> listOfRules;
 	// todo: templates
 	// listOfRules.push_back(ThomasParseRule(-1, general, {unary_value, T_PLUS_PLUS}, unary_clause));												// <T>
 
+	// true
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_MINUS_MINUS}, unary1_clause));													// x--
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, bracket_block}, unary1_clause));													// x[y]
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PERIOD}, unary1_clause));														// x.y
 
+	// false
 	listOfRules.push_back(ThomasParseRule( 10, general, {T_POSITIVE, unary2_value}, unary2_clause));													// +x
 	listOfRules.push_back(ThomasParseRule( 10, general, {T_NEGATIVE, unary2_value}, unary2_clause));													// -x
 	listOfRules.push_back(ThomasParseRule( 10, general, {T_PLUS_PLUS, unary2_value}, unary2_clause));													// ++x
@@ -88,13 +87,16 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule( 10, general, {T_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
 	listOfRules.push_back(ThomasParseRule( 10, general, {T_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
 
+	// true
 	listOfRules.push_back(ThomasParseRule( 20, general, {mult_value, T_ASTERISK, mult_value}, mult_clause));											// x * y
 	listOfRules.push_back(ThomasParseRule( 20, general, {mult_value, T_SLASH, mult_value}, mult_clause));											// x / y
 	listOfRules.push_back(ThomasParseRule( 20, general, {mult_value, T_PERCENT, mult_value}, mult_clause));											// x % y
 
+	// true
 	listOfRules.push_back(ThomasParseRule( 30, general, {plus_value, T_PLUS, plus_value}, plus_clause));												// x + y
 	listOfRules.push_back(ThomasParseRule( 30, general, {plus_value, T_MINUS, plus_value}, plus_clause));											// x - y
 
+	// true
 	listOfRules.push_back(ThomasParseRule( 40, general, {shift_value, T_SHIFT_LEFT, shift_value}, shift_clause));									// x << y
 	listOfRules.push_back(ThomasParseRule( 40, general, {shift_value, T_SHIFT_RIGHT, shift_value}, shift_clause));									// x >> y
 
@@ -133,26 +135,6 @@ int main(int argc, const char * argv[]) {
 	listOfRules.push_back(ThomasParseRule(120, general, {comma_value, T_SEMI_COLON}, statement));													// x;
 
 	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
-
-	// listOfRules.push_back(ThomasParseRule(120, general, {unary_clause, statement}, statements));														// x y
-
-	// parse template instances
-	listOfRules.push_back(ThomasParseRule(-10, template_block, {T_INTEGER_LITERAL}, template_instance_arg));
-	listOfRules.push_back(ThomasParseRule(-10, template_block, {raw_type}, template_instance_arg));
-	listOfRules.push_back(ThomasParseRule( -9, template_block, {T_COMMA, template_instance_arg}, comma_and_template_instance_arg));
-	listOfRules.push_back(ThomasParseRule( -9, template_block, {template_instance_arg}, template_instance_args));
-	listOfRules.push_back(ThomasParseRule( -8, template_block, {template_instance_args, comma_and_template_instance_arg}, template_instance_args));
-
-	// parse template declarations
-	listOfRules.push_back(ThomasParseRule(-10, template_block, {T_KEYWORD_FLOAT}, template_decl_arg));
-	listOfRules.push_back(ThomasParseRule(-10, template_block, {T_IDENTIFIER}, template_decl_arg));
-	listOfRules.push_back(ThomasParseRule( -9, template_block, {T_COMMA, template_decl_arg}, comma_and_template_decl_arg));
-	listOfRules.push_back(ThomasParseRule( -9, template_block, {template_decl_arg}, template_decl_args));
-	listOfRules.push_back(ThomasParseRule( -8, template_block, {template_decl_args, comma_and_template_decl_arg}, template_decl_args));
-
-	listOfRules.push_back(ThomasParseRule(140, general, {T_FUNC_DECL_IDENTIFIER, parenthesis_block, T_ARROW}, function_decl));														// foo (int x, int y) -> int
-	listOfRules.push_back(ThomasParseRule(140, general, {T_FUNC_DECL_IDENTIFIER, template_block, parenthesis_block, T_ARROW}, function_decl));														// foo (int x, int y) -> int
-
 
 
 
