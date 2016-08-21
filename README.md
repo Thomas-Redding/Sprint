@@ -2,11 +2,17 @@
 Compiler for New Language
 
 ## PROGRESS
-1. Tokenizer        - DONE
-2. Parser           - DONE
-3. Parse Rules      - IN PROGRESS as of Aug 5, 2016; expected completion is Aug 14.
-4. Compiler         - TODO
-5. Standard Library - TODO
+1. Tokenizer                            - DONE
+2. Post-Tokenizer                       - NEED TO DELETE; expected complete
+2. Parser                               - DONE
+3. Parse Rules                          - IN PROGRESS; expected completion by Wed, Aug 24
+4. Templating                           - Morgan will Do this; expected completion by Sat, Aug 27
+5. Type Checking and Variable Scoping   - TODO; expected completion by Sat, Sep 10
+6. Translate to C++                     - TODO; ...
+7. Garbage Collection                   - TODO; expected by Thanksgiving
+8. Output to C++ Files                  - TODO; expected to take a couple days (because of doing step #5 well)
+9. Allow Input From Multiples Files     - TODO; expected to take a couple days
+10. Standard Library                    - TODO; indefinitey :)
 
 ## FEATURES
 This language is generally similar to C++. Here are it's planned noteworthy features
