@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <unistd.h>
 #include <map>
 #include <stack>
@@ -11,7 +10,7 @@
 #include "../include/PostTokenizer.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
-
+#include "../include/FindModifiedFiles.hpp"
 
 int main(int argc, const char * argv[]) {
 
@@ -21,7 +20,14 @@ int main(int argc, const char * argv[]) {
 		std::cout << "Error: need to pass in one argument" << std::endl;
 		return 0;
 	}
-	
+
+	std::vector<std::string> modifiedFiles = findModifiedFiles(argv[1]);
+
+	std::cout << "modified files: " << modifiedFiles.size() << std::endl;
+
+	// TODO: we'll use this list of modified files somehow...
+	// TODO: after a successful compilation, modify 'last_hashes.txt' with the new hashes
+
 	std::string fileLine;
 	std::string contents = "";
 	std::string pathToFile = argv[1];
