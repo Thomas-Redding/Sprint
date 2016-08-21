@@ -57,12 +57,11 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == T_KEYWORD_INT8) return "T_KEYWORD_INT8";
 	else if (t == T_KEYWORD_INT16) return "T_KEYWORD_INT16";
 	else if (t == T_KEYWORD_INT32) return "T_KEYWORD_INT32";
-	else if (t == T_KEYWORD_INT64) return "T_KEYWORD_INT64";
 	else if (t == T_KEYWORD_UINT) return "T_KEYWORD_UINT";
 	else if (t == T_KEYWORD_UINT8) return "T_KEYWORD_UINT8";
 	else if (t == T_KEYWORD_UINT16) return "T_KEYWORD_UINT16";
 	else if (t == T_KEYWORD_UINT32) return "T_KEYWORD_UINT32";
-	else if (t == T_KEYWORD_UINT64) return "T_KEYWORD_UINT64";
+	else if (t == T_KEYWORD_IMPORT) return "T_KEYWORD_IMPORT";
 	else if (t == T_KEYWORD_AND) return "T_KEYWORD_AND";
 	else if (t == T_KEYWORD_OR) return "T_KEYWORD_OR";
 	else if (t == T_KEYWORD_NOT) return "T_KEYWORD_NOT";
@@ -235,12 +234,11 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_INT8) return T_KEYWORD_INT8;
 	else if (t == KEYWORD_INT16) return T_KEYWORD_INT16;
 	else if (t == KEYWORD_INT32) return T_KEYWORD_INT32;
-	else if (t == KEYWORD_INT64) return T_KEYWORD_INT64;
 	else if (t == KEYWORD_UINT) return T_KEYWORD_UINT;
 	else if (t == KEYWORD_UINT8) return T_KEYWORD_UINT8;
 	else if (t == KEYWORD_UINT16) return T_KEYWORD_UINT16;
 	else if (t == KEYWORD_UINT32) return T_KEYWORD_UINT32;
-	else if (t == KEYWORD_UINT64) return T_KEYWORD_UINT64;
+	else if (t == KEYWORD_IMPORT) return T_KEYWORD_IMPORT;
 	else if (t == KEYWORD_AND) return T_KEYWORD_AND;
 	else if (t == KEYWORD_OR) return T_KEYWORD_OR;
 	else if (t == KEYWORD_NOT) return T_KEYWORD_NOT;
