@@ -354,9 +354,32 @@ std::list<Token> Tokenizer::process(std::string str) {
 		if ((*it).type == LESS_THAN)
 			template_symbols.push(it);
 		else if ((*it).type == GREATER_THAN) {
-			template_symbols.top()->type = OPEN_TEMPLATE;
-			(*it).type = CLOSE_TEMPLATE;
-			template_symbols.pop();
+			if (template_symbols.size() > 0) {
+				template_symbols.top()->type = OPEN_TEMPLATE;
+				(*it).type = CLOSE_TEMPLATE;
+				template_symbols.pop();
+			}
+		}
+		else if ((*it).type == SHIFT_RIGHT) {
+			if (template_symbols.size() > 1) {
+				template_symbols.top()->type = OPEN_TEMPLATE;
+				template_symbols.pop();
+				template_symbols.top()->type = OPEN_TEMPLATE;
+				template_symbols.pop();
+				(*it).type = CLOSE_TEMPLATE;
+				(*it).str = ">";
+				rtn.insert(it, *it);
+			}
+			else if (template_symbols.size() > 0) {
+				template_symbols.top()->type = OPEN_TEMPLATE;
+				(*it).type = CLOSE_TEMPLATE;
+				template_symbols.pop();
+				(*it).str = ">";
+				rtn.insert(it, *it);
+				(*it).type = CLOSE_TEMPLATE;
+				++it;
+				(*it).type = LESS_THAN;
+			}
 		}
 		else if (template_symbols.empty()) {
 			if (legalTokensForTemplating.count((*it).type) == 0)
