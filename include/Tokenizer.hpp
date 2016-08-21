@@ -7,6 +7,7 @@
 #include <iostream>
 #include <ctype.h>
 #include <set>
+#include <stack>
 #include <algorithm>
 
 #include "Token.hpp"

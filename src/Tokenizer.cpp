@@ -347,6 +347,24 @@ std::list<Token> Tokenizer::process(std::string str) {
 		}
 	}
 
+	std::stack<std::list<Token>::iterator> template_symbols;
+	std::set<TokenType> legalTokensForTemplating = {KEYWORD_INT, KEYWORD_INT8, KEYWORD_INT16, KEYWORD_INT32, KEYWORD_UINT, KEYWORD_UINT8, KEYWORD_UINT16, KEYWORD_UINT32, COMMA, OPEN_BRACKET, CLOSE_BRACKET, IDENTIFIER};
+
+	for (std::list<Token>::iterator it = rtn.begin(); it != rtn.end(); ++it) {
+		if ((*it).type == LESS_THAN)
+			template_symbols.push(it);
+		else if ((*it).type == GREATER_THAN) {
+			template_symbols.top()->type = OPEN_TEMPLATE;
+			(*it).type = CLOSE_TEMPLATE;
+			template_symbols.pop();
+		}
+		else if (template_symbols.empty()) {
+			if (legalTokensForTemplating.count((*it).type) == 0)
+				while (! template_symbols.empty())
+					template_symbols.pop();
+		}
+	}
+
 	return rtn;
 }
 

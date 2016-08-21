@@ -156,17 +156,10 @@ enum TreeType {
 	statement,
 	statements,
 
-	template_instance_arg, // "5", "List<double>", "Window", etc
-	comma_and_template_instance_arg,
-	template_instance_args, // "5, List<double>, Window"
-
-	template_decl_arg, // "int A", "T", "uint64 B", etc
-	comma_and_template_decl_arg,
-	template_decl_args,
-
 	function_decl,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
+	int_type,
 	unary1_value,
 	unary2_value,
 	plus_value,
@@ -256,6 +249,7 @@ public:
 		leftRight = lr;
 		// shortcuts[value] = {T_IDENTIFIER};
 		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
+		shortcuts[int_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32};
 		shortcuts[unary1_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause};
 		shortcuts[unary2_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause};
 		shortcuts[mult_value] = {T_IDENTIFIER, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause};

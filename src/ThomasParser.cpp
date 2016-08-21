@@ -158,17 +158,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == statement) return "statement";
 	else if (t == statements) return "statements";
 	else if (t == T_FUNC_DECL_IDENTIFIER) return "T_FUNC_DECL_IDENTIFIER";
-
-	else if (t == comma_and_template_instance_arg) return "comma_and_template_instance_arg";
-	else if (t == template_instance_arg) return "template_instance_arg";
-	else if (t == template_instance_args) return "template_instance_args";
-
-	else if (t == template_decl_arg) return "template_decl_arg";
-	else if (t == comma_and_template_decl_arg) return "comma_and_template_decl_arg";
-	else if (t == template_decl_args) return "template_decl_args";
-
 	else if (t == function_decl) return "function_decl";
-
 	else return std::to_string(static_cast<TreeType>(t));
 }
 

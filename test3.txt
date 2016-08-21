@@ -1,10 +1,28 @@
 
-class Foo {
+class Foo<A, int B, C> {
     int bar;
 }
 
-function main<T>(string x) {
+function main<A, int B, C>(string x) {
     int x = a * b * c + d * e * f + g + h;
     int *y = 42;
     Foo z;
 }
+
+main<double, 42, var>("apple");
+Foo<char, 91, char[]> bar = Foo<int>();
+
+/*
+
+
+<
+ID
+int
+,
+[
+]
+>
+
+
+
+*/
