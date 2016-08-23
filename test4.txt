@@ -1,0 +1,13 @@
+
+enum Foo {
+	alpha,
+	beta,
+	gamma = 42,
+	delta = 13,
+	epsilon,
+	phi = 7
+}
+
+
+
+

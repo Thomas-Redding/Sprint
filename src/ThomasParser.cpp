@@ -149,6 +149,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == ternary_clause) return "ternary_clause";
 	else if (t == comma_value) return "comma_value";
 	else if (t == comma_clause) return "comma_clause";
+	else if (t == enum_implementation) return "enum_implementation";
 	else if (t == T_POSITIVE) return "T_POSITIVE";
 	else if (t == T_NEGATIVE) return "T_NEGATIVE";
 	else if (t == T_PTR) return "T_PTR";

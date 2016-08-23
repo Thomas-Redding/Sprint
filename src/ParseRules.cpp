@@ -4,7 +4,7 @@
 void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> &listOfRules) {
 	leftToRight= {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		true, false, true, true, true, true, true, true, true, true, false, true, true, false
+		true, false, true, true, true, true, true, true, true, true, false, true, true, false, true
 	};
 
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
@@ -70,4 +70,10 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(120, general, {comma_value, T_SEMI_COLON}, statement));													// x;
 
 	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
+
+	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));							// enum Foo { ... 
 }
+
+
+
+
