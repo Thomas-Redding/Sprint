@@ -71,7 +71,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 
 	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
 
-	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));							// enum Foo { ... 
+	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 
+	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));					// enum Foo { ... 
 }
 
 

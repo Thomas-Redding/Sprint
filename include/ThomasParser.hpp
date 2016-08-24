@@ -155,7 +155,9 @@ enum TreeType {
 	comma_clause,
 	statement,
 	statements,
+
 	enum_implementation,
+	class_implementation,
 
 	function_decl,
 
