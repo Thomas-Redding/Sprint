@@ -71,7 +71,36 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 
 	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
 
+	// class implementations
 	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 
+	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_CLASS, T_IDENTIFIER, template_block, curly_brace_block}, class_implementation));	// class Foo <T> { ... 
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_KEYWORD_CLASS, T_IDENTIFIER, T_COLON, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
+	}, class_implementation));
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_COLON, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
+	}, class_implementation));
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_KEYWORD_CLASS, T_IDENTIFIER, T_COLON, T_IDENTIFIER, template_block, curly_brace_block								// class Foo: Bar<S>
+	}, class_implementation));
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_COLON, T_IDENTIFIER, template_block, curly_brace_block								// class Foo<T, S> : Bar<T>
+	}, class_implementation));
+
+	// function implementations
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_IDENTIFIER, parenthesis_block, T_ARROW, raw_type, curly_brace_block
+	}, function_implementation));
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type, curly_brace_block
+	}, function_implementation));
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_IDENTIFIER, parenthesis_block, T_ARROW, raw_type, template_block, curly_brace_block
+	}, function_implementation));
+	listOfRules.push_back(ThomasParseRule(140, general, {
+		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type, template_block, curly_brace_block
+	}, function_implementation)); // TODO: why doesn't this work
+
 	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));					// enum Foo { ... 
 }
 

@@ -1,6 +1,8 @@
-class List<T>;
+class LinkedList<T> : List<T> {
+	// TODO
+}
 
-sum<T>(List<T> list) -> double {
+sum<T>(List<T> list) -> Foo<5> {
 	T rtn;
 	return  List<double>(rtn) < 5;
 }

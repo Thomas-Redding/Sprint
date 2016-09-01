@@ -151,6 +151,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == comma_clause) return "comma_clause";
 	else if (t == enum_implementation) return "enum_implementation";
 	else if (t == class_implementation) return "class_implementation";
+	else if (t == function_implementation) return "function_implementation";
 	else if (t == T_POSITIVE) return "T_POSITIVE";
 	else if (t == T_NEGATIVE) return "T_NEGATIVE";
 	else if (t == T_PTR) return "T_PTR";
@@ -160,7 +161,6 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == statement) return "statement";
 	else if (t == statements) return "statements";
 	else if (t == T_FUNC_DECL_IDENTIFIER) return "T_FUNC_DECL_IDENTIFIER";
-	else if (t == function_decl) return "function_decl";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 

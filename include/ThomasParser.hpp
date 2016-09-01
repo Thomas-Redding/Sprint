@@ -158,8 +158,7 @@ enum TreeType {
 
 	enum_implementation,
 	class_implementation,
-
-	function_decl,
+	function_implementation,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	int_type,
