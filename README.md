@@ -21,7 +21,7 @@ This language is generally similar to C++. Here are it's planned noteworthy feat
 1. Will support all C++ libraries.
 2. Garbage Collector (Mark-and-sweep, concurrent, tri-colored)
 3. Abstraction away from Stack v. Heap without loss of speed
-    - As noted directly above, you can think of every object as being on the Heap. However, the compiler will detect when an object is both small enough and short-lived enough to be able to be on the Stack. (Apparently Go does this to?)
+    - As noted directly above, you can think of every object as being on the Heap. However, the compiler will detect when an object is both small enough and short-lived enough to be able to be on the Stack
 4. Interchangability between functions and public methods (including operator-overrides)
     - For instance, these are equivalent: myMatrix.det(); det(myMatrix);
     - In lieu of a toString() operator, conversion to strings is done by creating your own string constructor: str(myObj)
