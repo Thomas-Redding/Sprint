@@ -25,6 +25,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == T_KEYWORD_CASE) return "T_KEYWORD_CASE";
 	else if (t == T_KEYWORD_CATCH) return "T_KEYWORD_CATCH";
 	else if (t == T_KEYWORD_CLASS) return "T_KEYWORD_CLASS";
+	else if (t == T_KEYWORD_NAMESPACE) return "T_KEYWORD_NAMESPACE";
 	else if (t == T_KEYWORD_CONST) return "T_KEYWORD_CONST";
 	else if (t == T_KEYWORD_CONTINUE) return "T_KEYWORD_CONTINUE";
 	else if (t == T_KEYWORD_DELETE) return "T_KEYWORD_DELETE";
@@ -150,6 +151,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == comma_value) return "comma_value";
 	else if (t == comma_clause) return "comma_clause";
 	else if (t == enum_implementation) return "enum_implementation";
+	else if (t == namespace_implementation) return "namespace_implementation";
 	else if (t == class_implementation) return "class_implementation";
 	else if (t == function_implementation) return "function_implementation";
 	else if (t == T_POSITIVE) return "T_POSITIVE";
@@ -194,6 +196,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_CASE) return T_KEYWORD_CASE;
 	else if (t == KEYWORD_CATCH) return T_KEYWORD_CATCH;
 	else if (t == KEYWORD_CLASS) return T_KEYWORD_CLASS;
+	else if (t == KEYWORD_NAMESPACE) return T_KEYWORD_NAMESPACE;
 	else if (t == KEYWORD_CONST) return T_KEYWORD_CONST;
 	else if (t == KEYWORD_CONTINUE) return T_KEYWORD_CONTINUE;
 	else if (t == KEYWORD_DELETE) return T_KEYWORD_DELETE;

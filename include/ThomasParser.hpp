@@ -36,6 +36,7 @@ enum TreeType {
 	T_KEYWORD_CASE,
 	T_KEYWORD_CATCH,
 	T_KEYWORD_CLASS,
+	T_KEYWORD_NAMESPACE,
 	T_KEYWORD_CONST,
 	T_KEYWORD_CONTINUE,
 	T_KEYWORD_DELETE,
@@ -157,6 +158,7 @@ enum TreeType {
 	statements,
 
 	enum_implementation,
+	namespace_implementation,
 	class_implementation,
 	function_implementation,
 

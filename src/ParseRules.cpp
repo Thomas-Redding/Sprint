@@ -102,6 +102,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	}, function_implementation)); // TODO: why doesn't this work
 
 	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));					// enum Foo { ... 
+	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_NAMESPACE, T_IDENTIFIER, curly_brace_block}, namespace_implementation));			// namespaces Foo { ... 
 }
 
 

@@ -8,6 +8,10 @@ enum Foo {
 	phi = 7
 }
 
+namespace Bar {
+	int x;
+}
+
 
 
 
