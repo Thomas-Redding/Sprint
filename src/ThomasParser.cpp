@@ -169,6 +169,10 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == while_loop) return "while_loop";
 	else if (t == do_while_loop) return "do_while_loop";
 	else if (t == switch_statement) return "switch_statement";
+	else if (t == return_statement) return "return_statement";
+	else if (t == break_statement) return "break_statement";
+	else if (t == continue_statement) return "continue_statement";
+	else if (t == case_statement) return "case_statement";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 

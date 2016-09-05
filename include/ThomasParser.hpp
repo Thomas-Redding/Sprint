@@ -167,6 +167,10 @@ enum TreeType {
 	if_statement,
 	if_else_statement,
 	switch_statement,
+	return_statement,
+	break_statement,
+	continue_statement,
+	case_statement,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	int_type,

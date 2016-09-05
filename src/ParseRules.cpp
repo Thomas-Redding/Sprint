@@ -65,11 +65,13 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(100, general, {setting_value, T_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
 	listOfRules.push_back(ThomasParseRule(100, general, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 
+	listOfRules.push_back(ThomasParseRule(110, general, {T_KEYWORD_RETURN, setting_value, T_SEMI_COLON}, return_statement));
 	listOfRules.push_back(ThomasParseRule(110, general, {comma_value, T_COMMA, comma_value}, comma_clause));										// x, y
+	listOfRules.push_back(ThomasParseRule(110, general, {T_KEYWORD_CASE, setting_value, T_COLON}, case_statement));
 	
 	listOfRules.push_back(ThomasParseRule(120, general, {comma_value, T_SEMI_COLON}, statement));													// x;
-
-	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
+	listOfRules.push_back(ThomasParseRule(120, general, {T_KEYWORD_BREAK, T_SEMI_COLON}, break_statement));
+	listOfRules.push_back(ThomasParseRule(120, general, {T_KEYWORD_CONTINUE, T_SEMI_COLON}, continue_statement));
 
 	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_IF, parenthesis_block, structure, T_KEYWORD_ELSE, structure}, if_else_statement));
 	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_IF, parenthesis_block, structure}, if_statement));
