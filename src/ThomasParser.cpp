@@ -173,6 +173,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == break_statement) return "break_statement";
 	else if (t == continue_statement) return "continue_statement";
 	else if (t == case_statement) return "case_statement";
+	else if (t == variable_dec) return "variable_dec";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 

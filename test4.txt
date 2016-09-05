@@ -25,3 +25,8 @@ switch (x+y) {
 	case 2: ++x; return x;
 	default: return 7;
 }
+
+Foo a;
+Foo<Bar> b;
+Foo c = a = 1;
+Foo<Bar> d = b = 3;

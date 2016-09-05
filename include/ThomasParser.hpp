@@ -171,6 +171,7 @@ enum TreeType {
 	break_statement,
 	continue_statement,
 	case_statement,
+	variable_dec,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	int_type,
