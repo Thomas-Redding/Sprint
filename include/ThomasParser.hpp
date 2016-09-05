@@ -166,6 +166,7 @@ enum TreeType {
 	do_while_loop,
 	if_statement,
 	if_else_statement,
+	switch_statement,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	int_type,
@@ -182,6 +183,7 @@ enum TreeType {
 	setting_value,
 	any_integer_type,
 	structure,
+	structure_or_statements,
 	comma_value				// make sure I'm the last enum
 };
 
@@ -274,6 +276,7 @@ public:
 		shortcuts[any_integer_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL};
 		shortcuts[comma_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause, comma_clause};
 		shortcuts[structure] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
+		shortcuts[structure_or_statements] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
 
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));
