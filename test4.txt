@@ -1,17 +1,21 @@
 
-enum Foo {
-	alpha,
-	beta,
-	gamma = 42,
-	delta = 13,
-	epsilon,
-	phi = 7
+if (x == 2)
+	y = 3;
+else if (x == 4)
+	y = 5;
+else
+	y = 6;
+
+if (x == 7) {
+	y = 8;
+}
+else if (x == 9) {
+	y = 10;
+}
+else {
+	y = 11;
 }
 
-namespace Bar {
-	int x;
+while (x == 4) {
+	++x;
 }
-
-
-
-

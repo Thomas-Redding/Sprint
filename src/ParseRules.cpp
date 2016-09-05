@@ -4,7 +4,7 @@
 void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> &listOfRules) {
 	leftToRight= {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		true, false, true, true, true, true, true, true, true, true, false, true, true, false, true
+		true, false, true, true, true, true, true, true, true, true, false, true, true, false, false, true
 	};
 
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
@@ -70,6 +70,12 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(120, general, {comma_value, T_SEMI_COLON}, statement));													// x;
 
 	listOfRules.push_back(ThomasParseRule(130, general, {statement, statement}, statements));														// x y
+
+	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_IF, parenthesis_block, structure, T_KEYWORD_ELSE, structure}, if_else_statement));
+	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_IF, parenthesis_block, structure}, if_statement));
+	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_WHILE, parenthesis_block, structure}, while_loop));
+	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
+	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_DO, structure, T_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
 
 	// class implementations
 	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 

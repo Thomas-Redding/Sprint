@@ -163,6 +163,11 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == statement) return "statement";
 	else if (t == statements) return "statements";
 	else if (t == T_FUNC_DECL_IDENTIFIER) return "T_FUNC_DECL_IDENTIFIER";
+	else if (t == if_statement) return "if_statement";
+	else if (t == if_else_statement) return "if_else_statement";
+	else if (t == for_loop) return "for_loop";
+	else if (t == while_loop) return "while_loop";
+	else if (t == do_while_loop) return "do_while_loop";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
