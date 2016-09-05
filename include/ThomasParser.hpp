@@ -249,7 +249,6 @@ private:
 	void doTemplatePass(ThomasNode* tree);
 	std::vector<ThomasParseRule> rules;
 	std::vector<bool>leftRight;
-	std::set<TreeType> parCollapse = {T_IDENTIFIER, mult_clause, plus_clause};
 	int firstToken = raw_type;
 	int lastToken = comma_value;
 	std::set<TreeType> shortcuts[200];

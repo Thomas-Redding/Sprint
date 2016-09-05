@@ -20,7 +20,7 @@ while (x == 4) {
 	++x;
 }
 
-switch (x) {
+switch (x+y) {
 	case 1: return x;
 	case 2: ++x; return x;
 	default: return 7;

@@ -353,16 +353,6 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end();) {
 		if ((*it)->children.size() > 0 && !skipRecursion) {
 			parseLeftRight(*it, from, to);
-			if ((*it)->children.size() == 1) {
-				if ((*it)->type == parenthesis_block) {
-					if (parCollapse.find((*((*it)->children.begin()))->type) != parCollapse.end()) {
-						ThomasNode *toDelete = *it;
-						(*it) = *((*it)->children.begin());
-						delete toDelete;
-						break;
-					}
-				}
-			}
 		}
 
 		int ruleToApply = -1;
@@ -434,15 +424,6 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 	for (std::list<ThomasNode*>::iterator it = --tree->children.end(); true; --it) {
 		if ((*it)->children.size() > 0) {
 			parseRightLeft(*it, from, to);
-			if ((*it)->children.size() == 1) {
-				if ((*it)->type == parenthesis_block) {
-					if (parCollapse.find((*((*it)->children.begin()))->type) != parCollapse.end()) {
-						ThomasNode *toDelete = *it;
-						(*it) = *((*it)->children.begin());
-						delete toDelete;
-					}
-				}
-			}
 		}
 
 		int ruleToApply = -1;
