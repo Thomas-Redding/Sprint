@@ -10,6 +10,7 @@
 #include "../include/Sweetener.hpp"
 #include "../include/ThomasParser.hpp"
 #include "../include/FindModifiedFiles.hpp"
+#include "../include/ParserVerifier.hpp"
 #include "ParseRules.cpp"
 
 int main(int argc, const char * argv[]) {
@@ -82,6 +83,9 @@ int main(int argc, const char * argv[]) {
 
 	// timeStart, timeOpenedFile, timeTokenized, timeListToVector, timeAsteriskPtr, timeParsed
 	auto timeParsed = std::chrono::high_resolution_clock::now();
+
+	ParserVerifier pv;
+	pv.verify(bar);
 
 	bar->print();
 	std::cout << "\n\n\n";
