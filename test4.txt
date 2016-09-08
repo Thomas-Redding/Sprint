@@ -28,5 +28,9 @@ switch (x+y) {
 
 Foo a;
 Foo<Bar> b;
-Foo c = a = 1;
-Foo<Bar> d = b = 3;
+Foo[] c;
+Foo<Bar>[] d;
+Foo e = a = 1;
+Foo<Bar> f = b = 2;
+Foo[] g = c = 3;
+Foo<Bar>[] h = d = 4;

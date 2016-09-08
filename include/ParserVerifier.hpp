@@ -2,6 +2,8 @@
 
 class ParserVerifier {
 public:
-	void verify(ThomasNode* tree);
+	void verify(ThomasNode* parent, ThomasNode* tree);
+private:
+	void error(std::string str);
 };
 

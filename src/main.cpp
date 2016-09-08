@@ -85,7 +85,7 @@ int main(int argc, const char * argv[]) {
 	auto timeParsed = std::chrono::high_resolution_clock::now();
 
 	ParserVerifier pv;
-	pv.verify(bar);
+	pv.verify(nullptr, bar);
 
 	bar->print();
 	std::cout << "\n\n\n";
