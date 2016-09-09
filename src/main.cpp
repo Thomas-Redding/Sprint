@@ -84,10 +84,12 @@ int main(int argc, const char * argv[]) {
 	// timeStart, timeOpenedFile, timeTokenized, timeListToVector, timeAsteriskPtr, timeParsed
 	auto timeParsed = std::chrono::high_resolution_clock::now();
 
-	ParserVerifier pv;
+	bar->print();
+	std::cout << "\n\n\n";
+
+	ParserVerifier pv(&foo);
 	pv.verify(nullptr, bar);
 
-	bar->print();
 	std::cout << "\n\n\n";
 
 	std::cout << "Reading File(s): " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeOpenedFile - timeStart).count() / 1000 << " µs\n";

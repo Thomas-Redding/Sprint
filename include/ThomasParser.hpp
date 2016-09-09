@@ -136,7 +136,7 @@ enum TreeType {
 	T_KEYWORD_REPEAT,
 	T_OPEN_TEMPLATE,
 	T_CLOSE_TEMPLATE,
-	general,
+	general,				// make sure this is the first non-token type
 	curly_brace_block,
 	parenthesis_block,
 	bracket_block,
@@ -155,7 +155,6 @@ enum TreeType {
 	ternary_clause,
 	comma_clause,
 	statement,
-	statements,
 
 	enum_implementation,
 	namespace_implementation,
@@ -188,7 +187,7 @@ enum TreeType {
 	setting_value,
 	any_integer_type,
 	structure,
-	structure_or_statements,
+	structure_or_statement,
 	comma_value				// make sure I'm the last enum
 };
 
@@ -256,9 +255,9 @@ private:
 	std::vector<bool>leftRight;
 	int firstToken = raw_type;
 	int lastToken = comma_value;
-	std::set<TreeType> shortcuts[200];
 	static bool thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseRule r2);
 public:
+	std::set<TreeType> shortcuts[200];
 	ThomasParser(std::vector<bool> lr, std::vector<ThomasParseRule> r) {
 		rules = r;
 		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
@@ -280,7 +279,7 @@ public:
 		shortcuts[any_integer_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL};
 		shortcuts[comma_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause, comma_clause};
 		shortcuts[structure] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
-		shortcuts[structure_or_statements] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
+		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block, variable_dec};
 
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));

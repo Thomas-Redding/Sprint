@@ -161,7 +161,6 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == T_KEYWORD_CHAR) return "T_KEYWORD_CHAR";
 	else if (t == T_KEYWORD_VAR) return "T_KEYWORD_VAR";
 	else if (t == statement) return "statement";
-	else if (t == statements) return "statements";
 	else if (t == T_FUNC_DECL_IDENTIFIER) return "T_FUNC_DECL_IDENTIFIER";
 	else if (t == if_statement) return "if_statement";
 	else if (t == if_else_statement) return "if_else_statement";
