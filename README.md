@@ -4,9 +4,9 @@ Compiler for New Language
 ## PROGRESS
 1. Tokenizer                            - DONE
 2. Parser                               - DONE
-3. Parse Rules                          - DONE
-4. Verify Parsing                       - TODO: Sep 2016 (first half)
-5. Type Checking and Variable Scoping   - TODO: Sep 2016 (first half)
+3. Parse Rules                          - IN PROGRESS: Sep 2016 (first half)
+4. Verify Parsing                       - IN PROGRESS: Sep 2016 (first half)
+5. Type Checking and Variable Scoping   - IN PROGRESS: Sep 2016 (first half)
 6. Templating                           - TODO: Sep 2016 (second half)
 7. Translate to C++                     - TODO: Oct 2016
 8. Garbage Collection                   - TODO; Nov 2016
