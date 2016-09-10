@@ -28,8 +28,29 @@ Token* ParserVerifier::getFirstTokenInTree(ThomasNode *tree) {
 			if (rtn != nullptr)
 				return rtn;
 		}
-		return nullptr;
+		return getNextTokenInTree(tree);
 	}
+}
+
+Token* ParserVerifier::getNextTokenInTree(ThomasNode *tree) {
+	while(!stack.empty()) {
+		bool shouldCheck = false;
+		ThomasNode *par = stack.top();
+		Token *rtn = nullptr;
+		for (std::list<ThomasNode*>::iterator it = par->children.begin(); it != par->children.end(); ++it) {
+			if (*it == tree)
+				shouldCheck = true;
+			else if (shouldCheck) {
+				rtn = getFirstTokenInTree(*it);
+				if (rtn != nullptr)
+					return rtn;
+			}
+		}
+		tree = par;
+		stack.pop();
+	}
+	// there are no tokens next
+	return nullptr;
 }
 
 void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
@@ -39,7 +60,7 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 				if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end()) {
 					Token* token = getFirstTokenInTree(*it);
 					if (token == nullptr)
-						error("Parser Error (contact tfredding@gmail.com)");
+						error("Parser Error 1 (contact tfredding@gmail.com)");
 					else
 						error("Parser Error: found unexpected class, namespace, or function (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
 				}
@@ -50,22 +71,26 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 		}
 	}
 	else if (tree->type == parenthesis_block) {
-		if (parent->type == if_else_statement) {
-			// todo
-		}
-		else if (parent->type == if_statement) {
-			// todo
-		}
-		else if (parent->type == while_loop) {
-			// todo
+		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == do_while_loop || parent->type == switch_statement) {
+			if (tree->children.size() == 0) {
+				error("Parser Error 2 (contact tfredding@gmail.com)");
+			}
+			else if (tree->children.size() > 1) {
+				Token* token = getFirstTokenInTree(tree->children.front());
+				if (token == nullptr)
+					error("Parser Error 3 (contact tfredding@gmail.com)");
+				else
+					error("Parser Error: Expected a single statement in condition, but found multiple (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+			}
+			else if (parser->shortcuts[setting_value].find(tree->children.front()->type) == parser->shortcuts[setting_value].end()) {
+				Token* token = getFirstTokenInTree(tree->children.front());
+				if (token == nullptr)
+					error("Parser Error 4 (contact tfredding@gmail.com)");
+				else
+					error("Parser Error: Expected (and did not find) single statement in condition (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+			}
 		}
 		else if (parent->type == for_loop) {
-			// todo
-		}
-		else if (parent->type == do_while_loop) {
-			// todo
-		}
-		else if (parent->type == switch_statement) {
 			// todo
 		}
 	}
@@ -75,9 +100,11 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 		//
 	}
 
+	stack.push(parent);
 	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 		verify(tree, *it);
 	}
+	stack.pop();
 }
 
 void ParserVerifier::error(std::string str) {
