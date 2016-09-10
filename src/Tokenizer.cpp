@@ -665,6 +665,8 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 		cur.type = KEYWORD_FLOAT;
 	else if(cur.str == "double")
 		cur.type = KEYWORD_DOUBLE;
+	else if(cur.str == "void")
+		cur.type = KEYWORD_VOID;
 	else if(cur.str == "bool")
 		cur.type = KEYWORD_BOOL;
 	else if(cur.str == "char")

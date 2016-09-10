@@ -4,7 +4,7 @@
 void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> &listOfRules) {
 	leftToRight= {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		true, false, true, true, true, true, true, true, true, true, false, true, true, false, false, true
+		true, true, false, true, true, true, true, true, true, true, true, false, true, true, false, false
 	};
 
 	listOfRules.push_back(ThomasParseRule(  0, general, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
@@ -77,45 +77,45 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(120, general, {T_KEYWORD_BREAK, T_SEMI_COLON}, break_statement));
 	listOfRules.push_back(ThomasParseRule(120, general, {T_KEYWORD_CONTINUE, T_SEMI_COLON}, continue_statement));
 
-	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_IF, parenthesis_block, structure, T_KEYWORD_ELSE, structure}, if_else_statement));
-	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_IF, parenthesis_block, structure}, if_statement));
-	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_WHILE, parenthesis_block, structure}, while_loop));
-	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
-	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_DO, structure, T_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
-	listOfRules.push_back(ThomasParseRule(135, general, {T_KEYWORD_SWITCH, parenthesis_block, curly_brace_block}, switch_statement));
+	listOfRules.push_back(ThomasParseRule(130, general, {T_KEYWORD_IF, parenthesis_block, structure, T_KEYWORD_ELSE, structure}, if_else_statement));
+	listOfRules.push_back(ThomasParseRule(130, general, {T_KEYWORD_IF, parenthesis_block, structure}, if_statement));
+	listOfRules.push_back(ThomasParseRule(130, general, {T_KEYWORD_WHILE, parenthesis_block, structure}, while_loop));
+	listOfRules.push_back(ThomasParseRule(130, general, {T_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
+	listOfRules.push_back(ThomasParseRule(130, general, {T_KEYWORD_DO, structure, T_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
+	listOfRules.push_back(ThomasParseRule(130, general, {T_KEYWORD_SWITCH, parenthesis_block, curly_brace_block}, switch_statement));
 
 	// class implementations
-	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 
-	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_CLASS, T_IDENTIFIER, template_block, curly_brace_block}, class_implementation));	// class Foo <T> { ... 
-	listOfRules.push_back(ThomasParseRule(140, general, {
+	listOfRules.push_back(ThomasParseRule(-10, general, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 
+	listOfRules.push_back(ThomasParseRule(-10, general, {T_KEYWORD_CLASS, T_IDENTIFIER, template_block, curly_brace_block}, class_implementation));	// class Foo <T> { ... 
+	listOfRules.push_back(ThomasParseRule(-10, general, {
 		T_KEYWORD_CLASS, T_IDENTIFIER, T_COLON, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
 	}, class_implementation));
-	listOfRules.push_back(ThomasParseRule(140, general, {
+	listOfRules.push_back(ThomasParseRule(-10, general, {
 		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_COLON, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
 	}, class_implementation));
-	listOfRules.push_back(ThomasParseRule(140, general, {
+	listOfRules.push_back(ThomasParseRule(-10, general, {
 		T_KEYWORD_CLASS, T_IDENTIFIER, T_COLON, T_IDENTIFIER, template_block, curly_brace_block								// class Foo: Bar<S>
 	}, class_implementation));
-	listOfRules.push_back(ThomasParseRule(140, general, {
+	listOfRules.push_back(ThomasParseRule(-10, general, {
 		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_COLON, T_IDENTIFIER, template_block, curly_brace_block								// class Foo<T, S> : Bar<T>
 	}, class_implementation));
 
 	// function implementations
-	listOfRules.push_back(ThomasParseRule(140, general, {
-		T_IDENTIFIER, parenthesis_block, T_ARROW, raw_type, curly_brace_block
+	listOfRules.push_back(ThomasParseRule(-10, general, {
+		T_IDENTIFIER, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
 	}, function_implementation));
-	listOfRules.push_back(ThomasParseRule(140, general, {
-		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type, curly_brace_block
+	listOfRules.push_back(ThomasParseRule(-10, general, {
+		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
 	}, function_implementation));
-	listOfRules.push_back(ThomasParseRule(140, general, {
+	listOfRules.push_back(ThomasParseRule(-10, general, {
 		T_IDENTIFIER, parenthesis_block, T_ARROW, raw_type, template_block, curly_brace_block
 	}, function_implementation));
-	listOfRules.push_back(ThomasParseRule(140, general, {
+	listOfRules.push_back(ThomasParseRule(-10, general, {
 		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type, template_block, curly_brace_block
 	}, function_implementation)); // TODO: why doesn't this work
 
-	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));					// enum Foo { ... 
-	listOfRules.push_back(ThomasParseRule(140, general, {T_KEYWORD_NAMESPACE, T_IDENTIFIER, curly_brace_block}, namespace_implementation));			// namespaces Foo { ... 
+	listOfRules.push_back(ThomasParseRule(-10, general, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));					// enum Foo { ... 
+	listOfRules.push_back(ThomasParseRule(-10, general, {T_KEYWORD_NAMESPACE, T_IDENTIFIER, curly_brace_block}, namespace_implementation));			// namespaces Foo { ... 
 }
 
 

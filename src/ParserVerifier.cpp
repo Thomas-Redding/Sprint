@@ -58,6 +58,8 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == for_loop || parent->type == do_while_loop) {
 			for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 				if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end()) {
+					stack.push(parent);
+					stack.push(tree);
 					Token* token = getFirstTokenInTree(*it);
 					if (token == nullptr)
 						error("Parser Error 1 (contact tfredding@gmail.com)");
@@ -76,6 +78,8 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 				error("Parser Error 2 (contact tfredding@gmail.com)");
 			}
 			else if (tree->children.size() > 1) {
+				stack.push(parent);
+				stack.push(tree);
 				Token* token = getFirstTokenInTree(tree->children.front());
 				if (token == nullptr)
 					error("Parser Error 3 (contact tfredding@gmail.com)");
@@ -83,6 +87,8 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 					error("Parser Error: Expected a single statement in condition, but found multiple (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
 			}
 			else if (parser->shortcuts[setting_value].find(tree->children.front()->type) == parser->shortcuts[setting_value].end()) {
+				stack.push(parent);
+				stack.push(tree);
 				Token* token = getFirstTokenInTree(tree->children.front());
 				if (token == nullptr)
 					error("Parser Error 4 (contact tfredding@gmail.com)");
@@ -91,8 +97,131 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 			}
 		}
 		else if (parent->type == for_loop) {
-			// todo
+			// for(x;y;z) <- x, y, and z are optional
+			if (tree->children.size() == 2) {
+				if (tree->children.front()->type == statement) {
+					if (tree->children.back()->type == statement) {
+						// for(x;y;)
+					}
+					else if (tree->children.back()->type == T_SEMI_COLON) {
+						// for(x;;)
+					}
+					else {
+						stack.push(parent);
+						stack.push(tree);
+						Token* token = getFirstTokenInTree(tree->children.back());
+						if (token == nullptr)
+							error("Parser Error 5 (contact tfredding@gmail.com)");
+						else
+							error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+					}
+				}
+				else if (tree->children.front()->type == T_SEMI_COLON) {
+					if (tree->children.back()->type == statement) {
+						// for(;y;)
+					}
+					else if (tree->children.back()->type == T_SEMI_COLON) {
+						// for(;;)
+					}
+					else {
+						stack.push(parent);
+						stack.push(tree);
+						Token* token = getFirstTokenInTree(tree->children.back());
+						if (token == nullptr)
+							error("Parser Error 6 (contact tfredding@gmail.com)");
+						else
+							error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+					}
+				}
+				else {
+					stack.push(parent);
+					stack.push(tree);
+					Token* token = getFirstTokenInTree(tree->children.front());
+					if (token == nullptr)
+						error("Parser Error 7 (contact tfredding@gmail.com)");
+					else
+						error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+				}
+			}
+			else if (tree->children.size() == 3) {
+				ThomasNode *first = tree->children.front();
+				auto it = tree->children.begin();
+				++it;
+				ThomasNode *second = *it;
+				ThomasNode *third = tree->children.back();
+				// for(x;y;z) <- x and y are optional; z is not
+				if (first->type == statement) {
+					// for(x;???)
+					if (second->type == statement) {
+						// for(x;y;???)
+						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
+							// for(x;y;z)
+						}
+						else {
+							stack.push(parent);
+							stack.push(tree);
+							Token* token = getFirstTokenInTree(third);
+							if (token == nullptr)
+								error("Parser Error 8 (contact tfredding@gmail.com)");
+							else
+								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+						}
+					}
+					else if (second->type == T_SEMI_COLON) {
+						// for(x;;???)
+						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
+							// for(x;;z)
+						}
+						else {
+							stack.push(parent);
+							stack.push(tree);
+							Token* token = getFirstTokenInTree(third);
+							if (token == nullptr)
+								error("Parser Error 9 (contact tfredding@gmail.com)");
+							else
+								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+						}
+					}
+				}
+				else if (first->type == T_SEMI_COLON) {
+					// for(;???)
+					if (second->type == statement) {
+						// for(;y;???)
+						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
+							// for(;y;z)
+						}
+						else {
+							stack.push(parent);
+							stack.push(tree);
+							Token* token = getFirstTokenInTree(third);
+							if (token == nullptr)
+								error("Parser Error 10 (contact tfredding@gmail.com)");
+							else
+								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+						}
+					}
+					else if (second->type == T_SEMI_COLON) {
+						// for(;;???)
+						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
+							// for(;;z)
+						}
+						else {
+							stack.push(parent);
+							stack.push(tree);
+							Token* token = getFirstTokenInTree(third);
+							if (token == nullptr)
+								error("Parser Error 11 (contact tfredding@gmail.com)");
+							else
+								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
+						}
+					}
+				}
+				else {
+					//
+				}
+			}
 		}
+		// else if (parent->type == )
 	}
 	else if (tree->type == bracket_block) {
 	}

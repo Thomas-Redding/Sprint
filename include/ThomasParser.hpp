@@ -173,6 +173,7 @@ enum TreeType {
 	variable_dec,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
+	raw_type_or_void,
 	int_type,
 	unary1_value,
 	unary2_value,
@@ -264,6 +265,7 @@ public:
 		leftRight = lr;
 		// shortcuts[value] = {T_IDENTIFIER};
 		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
+		shortcuts[raw_type_or_void] = {T_KEYWORD_VOID, T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
 		shortcuts[int_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32};
 		shortcuts[unary1_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause};
 		shortcuts[unary2_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause};
