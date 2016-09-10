@@ -55,7 +55,7 @@ Token* ParserVerifier::getNextTokenInTree(ThomasNode *tree) {
 
 void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 	if (tree->type == curly_brace_block) {
-		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == for_loop || parent->type == do_while_loop) {
+		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == for_loop || parent->type == do_while_loop || parent->type == function_implementation /* || parent->type == constructor_implementation */) {
 			for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 				if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end()) {
 					stack.push(parent);
@@ -71,6 +71,7 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 		else if (parent->type == switch_statement) {
 			// todo
 		}
+		// todo: x = {"one": 1, "two": 2}
 	}
 	else if (tree->type == parenthesis_block) {
 		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == do_while_loop || parent->type == switch_statement) {
@@ -221,12 +222,23 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 				}
 			}
 		}
-		// else if (parent->type == )
+		else if (parent->type == function_implementation /* || parent->type == constructor_implementation */) {
+			// todo
+		}
+		// todo: x(42);
 	}
 	else if (tree->type == bracket_block) {
+		// todo
+		/*
+		 * square brackets are used in
+		 *   1. declarations:		int[] x;
+		 *   2. constructions		x = new int[];
+		 *   3. literal constructs	x = [1, 2, 3];
+		 *   4. accessors			x[5];
+		 */
 	}
 	else if (tree->type == template_block) {
-		//
+		// todo
 	}
 
 	stack.push(parent);
