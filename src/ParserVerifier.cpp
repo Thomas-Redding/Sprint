@@ -228,7 +228,10 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 				}
 			}
 		}
-		else if (parent->type == function_implementation /* || parent->type == constructor_implementation */) {
+		else if (parent->type == function_implementation) {
+			// todo
+		}
+		else if (parent->type == constructor_implementation) {
 			// todo
 		}
 		// todo: x(42);
@@ -245,6 +248,15 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 	}
 	else if (tree->type == template_block) {
 		// todo
+	}
+	// check missing structures
+	else if (tree->type == T_KEYWORD_FOR) {
+		if (parent->type != for_loop)
+			error("Parser Error: poorly structured for-loop");
+	}
+	else if (tree->type == T_KEYWORD_SWITCH) {
+		if (parent->type != switch_statement)
+			error("Parser Error: poorly structured switch block");
 	}
 
 	stack.push(parent);
