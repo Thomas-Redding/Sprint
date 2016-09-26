@@ -159,6 +159,7 @@ enum TreeType {
 	enum_implementation,
 	namespace_implementation,
 	class_implementation,
+	constructor_implementation,
 	function_implementation,
 	for_loop,
 	while_loop,
