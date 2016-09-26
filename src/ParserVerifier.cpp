@@ -254,6 +254,18 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 		if (parent->type != for_loop)
 			error("Parser Error: poorly structured for-loop");
 	}
+	else if (tree->type == T_KEYWORD_WHILE) {
+		if (parent->type != while_loop && parent->type != do_while_loop)
+			error("Parser Error: poorly structured for-loop");
+	}
+	else if (tree->type == T_KEYWORD_IF) {
+		if (parent->type != if_statement && parent->type != if_else_statement)
+			error("Parser Error: poorly structured for-loop");
+	}
+	else if (tree->type == T_KEYWORD_ELSE) {
+		if (parent->type != if_else_statement)
+			error("Parser Error: poorly structured for-loop");
+	}
 	else if (tree->type == T_KEYWORD_SWITCH) {
 		if (parent->type != switch_statement)
 			error("Parser Error: poorly structured switch block");

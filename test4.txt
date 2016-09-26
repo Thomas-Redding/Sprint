@@ -6,6 +6,9 @@ else if (x == 4)
 else
 	y = 6;
 
+if (x == 2)
+	y = 4;
+
 if (x == 7) {
 	y = 8;
 }
