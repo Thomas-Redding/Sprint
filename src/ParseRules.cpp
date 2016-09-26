@@ -72,6 +72,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(110, general, {T_KEYWORD_RETURN, setting_value, T_SEMI_COLON}, return_statement));
 	listOfRules.push_back(ThomasParseRule(110, general, {comma_value, T_COMMA, comma_value}, comma_clause));										// x, y
 	listOfRules.push_back(ThomasParseRule(110, general, {T_KEYWORD_CASE, setting_value, T_COLON}, case_statement));
+	listOfRules.push_back(ThomasParseRule(110, general, {T_KEYWORD_DEFAULT, T_COLON}, case_statement));
 	
 	listOfRules.push_back(ThomasParseRule(120, general, {comma_value, T_SEMI_COLON}, statement));													// x;
 	listOfRules.push_back(ThomasParseRule(120, general, {T_KEYWORD_BREAK, T_SEMI_COLON}, break_statement));

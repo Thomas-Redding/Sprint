@@ -69,7 +69,13 @@ void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
 			}
 		}
 		else if (parent->type == switch_statement) {
-			// todo
+			bool inCase = false;
+			for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+				if (!inCase) {
+					if ((*it)->type == case_statement)
+						inCase = true;
+				}
+			}
 		}
 		// todo: x = {"one": 1, "two": 2}
 	}
