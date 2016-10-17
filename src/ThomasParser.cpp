@@ -155,6 +155,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == namespace_implementation) return "namespace_implementation";
 	else if (t == class_implementation) return "class_implementation";
 	else if (t == function_implementation) return "function_implementation";
+	else if (t == function_declaration) return "function_declaration";
 	else if (t == T_POSITIVE) return "T_POSITIVE";
 	else if (t == T_NEGATIVE) return "T_NEGATIVE";
 	else if (t == T_PTR) return "T_PTR";
@@ -364,7 +365,7 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 		int ruleToApply = -1;
 		int ruleSize = 0;
 		for (int i = from; i < to; ++i) {
-			if (rules[i].parent == general || rules[i].parent == tree->type) {
+			if (rules[i].notParents.find(tree->type) == rules[i].notParents.end() && (rules[i].parents.size() == 0 || rules[i].parents.find(tree->type) != rules[i].notParents.end())) {
 				int j;
 				std::list<ThomasNode*>::iterator it2 = it;
 				for (j = 0; j < rules[i].from.size(); ++j) {
@@ -435,7 +436,7 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 		int ruleToApply = -1;
 		int ruleSize = 0;
 		for (int i = from; i < to; ++i) {
-			if (rules[i].parent == general || rules[i].parent == tree->type) {
+			if (rules[i].notParents.find(tree->type) == rules[i].notParents.end() && (rules[i].parents.size() == 0 || rules[i].parents.find(tree->type) != rules[i].notParents.end())) {
 				std::list<ThomasNode*>::iterator it2 = it;
 				int j;
 				for (j = 0; j < rules[i].from.size(); ++j) {

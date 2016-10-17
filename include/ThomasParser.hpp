@@ -162,6 +162,7 @@ enum TreeType {
 	class_implementation,
 	constructor_implementation,
 	function_implementation,
+	function_declaration,
 	for_loop,
 	while_loop,
 	do_while_loop,
@@ -221,14 +222,15 @@ struct ThomasNode {
 
 class ThomasParseRule {
 public:
-	ThomasParseRule(int p, TreeType par, std::vector<TreeType> f, TreeType t) {
+	ThomasParseRule(int p, std::set<TreeType> par, std::set<TreeType> notPar, std::vector<TreeType> f, TreeType t) {
 		precedence = p;
-		parent = par;
+		parents = par;
+		notParents = notPar;
 		from = f;
 		to = t;
 	}
 	std::string toString() {
-		std::string rtn = treeTypeToString(parent);
+		std::string rtn = "{set-o'-things}";
 		rtn += " : ";
 		for (int i = 0; i < from.size(); i++) {
 			if (i != 0)
@@ -240,7 +242,8 @@ public:
 		return rtn;
 	}
 	int precedence;
-	TreeType parent;
+	std::set<TreeType> parents;
+	std::set<TreeType> notParents;
 	std::vector<TreeType> from;
 	TreeType to;
 };
