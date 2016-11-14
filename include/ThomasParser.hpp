@@ -174,6 +174,8 @@ enum TreeType {
 	continue_statement,
 	case_statement,
 	variable_dec,
+	try_block,
+	catch_block,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	raw_type_or_void,

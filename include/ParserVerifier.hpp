@@ -1,15 +1,20 @@
-#include <stack>
+#include <list>
+#include <unordered_map>
+#include <set>
 #include "../include/ThomasParser.hpp"
+
 
 class ParserVerifier {
 public:
 	ParserVerifier(ThomasParser *par);
-	void verify(ThomasNode* parent, ThomasNode* tree);
+	void verify(ThomasNode* tree);
 private:
-	void error(std::string str);
-	Token* getFirstTokenInTree(ThomasNode *tree);
-	Token* getNextTokenInTree(ThomasNode *tree);
 	ThomasParser *parser;
-	std::stack<ThomasNode*> stack;
-};
+	std::unordered_map<int, std::set<int>> keywords_are_in_structures;
+	std::unordered_map<int, std::set<int>> keywords_are_eventually_in_structures;
+	std::set<int> structures_with_blocks_of_statements;
 
+	std::list<ThomasNode*> ancestors;
+	void error(std::string message, ThomasNode* tree);
+	void verify_block_contains_only_statements(ThomasNode* tree);
+};

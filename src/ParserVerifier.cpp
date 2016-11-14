@@ -1,284 +1,139 @@
 
 #include "../include/ParserVerifier.hpp"
 
-/*
- * we have to verify all (), {}, [], and <> blocks
- * idea: a "Rule" consists of
- *   1. a block-type
- *   2. a parent type
- *   3. approporiate children patterns
- * For instance, for while-loops, we might have something like
- * {curly_bracket, while_loop, statements}
- * Form this point, we just have to loop through all the nodes in the tree.
- * when we find a block, we check the parent, then we check if the block's contents are good
- */
 
 ParserVerifier::ParserVerifier(ThomasParser *par) {
 	parser = par;
-}
 
-Token* ParserVerifier::getFirstTokenInTree(ThomasNode *tree) {
-	if (tree->type < general) {
-		return &tree->token;
-	}
-	else {
-		Token *rtn;
-		for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-			rtn = getFirstTokenInTree(*it);
-			if (rtn != nullptr)
-				return rtn;
-		}
-		return getNextTokenInTree(tree);
-	}
-}
+	keywords_are_in_structures.insert({T_KEYWORD_CLASS, std::set<int>({class_implementation})});
+	keywords_are_in_structures.insert({T_KEYWORD_ENUM, std::set<int>({enum_implementation})});
+	keywords_are_in_structures.insert({T_KEYWORD_NAMESPACE, std::set<int>({namespace_implementation})});
+	keywords_are_in_structures.insert({T_KEYWORD_ELSE, std::set<int>({if_else_statement})});
+	keywords_are_in_structures.insert({T_KEYWORD_FOR, std::set<int>({for_loop})});
+	keywords_are_in_structures.insert({T_KEYWORD_DO, std::set<int>({do_while_loop})});
+	keywords_are_in_structures.insert({T_KEYWORD_WHILE, std::set<int>({do_while_loop})});
+	keywords_are_in_structures.insert({T_KEYWORD_NEW, std::set<int>({unary2_clause})});
+	keywords_are_in_structures.insert({T_KEYWORD_DELETE, std::set<int>({unary2_clause})});
+	keywords_are_in_structures.insert({T_KEYWORD_SWITCH, std::set<int>({switch_statement})});
+	keywords_are_in_structures.insert({T_KEYWORD_TRY, std::set<int>({try_block})});
+	keywords_are_in_structures.insert({T_KEYWORD_CATCH, std::set<int>({catch_block})});
 
-Token* ParserVerifier::getNextTokenInTree(ThomasNode *tree) {
-	while(!stack.empty()) {
-		bool shouldCheck = false;
-		ThomasNode *par = stack.top();
-		Token *rtn = nullptr;
-		for (std::list<ThomasNode*>::iterator it = par->children.begin(); it != par->children.end(); ++it) {
-			if (*it == tree)
-				shouldCheck = true;
-			else if (shouldCheck) {
-				rtn = getFirstTokenInTree(*it);
-				if (rtn != nullptr)
-					return rtn;
-			}
-		}
-		tree = par;
-		stack.pop();
-	}
-	// there are no tokens next
-	return nullptr;
-}
+	keywords_are_eventually_in_structures.insert({T_KEYWORD_RETURN, std::set<int>({function_implementation})});
+	keywords_are_eventually_in_structures.insert({T_KEYWORD_DEFAULT, std::set<int>({switch_statement})});
+	keywords_are_eventually_in_structures.insert({T_KEYWORD_CASE, std::set<int>({switch_statement})});
 
-void ParserVerifier::verify(ThomasNode* parent, ThomasNode* tree) {
-	if (tree->type == curly_brace_block) {
-		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == for_loop || parent->type == do_while_loop || parent->type == function_implementation /* || parent->type == constructor_implementation */) {
-			for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-				if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end()) {
-					stack.push(parent);
-					stack.push(tree);
-					Token* token = getFirstTokenInTree(*it);
-					if (token == nullptr)
-						error("Parser Error 1 (contact tfredding@gmail.com)");
-					else
-						error("Parser Error: found unexpected class, namespace, or function (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-				}
-			}
+	keywords_are_eventually_in_structures.insert({T_KEYWORD_BREAK, std::set<int>({for_loop, do_while_loop})});
+	keywords_are_in_structures.insert({T_KEYWORD_IF, std::set<int>({if_statement, if_else_statement})});
+	keywords_are_eventually_in_structures.insert({T_KEYWORD_CONTINUE, std::set<int>({if_statement, if_else_statement})});
+
+	structures_with_blocks_of_statements = {
+		function_implementation,
+		for_loop,
+		while_loop,
+		do_while_loop,
+		if_statement,
+		if_else_statement,
+		try_block,
+		catch_block
+	};
+};
+
+void ParserVerifier::verify(ThomasNode* tree) {
+	// verify current node is legal
+	bool has_been_verified = false;
+
+
+	std::unordered_map<int, std::set<int>>::iterator valid_parents_it = keywords_are_in_structures.find(tree->type);
+	if (valid_parents_it != keywords_are_in_structures.end()) {
+		if (valid_parents_it->second.find(ancestors.back()->type) == valid_parents_it->second.end()) {
+			error("invalid parent (" + treeTypeToString(tree->type) + ")", tree);
 		}
-		else if (parent->type == switch_statement) {
-			bool inCase = false;
-			for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-				if (!inCase) {
-					if ((*it)->type == case_statement)
-						inCase = true;
-				}
-			}
-		}
-		// todo: x = {"one": 1, "two": 2}
-	}
-	else if (tree->type == parenthesis_block) {
-		if (parent->type == if_else_statement || parent->type == if_statement || parent->type == while_loop || parent->type == do_while_loop || parent->type == switch_statement) {
-			if (tree->children.size() == 0) {
-				error("Parser Error 2 (contact tfredding@gmail.com)");
-			}
-			else if (tree->children.size() > 1) {
-				stack.push(parent);
-				stack.push(tree);
-				Token* token = getFirstTokenInTree(tree->children.front());
-				if (token == nullptr)
-					error("Parser Error 3 (contact tfredding@gmail.com)");
-				else
-					error("Parser Error: Expected a single statement in condition, but found multiple (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-			}
-			else if (parser->shortcuts[setting_value].find(tree->children.front()->type) == parser->shortcuts[setting_value].end()) {
-				stack.push(parent);
-				stack.push(tree);
-				Token* token = getFirstTokenInTree(tree->children.front());
-				if (token == nullptr)
-					error("Parser Error 4 (contact tfredding@gmail.com)");
-				else
-					error("Parser Error: Expected (and did not find) single statement in condition (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-			}
-		}
-		else if (parent->type == for_loop) {
-			// for(x;y;z) <- x, y, and z are optional
-			if (tree->children.size() == 2) {
-				if (tree->children.front()->type == statement) {
-					if (tree->children.back()->type == statement) {
-						// for(x;y;)
-					}
-					else if (tree->children.back()->type == T_SEMI_COLON) {
-						// for(x;;)
-					}
-					else {
-						stack.push(parent);
-						stack.push(tree);
-						Token* token = getFirstTokenInTree(tree->children.back());
-						if (token == nullptr)
-							error("Parser Error 5 (contact tfredding@gmail.com)");
-						else
-							error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-					}
-				}
-				else if (tree->children.front()->type == T_SEMI_COLON) {
-					if (tree->children.back()->type == statement) {
-						// for(;y;)
-					}
-					else if (tree->children.back()->type == T_SEMI_COLON) {
-						// for(;;)
-					}
-					else {
-						stack.push(parent);
-						stack.push(tree);
-						Token* token = getFirstTokenInTree(tree->children.back());
-						if (token == nullptr)
-							error("Parser Error 6 (contact tfredding@gmail.com)");
-						else
-							error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-					}
-				}
-				else {
-					stack.push(parent);
-					stack.push(tree);
-					Token* token = getFirstTokenInTree(tree->children.front());
-					if (token == nullptr)
-						error("Parser Error 7 (contact tfredding@gmail.com)");
-					else
-						error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-				}
-			}
-			else if (tree->children.size() == 3) {
-				ThomasNode *first = tree->children.front();
-				auto it = tree->children.begin();
-				++it;
-				ThomasNode *second = *it;
-				ThomasNode *third = tree->children.back();
-				// for(x;y;z) <- x and y are optional; z is not
-				if (first->type == statement) {
-					// for(x;???)
-					if (second->type == statement) {
-						// for(x;y;???)
-						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
-							// for(x;y;z)
-						}
-						else {
-							stack.push(parent);
-							stack.push(tree);
-							Token* token = getFirstTokenInTree(third);
-							if (token == nullptr)
-								error("Parser Error 8 (contact tfredding@gmail.com)");
-							else
-								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-						}
-					}
-					else if (second->type == T_SEMI_COLON) {
-						// for(x;;???)
-						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
-							// for(x;;z)
-						}
-						else {
-							stack.push(parent);
-							stack.push(tree);
-							Token* token = getFirstTokenInTree(third);
-							if (token == nullptr)
-								error("Parser Error 9 (contact tfredding@gmail.com)");
-							else
-								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-						}
-					}
-				}
-				else if (first->type == T_SEMI_COLON) {
-					// for(;???)
-					if (second->type == statement) {
-						// for(;y;???)
-						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
-							// for(;y;z)
-						}
-						else {
-							stack.push(parent);
-							stack.push(tree);
-							Token* token = getFirstTokenInTree(third);
-							if (token == nullptr)
-								error("Parser Error 10 (contact tfredding@gmail.com)");
-							else
-								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-						}
-					}
-					else if (second->type == T_SEMI_COLON) {
-						// for(;;???)
-						if (parser->shortcuts[comma_value].find(third->type) == parser->shortcuts[comma_value].end()) {
-							// for(;;z)
-						}
-						else {
-							stack.push(parent);
-							stack.push(tree);
-							Token* token = getFirstTokenInTree(third);
-							if (token == nullptr)
-								error("Parser Error 11 (contact tfredding@gmail.com)");
-							else
-								error("Parser Error: found unexpected object in for-loop (line: " + std::to_string(token->lineNum) + ", char: " + std::to_string(token->charNum) + ", string: \"" + token->str + "\")");
-						}
-					}
-				}
-				else {
-					//
-				}
-			}
-		}
-		else if (parent->type == function_implementation) {
-			// todo
-		}
-		else if (parent->type == constructor_implementation) {
-			// todo
-		}
-		// todo: x(42);
-	}
-	else if (tree->type == bracket_block) {
-		// todo
-		/*
-		 * square brackets are used in
-		 *   1. declarations:		int[] x;
-		 *   2. constructions		x = new int[];
-		 *   3. literal constructs	x = [1, 2, 3];
-		 *   4. accessors			x[5];
-		 */
-	}
-	else if (tree->type == template_block) {
-		// todo
-	}
-	// check missing structures
-	else if (tree->type == T_KEYWORD_FOR) {
-		if (parent->type != for_loop)
-			error("Parser Error: poorly structured for-loop");
-	}
-	else if (tree->type == T_KEYWORD_WHILE) {
-		if (parent->type != while_loop && parent->type != do_while_loop)
-			error("Parser Error: poorly structured for-loop");
-	}
-	else if (tree->type == T_KEYWORD_IF) {
-		if (parent->type != if_statement && parent->type != if_else_statement)
-			error("Parser Error: poorly structured for-loop");
-	}
-	else if (tree->type == T_KEYWORD_ELSE) {
-		if (parent->type != if_else_statement)
-			error("Parser Error: poorly structured for-loop");
-	}
-	else if (tree->type == T_KEYWORD_SWITCH) {
-		if (parent->type != switch_statement)
-			error("Parser Error: poorly structured switch block");
+		has_been_verified = true;
 	}
 
-	stack.push(parent);
+	if (!has_been_verified) {
+		std::unordered_map<int, std::set<int>>::iterator valid_ancestors_it = keywords_are_eventually_in_structures.find(tree->type);
+		if (valid_parents_it != keywords_are_eventually_in_structures.end()) {
+			bool found_valid_ancestor = false;
+			for (std::list<ThomasNode*>::reverse_iterator it = ancestors.rbegin(); it != ancestors.rend(); --it) {
+				if (valid_ancestors_it->second.find((*it)->type) != valid_parents_it->second.end()) {
+					found_valid_ancestor = true;
+					break;
+				}
+			}
+			if (!found_valid_ancestor) {
+				error("invalid ancestor", tree);
+			}
+			has_been_verified = true;
+		}
+	}
+	
+	if (!has_been_verified) {
+		if (tree->type == curly_brace_block) {
+			if (structures_with_blocks_of_statements.find(ancestors.back()->type) != structures_with_blocks_of_statements.end()) {
+				verify_block_contains_only_statements(tree);
+				has_been_verified = true;
+			}
+			else if (ancestors.back()->type == switch_statement) {
+				for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+					if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end()) {
+						if ((*it)->type != case_statement)
+							error("block contains invalid line", *it);
+					}
+				}
+				has_been_verified = true;
+			}
+			else if (ancestors.back()->type == class_implementation) {
+				// todo
+				has_been_verified = true;
+			}
+			else if (ancestors.back()->type == enum_implementation) {
+				// todo
+				has_been_verified = true;
+			}
+			else if (ancestors.back()->type == namespace_implementation) {
+				// todo
+				has_been_verified = true;
+			}
+		}
+	}
+
+	if (!has_been_verified) {
+		if (tree->type == curly_brace_block || tree->type == bracket_block) {
+			/*
+				[int]					{int}
+				[int:int]				{int: int}
+				[x, y, z]				{x, y, z}
+				[x:y, z:a, b:c]			{x:y, z:a, b:c}
+			*/
+		}
+	}
+
+	if (!has_been_verified) {
+		if (tree->type == parenthesis_block) {
+			/*
+				(int, int, int)
+				(x, y, z)
+			*/
+		}
+	}
+
+	// verify children recursively
+	ancestors.push_back(tree);
 	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-		verify(tree, *it);
+		verify(*it);
 	}
-	stack.pop();
+	ancestors.pop_back();
+};
+
+void ParserVerifier::verify_block_contains_only_statements(ThomasNode* tree) {
+	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+		if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end())
+			error("block contains invalid line", *it);
+	}
 }
 
-void ParserVerifier::error(std::string str) {
-	std::cout << str << "\n";
-	exit(1);
+void ParserVerifier::error(std::string message, ThomasNode* tree) {
+	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
+	exit(0);
 }

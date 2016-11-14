@@ -88,7 +88,7 @@ int main(int argc, const char * argv[]) {
 	std::cout << "\n\n\n";
 
 	ParserVerifier pv(&foo);
-	pv.verify(nullptr, bar);
+	pv.verify(bar);
 
 	std::cout << "\n\n\n";
 

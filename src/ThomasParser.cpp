@@ -1,6 +1,5 @@
 #include "../include/ThomasParser.hpp"
 
-
 std::string treeTypeToString(TreeType t) {
 	if (t == T_KEYWORD) return "T_KEYWORD";
 	else if (t == T_IDENTIFIER) return "T_IDENTIFIER";

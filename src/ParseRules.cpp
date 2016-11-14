@@ -65,6 +65,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 
+	listOfRules.push_back(ThomasParseRule(105, {}, {}, {setting_value, T_COLON, setting_value}, ternary_clause));	// x : z
+
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, T_IDENTIFIER, T_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, template_block, T_IDENTIFIER, T_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, setting_value, T_SEMI_COLON}, variable_dec));
@@ -84,6 +86,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(130, {}, {}, {T_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
 	listOfRules.push_back(ThomasParseRule(130, {}, {}, {T_KEYWORD_DO, structure, T_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
 	listOfRules.push_back(ThomasParseRule(130, {}, {}, {T_KEYWORD_SWITCH, parenthesis_block, curly_brace_block}, switch_statement));
+	listOfRules.push_back(ThomasParseRule(130, {}, {}, {T_KEYWORD_TRY, curly_brace_block}, try_block));
+	listOfRules.push_back(ThomasParseRule(130, {}, {}, {T_KEYWORD_CATCH, parenthesis_block, curly_brace_block}, catch_block));
 
 	// class implementations
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 
