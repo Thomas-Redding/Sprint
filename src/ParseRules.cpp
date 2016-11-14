@@ -93,16 +93,16 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {T_KEYWORD_CLASS, T_IDENTIFIER, curly_brace_block}, class_implementation));					// class Foo { ... 
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {T_KEYWORD_CLASS, T_IDENTIFIER, template_block, curly_brace_block}, class_implementation));	// class Foo <T> { ... 
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS, T_IDENTIFIER, T_COLON, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
+		T_KEYWORD_CLASS, T_IDENTIFIER, T_EXTENDS, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
 	}, class_implementation));
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_COLON, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
+		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_EXTENDS, T_IDENTIFIER, curly_brace_block												// class Foo<T> : Bar
 	}, class_implementation));
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS, T_IDENTIFIER, T_COLON, T_IDENTIFIER, template_block, curly_brace_block								// class Foo: Bar<S>
+		T_KEYWORD_CLASS, T_IDENTIFIER, T_EXTENDS, T_IDENTIFIER, template_block, curly_brace_block								// class Foo: Bar<S>
 	}, class_implementation));
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_COLON, T_IDENTIFIER, template_block, curly_brace_block								// class Foo<T, S> : Bar<T>
+		T_KEYWORD_CLASS, T_IDENTIFIER, template_block, T_EXTENDS, T_IDENTIFIER, template_block, curly_brace_block								// class Foo<T, S> : Bar<T>
 	}, class_implementation));
 
 	// function implementations

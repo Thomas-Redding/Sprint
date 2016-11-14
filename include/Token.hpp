@@ -128,7 +128,8 @@ enum TokenType {
 	OPEN_TEMPLATE,
 	CLOSE_TEMPLATE,
 	FUNC_DECL_IDENTIFIER, // for 'foo' in the line 'foo(int x) -> { ... }'
-	CLASS_IDENTIFIER
+	CLASS_IDENTIFIER,
+	EXTENDS
 };
 
 class Token {

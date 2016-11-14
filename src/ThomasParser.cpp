@@ -308,6 +308,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_FUNCTION) return T_KEYWORD_FUNCTION;
 	else if (t == OPEN_TEMPLATE) return T_OPEN_TEMPLATE;
 	else if (t == CLOSE_TEMPLATE) return T_CLOSE_TEMPLATE;
+	else if (t == EXTENDS) return T_EXTENDS;
 	else return T_UNKNOWN;
 }
 

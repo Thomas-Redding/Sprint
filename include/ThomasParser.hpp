@@ -137,6 +137,7 @@ enum TreeType {
 	T_KEYWORD_REPEAT,
 	T_OPEN_TEMPLATE,
 	T_CLOSE_TEMPLATE,
+	T_EXTENDS,
 	general,				// make sure this is the first non-token type
 	curly_brace_block,
 	parenthesis_block,

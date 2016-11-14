@@ -5,7 +5,7 @@ interface Container<T> {
     pop() -> T;
 }
 
-class Queue<T> implements Container<T> {
+class Queue<T> extends Container<T> {
     push(T v) -> void; // note, this void is optional
     pop() -> T;
     front() -> T {

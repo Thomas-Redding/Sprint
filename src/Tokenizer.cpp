@@ -15,6 +15,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("do");
 	keywords.insert("else");
 	keywords.insert("enum");
+	keywords.insert("extends");
 	keywords.insert("false");
 	keywords.insert("for");
 	keywords.insert("if");
