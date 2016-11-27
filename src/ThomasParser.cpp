@@ -494,7 +494,7 @@ TreeType to;
 
 void ThomasParser::doCurlyBracePass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
-	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
+	for (std::list<ThomasNode*>::iterator it=tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->children.size() > 0) {
 			doCurlyBracePass(*it);
 		}
@@ -504,6 +504,9 @@ void ThomasParser::doCurlyBracePass(ThomasNode* tree) {
 			}
 			else if ((*it)->type == T_CLOSE_CURLY_BRACE) {
 				// create new parenthesis_block
+				if (st.size() == 0) {
+					error("Closed curly brace has no open counterpart.", *it);
+				}
 				ThomasNode* newTree = new ThomasNode(curly_brace_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
@@ -522,7 +525,7 @@ void ThomasParser::doCurlyBracePass(ThomasNode* tree) {
 
 void ThomasParser::doTemplatePass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
-	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
+	for (std::list<ThomasNode*>::iterator it=tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->children.size() > 0) {
 			doTemplatePass(*it);
 		}
@@ -532,6 +535,9 @@ void ThomasParser::doTemplatePass(ThomasNode* tree) {
 			}
 			else if ((*it)->type == T_CLOSE_TEMPLATE) {
 				// create new parenthesis_block
+				if (st.size() == 0) {
+					error("Closed template has no open counterpart.", *it);
+				}
 				ThomasNode* newTree = new ThomasNode(template_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
@@ -551,7 +557,7 @@ void ThomasParser::doTemplatePass(ThomasNode* tree) {
 
 void ThomasParser::doParenthesesPass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
-	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
+	for (std::list<ThomasNode*>::iterator it=tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->children.size() > 0) {
 			doParenthesesPass(*it);
 		}
@@ -561,6 +567,9 @@ void ThomasParser::doParenthesesPass(ThomasNode* tree) {
 			}
 			else if ((*it)->type == T_CLOSE_PARENTHESIS) {
 				// create new parenthesis_block
+				if (st.size() == 0) {
+					error("Closed paranthesis has no open counterpart.", *it);
+				}
 				ThomasNode* newTree = new ThomasNode(parenthesis_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
@@ -577,9 +586,15 @@ void ThomasParser::doParenthesesPass(ThomasNode* tree) {
 	}
 }
 
+void ThomasParser::error(std::string message, ThomasNode* tree) {
+	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
+	exit(0);
+}
+
+
 void ThomasParser::doBracketPass(ThomasNode* tree) {
 	std::stack<std::list<ThomasNode*>::iterator> st;
-	for (std::list<ThomasNode*>::iterator it=++tree->children.begin(); it != tree->children.end(); ++it) {
+	for (std::list<ThomasNode*>::iterator it=tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->children.size() > 0) {
 			doBracketPass(*it);
 		}
@@ -589,6 +604,9 @@ void ThomasParser::doBracketPass(ThomasNode* tree) {
 			}
 			else if ((*it)->type == T_CLOSE_BRACKET) {
 				// create new parenthesis_block
+				if (st.size() == 0) {
+					error("Closed bracket has no open counterpart.", *it);
+				}
 				ThomasNode* newTree = new ThomasNode(bracket_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();

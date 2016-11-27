@@ -299,6 +299,8 @@ public:
 	void parse();
 	void parseLeftRight(ThomasNode *tree, int from, int to);
 	void parseRightLeft(ThomasNode *tree, int from, int to);
+	void error(std::string message, ThomasNode* tree);
+
 };
 
 #endif
