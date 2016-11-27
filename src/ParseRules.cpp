@@ -200,10 +200,13 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type_or_void, T_SEMI_COLON
 	}, function_declaration));
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_IDENTIFIER, parenthesis_block, T_ARROW, raw_type, template_block, T_SEMI_COLON
+		T_IDENTIFIER, parenthesis_block, T_ARROW, T_IDENTIFIER, T_SEMI_COLON
 	}, function_declaration));
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, raw_type, template_block, T_SEMI_COLON
+		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, T_IDENTIFIER, T_SEMI_COLON
+	}, function_declaration));
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, T_IDENTIFIER, template_block, T_SEMI_COLON
 	}, function_declaration));
 
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));					// enum Foo { ... 
