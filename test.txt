@@ -1,5 +1,7 @@
+void foo() -> void;
+
 class LinkedList<T> : List<T> {
-	// TODO
+	int x;
 }
 
 sum<T>(List<T> list) -> Foo<5> {
@@ -8,6 +10,7 @@ sum<T>(List<T> list) -> Foo<5> {
 }
 
 /*
+
 class Foo extends Parent {
 	int16 bar, foo;
 	public:
