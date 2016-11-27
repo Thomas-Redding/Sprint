@@ -142,9 +142,9 @@ std::list<Token> Tokenizer::process(std::string str) {
 				cur.str += str[it];
 			}
 			else if (str[it] == '+' || str[it] == '-') {
-				if (it == 0) {
+				/*if (it == 0) {
 					error("Tokenizer: Can't begin a document with '+' or '-'.");
-				}
+				}*/
 				cur.str += str[it];
 				long i;
 				for (i=it+1; i<str.length(); i++) {
