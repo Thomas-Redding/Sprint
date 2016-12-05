@@ -62,6 +62,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("var");
 	keywords.insert("repeat");
 	keywords.insert("default");
+	keywords.insert("is");
 
 	punctuation.insert('.');
 	punctuation.insert(':');
@@ -560,6 +561,8 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = MINUS_MINUS;
 	else if (str == "->")
 		rtn = ARROW;
+	else if (str == "<-")
+		rtn = LEFT_ARROW;
 	else
 		rtn = UNKNOWN;
 	return rtn;
@@ -683,6 +686,8 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 		cur.type = KEYWORD_METHOD;
 	else if(cur.str == "repeat")
 		cur.type = KEYWORD_REPEAT;
+	else if (cur.str == "is")
+		cur.type = KEYWORD_IS;
 	else
 		cur.type = IDENTIFIER;
 }

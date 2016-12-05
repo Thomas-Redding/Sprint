@@ -118,6 +118,8 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == T_OPEN_TEMPLATE) return "T_OPEN_TEMPLATE";
 	else if (t == T_CLOSE_TEMPLATE) return "T_CLOSE_TEMPLATE";
 	else if (t == T_KEYWORD_DEFAULT) return "T_KEYWORD_DEFAULT";
+	else if (t == T_LEFT_ARROW) return "T_LEFT_ARROW";
+	else if (t == T_KEYWORD_IS) return "T_KEYWORD_IS";
 	else if (t == curly_brace_block) return "curly_brace_block";
 	else if (t == parenthesis_block) return "parenthesis_block";
 	else if (t == bracket_block) return "bracket_block";
@@ -309,6 +311,8 @@ TreeType translateType(TokenType t) {
 	else if (t == OPEN_TEMPLATE) return T_OPEN_TEMPLATE;
 	else if (t == CLOSE_TEMPLATE) return T_CLOSE_TEMPLATE;
 	else if (t == EXTENDS) return T_EXTENDS;
+	else if (t == LEFT_ARROW) return T_LEFT_ARROW;
+	else if (t == KEYWORD_IS) return T_KEYWORD_IS;
 	else return T_UNKNOWN;
 }
 
