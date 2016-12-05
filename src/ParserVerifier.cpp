@@ -17,6 +17,10 @@ ParserVerifier::ParserVerifier(ThomasParser *par) {
 	keywords_are_in_structures.insert({T_KEYWORD_SWITCH, std::set<int>({switch_statement})});
 	keywords_are_in_structures.insert({T_KEYWORD_TRY, std::set<int>({try_block})});
 	keywords_are_in_structures.insert({T_KEYWORD_CATCH, std::set<int>({catch_block})});
+	// keywords_are_in_structures.insert({T_KEYWORD_NOT, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({T_KEYWORD_AND, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({T_KEYWORD_XOR, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({T_KEYWORD_OR, std::set<int>({unary2_clause})});
 
 	keywords_are_eventually_in_structures.insert({T_KEYWORD_RETURN, std::set<int>({function_implementation})});
 	keywords_are_eventually_in_structures.insert({T_KEYWORD_DEFAULT, std::set<int>({switch_statement})});
