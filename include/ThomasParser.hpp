@@ -138,6 +138,8 @@ enum TreeType {
 	T_OPEN_TEMPLATE,
 	T_CLOSE_TEMPLATE,
 	T_EXTENDS,
+	T_LEFT_ARROW,
+	T_KEYWORD_IS,
 	general,				// make sure this is the first non-token type
 	curly_brace_block,
 	parenthesis_block,

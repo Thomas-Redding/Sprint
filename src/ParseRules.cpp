@@ -53,17 +53,18 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_QUESTION_MARK, setting_value, T_COLON, setting_value}, ternary_clause));	// x ? y : z
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_EQUALS, setting_value}, setting_clause));									// x = y
-	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_PLUS_EQUALS, setting_value}, setting_clause));							// x += y
+	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_PLUS_EQUALS, setting_value}, setting_clause));								// x += y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_MINUS_EQUALS, setting_value}, setting_clause));							// x -= y
-	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_ASTERISK_EQUALS, setting_value}, setting_clause));						// x *= y
+	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_ASTERISK_EQUALS, setting_value}, setting_clause));							// x *= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SLASH_EQUALS, setting_value}, setting_clause));							// x /= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_PERCENT_EQUALS, setting_value}, setting_clause));							// x %= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_AMPERSAND_EQUALS, setting_value}, setting_clause));						// x &= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_CARROT_EQUALS, setting_value}, setting_clause));							// x ^= y
-	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_VERTICAL_BAR_EQUALS, setting_value}, setting_clause));					// x |= y
-	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_COLON_EQUALS, setting_value}, setting_clause));							// x := y
+	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_VERTICAL_BAR_EQUALS, setting_value}, setting_clause));						// x |= y
+	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_LEFT_ARROW, setting_value}, setting_clause));								// x <- y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
+	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_KEYWORD_IS, setting_value}, setting_clause));								// x is y
 
 	listOfRules.push_back(ThomasParseRule(105, {}, {}, {setting_value, T_COLON, setting_value}, ternary_clause));	// x : z
 
