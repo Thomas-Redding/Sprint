@@ -224,6 +224,13 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 		raw_type_or_void,
 		curly_brace_block
 	}, function_declaration));
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+		T_POSITIVE,
+		parenthesis_block,
+		T_ARROW,
+		raw_type_or_void,
+		curly_brace_block
+	}, function_declaration));
 
 	// enum Foo {...}
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));
