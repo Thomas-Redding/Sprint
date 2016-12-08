@@ -4,7 +4,8 @@
 void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> &listOfRules) {
 	leftToRight= {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		true, true, false, true, true, true, true, true, true, true, true, false, true, true, false, false
+		// -10, 0 , 10   , 20  , 30  , 40  , 50  , 60  , 70  , 80  , 90  , 100 , 105 , 110 , 120  , 130
+		true, true, false, true, true, true, true, true, true, true, true, true, true, false, false, false
 	};
 
 	listOfRules.push_back(ThomasParseRule(  0, {}, {}, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
@@ -66,14 +67,14 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_KEYWORD_IS, setting_value}, setting_clause));								// x is y
 
-	listOfRules.push_back(ThomasParseRule(105, {}, {}, {setting_value, T_COLON, setting_value}, ternary_clause));	// x : z
+	listOfRules.push_back(ThomasParseRule(105, {}, {}, {colon_value, T_COLON, colon_value}, colon_clause));	// x : z
 
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, T_IDENTIFIER, T_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, template_block, T_IDENTIFIER, T_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, setting_value, T_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {raw_type, template_block, setting_value, T_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {T_KEYWORD_RETURN, setting_value, T_SEMI_COLON}, return_statement));
-	listOfRules.push_back(ThomasParseRule(110, {}, {}, {comma_value, T_COMMA, comma_value}, comma_clause));										// x, y
+	listOfRules.push_back(ThomasParseRule(110, {}, {}, {comma_value, T_COMMA, comma_value}, comma_clause));											// x, y
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {T_KEYWORD_CASE, setting_value, T_COLON}, case_statement));
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {T_KEYWORD_DEFAULT, T_COLON}, case_statement));
 	
