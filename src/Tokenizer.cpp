@@ -107,7 +107,7 @@ std::list<Token> Tokenizer::process(std::string str) {
 	for (long i=0; i<byLine.size(); i++)
 		cumulativeCharsPerLine.push_back(byLine[i].size());
 	for (long i=1; i<byLine.size(); i++)
-		cumulativeCharsPerLine[i] = cumulativeCharsPerLine[i] + cumulativeCharsPerLine[i-1] + 1;
+		cumulativeCharsPerLine[i] = cumulativeCharsPerLine[i] + cumulativeCharsPerLine[i-1] + 1; // +1 is for the \n character
 
 	// set the current state of the Finite State Machine to the default
 	Token cur = Token(UNKNOWN, "", getLineNum(), getCharNum());
@@ -311,11 +311,13 @@ std::list<Token> Tokenizer::process(std::string str) {
 				cur.str += str[it];
 			else {
 				int i;
+				int go_back;
 				for (i = 0; i < cur.str.length(); ++i) {
+					go_back = cur.str.length() - i + 1;
 					if (cur.str.length() - i >= 2) {
 						TokenType tt = categorizePunc(cur.str.substr(i, 2));
 						if (tt != UNKNOWN) {
-							rtn.push_back(Token(tt, cur.str.substr(i, 2), getLineNum(), getCharNum()));
+							rtn.push_back(Token(tt, cur.str.substr(i, 2), getLineNum(go_back), getCharNum(go_back)));
 							++i;
 							continue;
 						}
@@ -324,18 +326,18 @@ std::list<Token> Tokenizer::process(std::string str) {
 					if (tt != UNKNOWN) {
 						if (tt == PLUS) {
 							if (rtn.back().type == IDENTIFIER || rtn.back().type == CLOSE_PARENTHESIS || rtn.back().type == CLOSE_BRACKET)
-								rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(), getCharNum()));
+								rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(go_back), getCharNum(go_back)));
 							else
-								rtn.push_back(Token(POSITIVE, cur.str.substr(i, 1), getLineNum(), getCharNum()));
+								rtn.push_back(Token(POSITIVE, cur.str.substr(i, 1), getLineNum(go_back), getCharNum(go_back)));
 						}
 						else if (tt == MINUS) {
 							if (rtn.back().type == IDENTIFIER || rtn.back().type == CLOSE_PARENTHESIS || rtn.back().type == CLOSE_BRACKET)
-								rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(), getCharNum()));
+								rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(go_back), getCharNum(go_back)));
 							else
-								rtn.push_back(Token(NEGATIVE, cur.str.substr(i, 1), getLineNum(), getCharNum()));
+								rtn.push_back(Token(NEGATIVE, cur.str.substr(i, 1), getLineNum(go_back), getCharNum(go_back)));
 						}
 						else
-							rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(), getCharNum()));
+							rtn.push_back(Token(tt, cur.str.substr(i, 1), getLineNum(go_back), getCharNum(go_back)));
 						continue;
 					}
 				}
@@ -458,11 +460,10 @@ std::vector<std::string> Tokenizer::split(std::string str, char delim) {
 
 long Tokenizer::getLineNum() {
 	for (long i=0; i<cumulativeCharsPerLine.size(); ++i) {
-		if (it <= cumulativeCharsPerLine[i])
+		if (it < cumulativeCharsPerLine[i])
 			return i;
 	}
-	error("Tokenizer: Error 2 (it: " + std::to_string(it) + ")");
-	return -1;
+	return cumulativeCharsPerLine.size() - 1;
 }
 
 long Tokenizer::getCharNum() {
@@ -471,6 +472,23 @@ long Tokenizer::getCharNum() {
 		return it;
 	else
 		return it - cumulativeCharsPerLine[lineNum-1];
+}
+
+long Tokenizer::getLineNum(int go_back) {
+	for (long i=0; i<cumulativeCharsPerLine.size(); ++i) {
+		if ((it - go_back) < cumulativeCharsPerLine[i])
+			return i;
+	}
+	return cumulativeCharsPerLine.size() - 1;
+}
+
+
+long Tokenizer::getCharNum(int go_back) {
+	int lineNum = getLineNum(go_back);
+	if (lineNum == 0)
+		return (it - go_back);
+	else
+		return (it - go_back) - cumulativeCharsPerLine[lineNum-1];
 }
 
 TokenType Tokenizer::categorizePunc(const std::string &str) {

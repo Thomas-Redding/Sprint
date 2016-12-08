@@ -67,9 +67,8 @@ int main(int argc, const char * argv[]) {
 
 	auto timeListToVector = std::chrono::high_resolution_clock::now();
 
-	for (auto it = list.begin(); it != list.end(); ++it) {
-		std::cout << *it << "\n";
-	}
+	for (int i = 0; i < tokenizedList.size(); ++i)
+		std::cout << tokenizedList[i] << "\n";
 
 	std::vector<bool> leftToRight;
 	std::vector<ThomasParseRule> listOfRules;

@@ -320,7 +320,7 @@ TreeType translateType(TokenType t) {
 ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
 	tokens = t;
 	len = n;
-	mainTree = new ThomasNode(general);
+	mainTree = new ThomasNode(general, 0, 0);
 	for (int i=0; i<len; ++i) {
 		mainTree->children.push_back(new ThomasNode(tokens[i]));
 	}
@@ -399,7 +399,7 @@ void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 		if (-1 < ruleToApply) {
 			int ruleSize = rules[ruleToApply].from.size();
 			std::list<ThomasNode*>::iterator it2 = it;
-			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to);
+			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to, (*it2)->token.lineNum, (*it2)->token.charNum);
 			for (int i= 0; i < ruleSize; ++i) {
 				newTree->children.push_back(*it2);
 				++it2;
@@ -471,7 +471,7 @@ void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 		if (-1 < ruleToApply) {
 			int ruleSize = rules[ruleToApply].from.size();
 			std::list<ThomasNode*>::iterator it2 = it;
-			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to);
+			ThomasNode *newTree = new ThomasNode(rules[ruleToApply].to, (*it)->token.lineNum, (*it)->token.charNum);
 			for (int i= 0; i < ruleSize; ++i) {
 				newTree->children.push_back(*it2);
 				++it2;
@@ -512,13 +512,13 @@ void ThomasParser::doCurlyBracePass(ThomasNode* tree) {
 				if (st.size() == 0) {
 					error("Closed curly brace has no open counterpart.", *it);
 				}
-				ThomasNode* newTree = new ThomasNode(curly_brace_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
 				std::list<ThomasNode*>::iterator rightPar = it;
 				std::list<ThomasNode*>::iterator end = ++it;
 				--it;
 				st.pop();
+				ThomasNode* newTree = new ThomasNode(curly_brace_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
 				for (std::list<ThomasNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
 					newTree->children.push_back(*it2);
 				tree->children.insert(leftPar, newTree);
@@ -543,13 +543,13 @@ void ThomasParser::doTemplatePass(ThomasNode* tree) {
 				if (st.size() == 0) {
 					error("Closed template has no open counterpart.", *it);
 				}
-				ThomasNode* newTree = new ThomasNode(template_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
 				std::list<ThomasNode*>::iterator rightPar = it;
 				std::list<ThomasNode*>::iterator end = ++it;
 				--it;
 				st.pop();
+				ThomasNode* newTree = new ThomasNode(template_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
 				for (std::list<ThomasNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
 					newTree->children.push_back(*it2);
 				tree->children.insert(leftPar, newTree);
@@ -575,13 +575,13 @@ void ThomasParser::doParenthesesPass(ThomasNode* tree) {
 				if (st.size() == 0) {
 					error("Closed paranthesis has no open counterpart.", *it);
 				}
-				ThomasNode* newTree = new ThomasNode(parenthesis_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
 				std::list<ThomasNode*>::iterator rightPar = it;
 				std::list<ThomasNode*>::iterator end = ++it;
 				--it;
 				st.pop();
+				ThomasNode* newTree = new ThomasNode(parenthesis_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
 				for (std::list<ThomasNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
 					newTree->children.push_back(*it2);
 				tree->children.insert(leftPar, newTree);
@@ -612,13 +612,13 @@ void ThomasParser::doBracketPass(ThomasNode* tree) {
 				if (st.size() == 0) {
 					error("Closed bracket has no open counterpart.", *it);
 				}
-				ThomasNode* newTree = new ThomasNode(bracket_block);
 				std::list<ThomasNode*>::iterator leftPar = st.top();
 				std::list<ThomasNode*>::iterator leftNonPar = ++st.top();
 				std::list<ThomasNode*>::iterator rightPar = it;
 				std::list<ThomasNode*>::iterator end = ++it;
 				--it;
 				st.pop();
+				ThomasNode* newTree = new ThomasNode(bracket_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
 				for (std::list<ThomasNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
 					newTree->children.push_back(*it2);
 				tree->children.insert(leftPar, newTree);

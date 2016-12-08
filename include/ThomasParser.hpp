@@ -208,9 +208,11 @@ TreeType translateType(TokenType t);
 
 struct ThomasNode {
 	TreeType type;
-	Token token;
+	Token token = Token(UNKNOWN);
 	std::list<ThomasNode*> children;
-	ThomasNode(TreeType tt) {
+	ThomasNode(TreeType tt, int line, int ch) {
+		token.lineNum = line;
+		token.charNum = ch;
 		type = tt;
 	}
 	ThomasNode(Token t);
@@ -221,7 +223,7 @@ struct ThomasNode {
 		std::string indent = "";
 		for (int i = 0; i < depth; i++)
 			indent += "   ";
-		std::cout << indent << treeTypeToString(type) << " : " << token.str << "\n";
+		std::cout << indent << treeTypeToString(type) << " : " << token.str << " (" << token.lineNum << "," << token.charNum << ")\n";
 		for (std::list<ThomasNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
 		    (*it)->print(depth+1);
 	}
