@@ -169,6 +169,7 @@ enum TreeType {
 	constructor_implementation,
 	function_implementation,
 	function_declaration,
+	function_head, // e.g. "foo(...) ->" or "foo<...>(...) ->"
 	for_loop,
 	while_loop,
 	do_while_loop,
@@ -304,10 +305,10 @@ public:
 		shortcuts[structure] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
 		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block, variable_dec};
 		shortcuts[op] = {T_LESS_THAN, T_LESS_THAN_EQUALS, T_GREATER_THAN, T_GREATER_THAN_EQUALS, T_EQUALS, T_EQUAL_EQUALS,
-			T_PLUS, T_MINUS, T_SLASH, T_ASTERISK, T_PLUS_PLUS, T_MINUS_MINUS, T_SHIFT_RIGHT, T_SHIFT_LEFT, T_PERCENT,
+			T_POSITIVE, T_MINUS, T_SLASH, T_ASTERISK, T_PLUS_PLUS, T_MINUS_MINUS, T_SHIFT_RIGHT, T_SHIFT_LEFT, T_PERCENT,
 			T_PLUS_EQUALS, T_MINUS_EQUALS, T_SLASH_EQUALS, T_ASTERISK_EQUALS, T_SHIFT_RIGHT_EQUALS, T_SHIFT_LEFT_EQUALS, T_PERCENT_EQUALS};
 		shortcuts[function_name_candidate] = {T_IDENTIFIER, T_LESS_THAN, T_LESS_THAN_EQUALS, T_GREATER_THAN, T_GREATER_THAN_EQUALS, T_EQUALS, T_EQUAL_EQUALS,
-			T_PLUS, T_MINUS, T_SLASH, T_ASTERISK, T_PLUS_PLUS, T_MINUS_MINUS, T_SHIFT_RIGHT, T_SHIFT_LEFT, T_PERCENT, T_BACK_SLASH, T_ASTERISK_ASTERISK,
+			T_POSITIVE, T_MINUS, T_SLASH, T_ASTERISK, T_PLUS_PLUS, T_MINUS_MINUS, T_SHIFT_RIGHT, T_SHIFT_LEFT, T_PERCENT, T_BACK_SLASH, T_ASTERISK_ASTERISK,
 			T_PLUS_EQUALS, T_MINUS_EQUALS, T_SLASH_EQUALS, T_ASTERISK_EQUALS, T_SHIFT_RIGHT_EQUALS, T_SHIFT_LEFT_EQUALS, T_PERCENT_EQUALS, T_BACK_SLASH_EQUALS, T_ASTERISK_ASTERISK_EQUALS};
 
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));

@@ -157,6 +157,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == class_implementation) return "class_implementation";
 	else if (t == function_implementation) return "function_implementation";
 	else if (t == function_declaration) return "function_declaration";
+	else if (t == function_head) return "function_head";
 	else if (t == T_POSITIVE) return "T_POSITIVE";
 	else if (t == T_NEGATIVE) return "T_NEGATIVE";
 	else if (t == T_PTR) return "T_PTR";
