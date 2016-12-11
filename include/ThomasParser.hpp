@@ -199,6 +199,7 @@ enum TreeType {
 	structure,
 	structure_or_statement,
 	colon_value,
+	op,
 	comma_value				// make sure I'm the last enum
 };
 
@@ -277,6 +278,7 @@ public:
 		rules = r;
 		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 		leftRight = lr;
+		
 		// shortcuts[value] = {T_IDENTIFIER};
 		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
 		shortcuts[raw_type_or_void] = {T_KEYWORD_VOID, T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
@@ -297,6 +299,9 @@ public:
 		shortcuts[comma_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause, colon_clause, comma_clause};
 		shortcuts[structure] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
 		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block, variable_dec};
+		shortcuts[op] = {T_LESS_THAN, T_LESS_THAN_EQUALS, T_GREATER_THAN, T_GREATER_THAN_EQUALS, T_EQUALS, T_EQUAL_EQUALS,
+			T_PLUS, T_MINUS, T_SLASH, T_ASTERISK, T_PLUS_PLUS, T_MINUS_MINUS, T_SHIFT_RIGHT, T_SHIFT_LEFT, T_PERCENT
+			T_PLUS_EQUALS, T_MINUS_EQUALS, T_SLASH_EQUALS, T_ASTERISK_EQUALS, T_SHIFT_RIGHT_EQUALS, T_SHIFT_LEFT_EQUALS, T_PERCENT_EQUALS};
 
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_FLOAT_LITERAL}, value));
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_IDENTIFIER}, value));
