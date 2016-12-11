@@ -82,7 +82,7 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('!');
 	punctuation.insert('^');
 	punctuation.insert('?');
-	punctuation.insert('/');
+	punctuation.insert('\\');
 	punctuation.insert('@');
 	punctuation.insert('~');
 
@@ -189,6 +189,7 @@ std::list<Token> Tokenizer::process(std::string str) {
 				cur.str = str[it];
 			}
 			else if (isPunc(str[it])) {
+				std::cout << "#" << it << ":" << str[it] << "#\n";
 				cur.type = PUNCTUATION;
 				cur.str += str[it];
 			}
@@ -581,6 +582,12 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = ARROW;
 	else if (str == "<-")
 		rtn = LEFT_ARROW;
+	else if (str == "**=")
+		rtn = ASTERISK_ASTERISK_EQUALS;
+	else if (str == "**")
+		rtn = ASTERISK_ASTERISK;
+	else if (str == "\\=")
+		rtn = BACK_SLASH_EQUALS;
 	else
 		rtn = UNKNOWN;
 	return rtn;

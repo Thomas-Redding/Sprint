@@ -314,6 +314,8 @@ TreeType translateType(TokenType t) {
 	else if (t == EXTENDS) return T_EXTENDS;
 	else if (t == LEFT_ARROW) return T_LEFT_ARROW;
 	else if (t == KEYWORD_IS) return T_KEYWORD_IS;
+	else if (t == ASTERISK_ASTERISK) return T_ASTERISK_ASTERISK;
+	else if (t == ASTERISK_ASTERISK_EQUALS) return T_ASTERISK_ASTERISK_EQUALS;
 	else return T_UNKNOWN;
 }
 
