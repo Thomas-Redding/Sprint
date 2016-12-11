@@ -10,7 +10,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 
 	listOfRules.push_back(ThomasParseRule(  0, {}, {}, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
 	listOfRules.push_back(ThomasParseRule(  0, {}, {}, {unary1_value, T_MINUS_MINUS}, unary1_clause));													// x--
-	listOfRules.push_back(ThomasParseRule(  0, {}, {function_declaration}, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
+	listOfRules.push_back(ThomasParseRule(  0, {}, {function_head}, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
 	listOfRules.push_back(ThomasParseRule(  0, {}, {}, {unary1_value, bracket_block}, unary1_clause));													// x[y]
 	listOfRules.push_back(ThomasParseRule(  0, {}, {}, {unary1_value, T_PERIOD}, unary1_clause));														// x.y
 
