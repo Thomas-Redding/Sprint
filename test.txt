@@ -2,12 +2,27 @@
 	
 }
 
-+
--
-/
-=
-==
-!=
++(int x, in ty) -> int {
+	
+}
+-(int x, in ty) -> int {
+	
+}
+*(int x, in ty) -> int {
+	
+}
+/(int x, in ty) -> int {
+	
+}
+==(int x, in ty) -> int {
+	
+}
+!=(int x, in ty) -> int {
+	
+}
+<-(int x, in ty) -> int {
+	
+}
 
 /*
 
