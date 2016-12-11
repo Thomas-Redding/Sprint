@@ -62,7 +62,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_AMPERSAND_EQUALS, setting_value}, setting_clause));						// x &= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_CARROT_EQUALS, setting_value}, setting_clause));							// x ^= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_VERTICAL_BAR_EQUALS, setting_value}, setting_clause));						// x |= y
-	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_LEFT_ARROW, setting_value}, setting_clause));								// x <- y
+	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_EQUAL_EQUALS, setting_value}, setting_clause));							// x <- y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 	listOfRules.push_back(ThomasParseRule(100, {}, {}, {setting_value, T_KEYWORD_IS, setting_value}, setting_clause));								// x is y
