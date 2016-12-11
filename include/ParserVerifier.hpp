@@ -17,6 +17,6 @@ private:
 	std::list<ThomasNode*> ancestors;
 	void error(std::string message, ThomasNode* tree);
 	void verify_block_contains_only_statements(ThomasNode* tree);
-	ThomasNode* is_proper_unordered_map(ThomasNode* tree);
-	ThomasNode* is_proper_set(ThomasNode* tree);
+	ThomasNode* is_proper_map(ThomasNode* tree);
+	ThomasNode* is_proper_set_or_list(ThomasNode* tree);
 };
