@@ -140,6 +140,9 @@ enum TreeType {
 	T_EXTENDS,
 	T_LEFT_ARROW,
 	T_KEYWORD_IS,
+	T_ASTERISK_ASTERISK,
+	T_ASTERISK_ASTERISK_EQUALS,
+
 	general,				// make sure this is the first non-token type
 	curly_brace_block,
 	parenthesis_block,
@@ -278,7 +281,7 @@ public:
 		rules = r;
 		std::sort(rules.begin(), rules.end(), thomasParserPrecedenceSorter);
 		leftRight = lr;
-		
+
 		// shortcuts[value] = {T_IDENTIFIER};
 		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
 		shortcuts[raw_type_or_void] = {T_KEYWORD_VOID, T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};

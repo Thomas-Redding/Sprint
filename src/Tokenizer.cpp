@@ -82,7 +82,7 @@ Tokenizer::Tokenizer() {
 	punctuation.insert('!');
 	punctuation.insert('^');
 	punctuation.insert('?');
-	punctuation.insert('/');
+	punctuation.insert('\\');
 	punctuation.insert('@');
 	punctuation.insert('~');
 
@@ -314,6 +314,14 @@ std::list<Token> Tokenizer::process(std::string str) {
 				int go_back;
 				for (i = 0; i < cur.str.length(); ++i) {
 					go_back = cur.str.length() - i + 1;
+					if (cur.str.length() - i >= 3) {
+						TokenType tt = categorizePunc(cur.str.substr(i, 3));
+						if (tt != UNKNOWN) {
+							rtn.push_back(Token(tt, cur.str.substr(i, 3), getLineNum(go_back), getCharNum(go_back)));
+							++i;
+							continue;
+						}
+					}
 					if (cur.str.length() - i >= 2) {
 						TokenType tt = categorizePunc(cur.str.substr(i, 2));
 						if (tt != UNKNOWN) {
@@ -529,7 +537,7 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = CARROT;
 	else if (str == "?")
 		rtn = QUESTION_MARK;
-	else if (str == "/")
+	else if (str == "\\")
 		rtn = BACK_SLASH;
 	else if (str == "@")
 		rtn = AT;
@@ -581,6 +589,12 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = ARROW;
 	else if (str == "<-")
 		rtn = LEFT_ARROW;
+	else if (str == "**=")
+		rtn = ASTERISK_ASTERISK_EQUALS;
+	else if (str == "**")
+		rtn = ASTERISK_ASTERISK;
+	else if (str == "\\=")
+		rtn = BACK_SLASH_EQUALS;
 	else
 		rtn = UNKNOWN;
 	return rtn;
