@@ -41,6 +41,8 @@ private:
 	std::vector<long> cumulativeCharsPerLine;
 	long getLineNum();
 	long getCharNum();
+	long getLineNum(int go_back);
+	long getCharNum(int go_back);
 	std::vector<std::string> split(std::string str, char delim);
 	void categorizeIdentifier(Token &cur);
 	TokenType categorizePunc(const std::string &str);
