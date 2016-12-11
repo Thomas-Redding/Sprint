@@ -208,39 +208,27 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 		T_IDENTIFIER, template_block, parenthesis_block, T_ARROW, T_IDENTIFIER, template_block, T_SEMI_COLON
 	}, function_declaration));
 
-	// operator-function declarations
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		parenthesis_block, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		bracket_block, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_POSITIVE, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
+	// // operator-function declarations
+	// listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+	// 	parenthesis_block, parenthesis_block, T_ARROW, raw_type_or_void, T_SEMI_COLON
+	// }, function_declaration));
+	// listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+	// 	bracket_block, parenthesis_block, T_ARROW, raw_type_or_void, T_SEMI_COLON
+	// }, function_declaration));
+	// listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+	// 	op, parenthesis_block, T_ARROW, raw_type_or_void, T_SEMI_COLON
+	// }, function_declaration));
 
-	// plus-function declarations
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_POSITIVE, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_NEGATIVE, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_ASTERISK, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_SLASH, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_LEFT_ARROW, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_EQUAL_EQUALS, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		T_EXCLAMATION_POINT_EQUALS, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
-	}, function_declaration));
+	// // operator-function implementation
+	// listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+	// 	parenthesis_block, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
+	// }, function_declaration));
+	// listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+	// 	bracket_block, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
+	// }, function_declaration));
+	// listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
+	// 	op, parenthesis_block, T_ARROW, raw_type_or_void, curly_brace_block
+	// }, function_declaration));
 
 	// enum Foo {...}
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));

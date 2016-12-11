@@ -2,27 +2,16 @@
 	
 }
 
++(int x, in ty) -> int;
 +(int x, in ty) -> int {
 	
 }
--(int x, in ty) -> int {
++<T>(int x, in ty) -> int;
++<T>(int x, in ty) -> int {
 	
 }
-*(int x, in ty) -> int {
-	
-}
-/(int x, in ty) -> int {
-	
-}
-==(int x, in ty) -> int {
-	
-}
-!=(int x, in ty) -> int {
-	
-}
-<-(int x, in ty) -> int {
-	
-}
+
+
 
 /*
 
