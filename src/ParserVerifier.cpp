@@ -45,6 +45,7 @@ ParserVerifier::ParserVerifier(ThomasParser *par) {
 
 void ParserVerifier::verify(ThomasNode* tree) {
 	// verify current node is legal
+	verify_children_recursively(tree);
 	bool has_been_verified = false;
 
 	// if the node is a relevant keyword, check that it actually has the parent it should have
@@ -106,7 +107,8 @@ void ParserVerifier::verify(ThomasNode* tree) {
 			else {
 				// this node is either a set or unordered map
 				if (tree->children.size() == 0) {
-					// empty set
+					// empty set		{}
+					tree->type = set_literal;
 				}
 				else if (tree->children.size() != 1) {
 					error("Unordered map or set literal parsed incorrectly", tree);
@@ -114,19 +116,23 @@ void ParserVerifier::verify(ThomasNode* tree) {
 				else {
 					ThomasNode* only_child = *tree->children.begin();
 					if (only_child->type == T_COLON) {
-						// empty unordered map
+						// empty unordered map		{:}
+						tree->type = unordered_map_literal;
 					}
 					else if (only_child->type == colon_clause) {
-						// singleton unordered map
+						// singleton unordered map	{1: 2}
+						tree->type = unordered_map_literal;
 					}
 					else if (only_child->type == comma_clause) {
 						TreeType first_type = (*only_child->children.begin())->type;
+						std::cout << "!!" << treeTypeToString(first_type) << "\n";
 						if (first_type == colon_clause) {
 							// possibly an unordered map:     {foo: bar, ...}
 							ThomasNode* result = is_proper_map(only_child);
 							if (result != nullptr) {
 								error("Improperly formated unordered map literal", result);
 							}
+							tree->type = unordered_map_literal;
 						}
 						else if (parser->shortcuts[comma_value].find(first_type) != parser->shortcuts[comma_value].end()) {
 							// possibly a set:     {foo, ...}
@@ -134,13 +140,15 @@ void ParserVerifier::verify(ThomasNode* tree) {
 							if (result != nullptr) {
 								error("Improperly formated set literal", result);
 							}
+							tree->type = set_literal;
 						}
 						else {
 							error("First term in set or unordered map literal is improperly formatted", tree);
 						}
 					}
 					else if (parser->shortcuts[comma_value].find(only_child->type) != parser->shortcuts[comma_value].end()) {
-						// singleotn set
+						// singleton set		{1}
+						tree->type = set_literal;
 					}
 					else {
 						error("First term in set or unordered map literal is improperly formatted", tree);
@@ -160,7 +168,8 @@ void ParserVerifier::verify(ThomasNode* tree) {
 			else {
 				// this node is either a list or ordered map
 				if (tree->children.size() == 0) {
-					// empty list
+					// empty list		[]
+					tree->type = list_literal;
 				}
 				else if (tree->children.size() != 1) {
 					error("Ordered map or list literal parsed incorrectly", tree);
@@ -168,10 +177,12 @@ void ParserVerifier::verify(ThomasNode* tree) {
 				else {
 					ThomasNode* only_child = *tree->children.begin();
 					if (only_child->type == T_COLON) {
-						// empty ordered map
+						// empty ordered map		[:]
+						tree->type = ordered_map_literal;
 					}
 					else if (only_child->type == colon_clause) {
-						// singleton ordered map
+						// singleton ordered map	[1: 2]
+						tree->type = ordered_map_literal;
 					}
 					else if (only_child->type == comma_clause) {
 						TreeType first_type = (*only_child->children.begin())->type;
@@ -181,6 +192,7 @@ void ParserVerifier::verify(ThomasNode* tree) {
 							if (result != nullptr) {
 								error("Improperly formated ordered map literal", result);
 							}
+							tree->type = ordered_map_literal;
 						}
 						else if (parser->shortcuts[comma_value].find(first_type) != parser->shortcuts[comma_value].end()) {
 							// possibly a list:     [foo, ...]
@@ -188,13 +200,15 @@ void ParserVerifier::verify(ThomasNode* tree) {
 							if (result != nullptr) {
 								error("Improperly formated list literal", result);
 							}
+							tree->type = list_literal;
 						}
 						else {
 							error("First term in list or ordered map literal is improperly formatted", tree);
 						}
 					}
 					else if (parser->shortcuts[comma_value].find(only_child->type) != parser->shortcuts[comma_value].end()) {
-						// singleotn set
+						// singleton list		[1]
+						tree->type = list_literal;
 					}
 					else {
 						error("First term in list or ordered map literal is improperly formatted", tree);
@@ -212,14 +226,15 @@ void ParserVerifier::verify(ThomasNode* tree) {
 			*/
 		}
 	}
+};
 
-	// verify children recursively
+void ParserVerifier::verify_children_recursively(ThomasNode* tree) {
 	ancestors.push_back(tree);
 	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 		verify(*it);
 	}
 	ancestors.pop_back();
-};
+}
 
 /*
  * returns nullptr if input is proper
@@ -244,6 +259,9 @@ ThomasNode* ParserVerifier::is_proper_map(ThomasNode* tree) {
  * otherwise returns the first improper token
  */
 ThomasNode* ParserVerifier::is_proper_set_or_list(ThomasNode* tree) {
+	std::cout << "\n\n";
+	tree->print();
+	std::cout << "\n\n";
 	std::list<ThomasNode*>::iterator it = tree->children.begin();
 	if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
 		return *it;
@@ -252,9 +270,9 @@ ThomasNode* ParserVerifier::is_proper_set_or_list(ThomasNode* tree) {
 	if ((*it)->type == comma_clause)
 		return is_proper_set_or_list(*it);
 	else if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
-		return nullptr; // end of literal
+		return tree; // something illegal
 	else
-		return tree;
+		return nullptr; // end of literal
 }
 
 /*

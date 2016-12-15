@@ -178,6 +178,11 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == case_statement) return "case_statement";
 	else if (t == variable_dec) return "variable_dec";
 	else if (t == colon_clause) return "colon_clause";
+	else if (t == list_literal) return "list_literal";
+	else if (t == set_literal) return "set_literal";
+	else if (t == ordered_map_literal) return "ordered_map_literal";
+	else if (t == unordered_map_literal) return "unordered_map_literal";
+	else if (t == colon_list) return "colon_list";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -331,7 +336,7 @@ ThomasNode* ThomasParser::getParseTree(const Token* t, uint64_t n) {
 	doParenthesesPass(mainTree);
 	doBracketPass(mainTree);
 	doTemplatePass(mainTree);
-	parse();
+	parse(mainTree);
 	/*
 	 * set-up: 6%
 	 * brackets: 5%
@@ -345,9 +350,13 @@ bool ThomasParser::thomasParserPrecedenceSorter(ThomasParseRule r1, ThomasParseR
 	return r1.precedence < r2.precedence;
 }
 
-void ThomasParser::parse() {
+void ThomasParser::parse(ThomasNode* tree) {
 	int from = 0;
 	int to = 0;
+	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block)
+			parse(*it);
+	}
 	for (int i=0; i<leftRight.size(); ++i) {
 		from = to;
 		int j;
@@ -357,17 +366,102 @@ void ThomasParser::parse() {
 		}
 		to = j;
 		if (leftRight[i])
-			parseLeftRight(mainTree, from, to);
+			parseLeftRight(tree, from, to);
 		else
-			parseRightLeft(mainTree, from, to);
+			parseRightLeft(tree, from, to);
 	}
+	if (tree->type != general)
+		classify_parsed_block(tree);
+}
+
+void ThomasParser::classify_parsed_block(ThomasNode *tree) {
+	if (tree->type == curly_brace_block) {
+		if (tree->children.size() == 0) {
+			// {}
+		}
+		else if (tree->children.size() == 1) {
+			// either (1) a block with one statement, a set literal, or a 
+			ThomasNode *child = *(tree->children.begin());
+			if (child->type == statement) {
+				tree->type = block_of_statements;
+			}
+			else if(child->type == colon_list) {
+				// {1 : 2, 3 : 4}
+				tree->type = unordered_map_literal;
+			}
+			else if (child->type == colon_clause) {
+				// {1: 2}
+				tree->type = unordered_map_literal;
+			}
+			else if (child->type == comma_clause) {
+				// {1, 2}
+				tree->type = set_literal;
+			}
+			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end()) {
+				// {1}
+				tree->type = set_literal;
+			}
+			else {
+				error("Poorly formated curly-brace block", tree);
+			}
+		}
+		else {
+			for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+				if ((*it)->type != statement)
+					error("Poorly formated block of statements.", tree);
+			}
+			tree->type = block_of_statements;
+		}
+	}
+	else if (tree->type == bracket_block) {
+		if (tree->children.size() == 0) {
+			// []
+		}
+		else if (tree->children.size() == 1) {
+			// either a list literal or a ordered map literal
+			ThomasNode *child = *(tree->children.begin());
+			if(child->type == colon_list) {
+				// [1 : 2, 3 : 4]
+				tree->type = ordered_map_literal;
+			}
+			else if (child->type == colon_clause) {
+				// [1: 2]
+				tree->type = ordered_map_literal;
+			}
+			else if (child->type == comma_clause) {
+				// [1, 2]
+				tree->type = list_literal;
+			}
+			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end()) {
+				// [1]
+				tree->type = list_literal;
+			}
+			else {
+				error("Poorly formated bracket block", tree);
+			}
+		}
+		else {
+			error("Poorly formated bracket block", tree);
+		}
+	}
+	else {
+		error("Error 413 - contact tfredding@gmail.com", tree);
+	}
+	std::cout << "\n\n";
+	tree->print();
+	std::cout << "\n\n";
 }
 
 void ThomasParser::parseLeftRight(ThomasNode *tree, int from, int to) {
 	bool skipRecursion = false;
 	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end();) {
 		if ((*it)->children.size() > 0 && !skipRecursion) {
-			parseLeftRight(*it, from, to);
+			if ((*it)->type == bracket_block || (*it)->type == curly_brace_block) {
+				// do nothing
+			}
+			else {
+				parseLeftRight(*it, from, to);
+			}
 		}
 
 		int ruleToApply = -1;
@@ -438,7 +532,12 @@ std::string nodeToStr(ThomasNode node) {
 void ThomasParser::parseRightLeft(ThomasNode *tree, int from, int to) {
 	for (std::list<ThomasNode*>::iterator it = --tree->children.end(); true; --it) {
 		if ((*it)->children.size() > 0) {
-			parseRightLeft(*it, from, to);
+			if ((*it)->type == bracket_block || (*it)->type == curly_brace_block) {
+				// do nothing
+			}
+			else {
+				parseRightLeft(*it, from, to);
+			}
 		}
 
 		int ruleToApply = -1;

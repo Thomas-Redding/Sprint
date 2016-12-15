@@ -19,4 +19,5 @@ private:
 	void verify_block_contains_only_statements(ThomasNode* tree);
 	ThomasNode* is_proper_map(ThomasNode* tree);
 	ThomasNode* is_proper_set_or_list(ThomasNode* tree);
+	void verify_children_recursively(ThomasNode* tree);
 };

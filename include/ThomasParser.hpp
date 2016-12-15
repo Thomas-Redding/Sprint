@@ -162,6 +162,7 @@ enum TreeType {
 	ternary_clause,
 	comma_clause,
 	statement,
+	colon_list,
 
 	enum_implementation,
 	namespace_implementation,
@@ -184,6 +185,13 @@ enum TreeType {
 	try_block,
 	catch_block,
 	colon_clause,
+	
+	block_of_statements,
+	list_literal,
+	set_literal,
+	ordered_map_literal,
+	unordered_map_literal,
+
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	raw_type_or_void,
@@ -198,11 +206,11 @@ enum TreeType {
 	bitwise_and_value,
 	bitwise_xor_value,
 	bitwise_or_value,
+	ternary_value,
 	setting_value,
 	any_integer_type,
 	structure,
 	structure_or_statement,
-	colon_value,
 	op,
 	function_name_candidate,
 	comma_value				// make sure I'm the last enum
@@ -288,20 +296,20 @@ public:
 		shortcuts[raw_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
 		shortcuts[raw_type_or_void] = {T_KEYWORD_VOID, T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL, T_KEYWORD_FLOAT, T_KEYWORD_DOUBLE, T_KEYWORD_VAR, T_CLASS_IDENTIFIER};
 		shortcuts[int_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32};
-		shortcuts[unary1_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause};
-		shortcuts[unary2_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause};
-		shortcuts[mult_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause};
-		shortcuts[plus_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause};
-		shortcuts[shift_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause};
-		shortcuts[inequality_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause};
-		shortcuts[equality_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause};
-		shortcuts[bitwise_and_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause};
-		shortcuts[bitwise_xor_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause};
-		shortcuts[bitwise_or_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause};
-		shortcuts[setting_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause};
-		shortcuts[colon_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause, colon_clause};
+		shortcuts[unary1_value] =      {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause};
+		shortcuts[unary2_value] =      {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause};
+		shortcuts[mult_value] =        {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause};
+		shortcuts[plus_value] =        {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause};
+		shortcuts[shift_value] =       {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause};
+		shortcuts[inequality_value] =  {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause};
+		shortcuts[equality_value] =    {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause};
+		shortcuts[bitwise_and_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause};
+		shortcuts[bitwise_xor_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause};
+		shortcuts[bitwise_or_value] =  {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause};
+		shortcuts[ternary_value] =     {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause};
+		shortcuts[setting_value] =     {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause};
+		shortcuts[comma_value] =     {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, bracket_block, curly_brace_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause, comma_clause};
 		shortcuts[any_integer_type] = {T_KEYWORD_INT, T_KEYWORD_INT8, T_KEYWORD_INT16, T_KEYWORD_INT32, T_KEYWORD_UINT, T_KEYWORD_UINT8, T_KEYWORD_UINT16, T_KEYWORD_UINT32, T_KEYWORD_CHAR, T_KEYWORD_BOOL};
-		shortcuts[comma_value] = {T_IDENTIFIER, T_INTEGER_LITERAL, T_FLOAT_LITERAL, T_STRING_LITERAL, parenthesis_block, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, setting_clause, ternary_clause, colon_clause, comma_clause};
 		shortcuts[structure] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block};
 		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, curly_brace_block, variable_dec};
 		shortcuts[op] = {T_LESS_THAN, T_LESS_THAN_EQUALS, T_GREATER_THAN, T_GREATER_THAN_EQUALS, T_EQUALS, T_EQUAL_EQUALS,
@@ -316,10 +324,11 @@ public:
 	// listOfRules.push_back(ThomasParseRule(10, general, {T_STRING_LITERAL
 	}
 	ThomasNode* getParseTree(const Token* t, uint64_t n);
-	void parse();
+	void parse(ThomasNode *tree);
 	void parseLeftRight(ThomasNode *tree, int from, int to);
 	void parseRightLeft(ThomasNode *tree, int from, int to);
 	void error(std::string message, ThomasNode* tree);
+	void classify_parsed_block(ThomasNode *tree);
 
 };
 
