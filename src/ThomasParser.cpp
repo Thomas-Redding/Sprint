@@ -354,7 +354,7 @@ void ThomasParser::parse(ThomasNode* tree) {
 	int from = 0;
 	int to = 0;
 	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block)
+		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block)
 			parse(*it);
 	}
 	for (int i=0; i<leftRight.size(); ++i) {
@@ -443,6 +443,9 @@ void ThomasParser::classify_parsed_block(ThomasNode *tree) {
 		else {
 			error("Poorly formated bracket block", tree);
 		}
+	}
+	else if (tree->type == parenthesis_block) {
+		// do nothing for now
 	}
 	else {
 		error("Error 413 - contact tfredding@gmail.com", tree);

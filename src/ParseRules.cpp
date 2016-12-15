@@ -144,7 +144,6 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	listOfRules.push_back(ThomasParseRule(105, {}, {}, {comma_value, T_COMMA, comma_value}, comma_clause));											// x, y
 	listOfRules.push_back(ThomasParseRule(107, {}, {}, {colon_clause, T_COMMA, colon_clause}, colon_list));										// a : b, c : d
 
-
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {setting_value, T_EQUALS, setting_value}, setting_clause));									// x = y
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {setting_value, T_PLUS_EQUALS, setting_value}, setting_clause));								// x += y
 	listOfRules.push_back(ThomasParseRule(110, {}, {}, {setting_value, T_MINUS_EQUALS, setting_value}, setting_clause));							// x -= y

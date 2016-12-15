@@ -86,12 +86,8 @@ int main(int argc, const char * argv[]) {
 	std::cout << "\n\n\n";
 	bar->print();
 
-	// ParserVerifier pv(&foo);
-	// pv.verify(bar);
-
-	// std::cout << "\n\n\n";
-	// bar->print();
-	// std::cout << "\n\n\n";
+	ParserVerifier pv(&foo);
+	pv.verify(bar);
 
 	std::cout << "Reading File(s): " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeOpenedFile - timeStart).count() / 1000 << " µs\n";
 	std::cout << "Tokenizing: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeTokenized - timeOpenedFile).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(timeTokenized - timeOpenedFile).count() / list.size() << " ns per token)\n";
