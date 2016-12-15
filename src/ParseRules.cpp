@@ -10,51 +10,51 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	// class implementations
 	// class Foo { ... 
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS,
-		T_IDENTIFIER,
+		P_KEYWORD_CLASS,
+		P_IDENTIFIER,
 		curly_brace_block
 	}, class_implementation));
 	// class Foo <T> { ... 
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS,
-		T_IDENTIFIER,
+		P_KEYWORD_CLASS,
+		P_IDENTIFIER,
 		template_block,
 		curly_brace_block
 	},class_implementation));
 	// class Foo<T> : Bar
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS,
-		T_IDENTIFIER,
-		T_COLON,
-		T_IDENTIFIER,
+		P_KEYWORD_CLASS,
+		P_IDENTIFIER,
+		P_COLON,
+		P_IDENTIFIER,
 		curly_brace_block
 	}, class_implementation));
 	// class Foo<T> : Bar<U>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS,
-		T_IDENTIFIER,
+		P_KEYWORD_CLASS,
+		P_IDENTIFIER,
 		template_block,
-		T_COLON,
-		T_IDENTIFIER,
+		P_COLON,
+		P_IDENTIFIER,
 		template_block,
 		curly_brace_block
 	}, class_implementation));
 	// class Foo: Bar<S>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS,
-		T_IDENTIFIER,
-		T_COLON,
-		T_IDENTIFIER,
+		P_KEYWORD_CLASS,
+		P_IDENTIFIER,
+		P_COLON,
+		P_IDENTIFIER,
 		template_block,
 		curly_brace_block
 	}, class_implementation));
 	// class Foo<T, S> : Bar<T>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
-		T_KEYWORD_CLASS,
-		T_IDENTIFIER,
+		P_KEYWORD_CLASS,
+		P_IDENTIFIER,
 		template_block,
-		T_EXTENDS,
-		T_IDENTIFIER,
+		P_EXTENDS,
+		P_IDENTIFIER,
 		template_block,
 		curly_brace_block								
 	}, class_implementation));
@@ -64,118 +64,118 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		function_name_candidate,
 		parenthesis_block,
-		T_ARROW,
+		P_ARROW,
 	}, function_head));
 	// foo<...>(...) ->
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		function_name_candidate,
 		template_block,
 		parenthesis_block,
-		T_ARROW,
+		P_ARROW,
 	}, function_head));
 	
 	// function declaration
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, T_SEMI_COLON }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, T_IDENTIFIER, T_SEMI_COLON }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, T_IDENTIFIER, template_block, T_SEMI_COLON }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, curly_brace_block, T_SEMI_COLON }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, T_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, P_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, P_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, template_block, P_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, curly_brace_block, P_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, P_SEMI_COLON }, function_declaration));
 
 	// function implementation
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, curly_brace_block }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, T_IDENTIFIER, curly_brace_block }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, T_IDENTIFIER, template_block, curly_brace_block }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, curly_brace_block }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, template_block, curly_brace_block }, function_declaration));
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, curly_brace_block, curly_brace_block }, function_declaration));
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, curly_brace_block }, function_declaration));
 
 	// enum Foo {...}
-	listOfRules.push_back(ParseRule(-10, {}, {}, {T_KEYWORD_ENUM, T_IDENTIFIER, curly_brace_block}, enum_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, curly_brace_block}, enum_implementation));
 	// namespaces Foo {...}
-	listOfRules.push_back(ParseRule(-10, {}, {}, {T_KEYWORD_NAMESPACE, T_IDENTIFIER, curly_brace_block}, namespace_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_NAMESPACE, P_IDENTIFIER, curly_brace_block}, namespace_implementation));
 
-	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, T_PLUS_PLUS}, unary1_clause));													// x++
-	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, T_MINUS_MINUS}, unary1_clause));													// x--
+	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, P_PLUS_PLUS}, unary1_clause));													// x++
+	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, P_MINUS_MINUS}, unary1_clause));													// x--
 	listOfRules.push_back(ParseRule(  0, {}, {function_head}, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
 	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, bracket_block}, unary1_clause));													// x[y]
-	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, T_PERIOD}, unary1_clause));														// x.y
+	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, P_PERIOD}, unary1_clause));														// x.y
 
 	// false
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_POSITIVE, unary2_value}, unary2_clause));													// +x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_NEGATIVE, unary2_value}, unary2_clause));													// -x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_PLUS_PLUS, unary2_value}, unary2_clause));													// ++x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_MINUS_MINUS, unary2_value}, unary2_clause));												// --x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_TILDE, unary2_value}, unary2_clause));														// ~x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {T_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_POSITIVE, unary2_value}, unary2_clause));													// +x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_NEGATIVE, unary2_value}, unary2_clause));													// -x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_PLUS_PLUS, unary2_value}, unary2_clause));													// ++x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_MINUS_MINUS, unary2_value}, unary2_clause));												// --x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_TILDE, unary2_value}, unary2_clause));														// ~x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
+	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
 
 	// true
-	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, T_ASTERISK, mult_value}, mult_clause));											// x * y
-	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, T_SLASH, mult_value}, mult_clause));											// x / y
-	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, T_PERCENT, mult_value}, mult_clause));											// x % y
+	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, P_ASTERISK, mult_value}, mult_clause));											// x * y
+	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, P_SLASH, mult_value}, mult_clause));											// x / y
+	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, P_PERCENT, mult_value}, mult_clause));											// x % y
 
 	// true
-	listOfRules.push_back(ParseRule( 30, {}, {}, {plus_value, T_PLUS, plus_value}, plus_clause));												// x + y
-	listOfRules.push_back(ParseRule( 30, {}, {}, {plus_value, T_MINUS, plus_value}, plus_clause));											// x - y
+	listOfRules.push_back(ParseRule( 30, {}, {}, {plus_value, P_PLUS, plus_value}, plus_clause));												// x + y
+	listOfRules.push_back(ParseRule( 30, {}, {}, {plus_value, P_MINUS, plus_value}, plus_clause));											// x - y
 
 	// true
-	listOfRules.push_back(ParseRule( 40, {}, {}, {shift_value, T_SHIFT_LEFT, shift_value}, shift_clause));									// x << y
-	listOfRules.push_back(ParseRule( 40, {}, {}, {shift_value, T_SHIFT_RIGHT, shift_value}, shift_clause));									// x >> y
+	listOfRules.push_back(ParseRule( 40, {}, {}, {shift_value, P_SHIFT_LEFT, shift_value}, shift_clause));									// x << y
+	listOfRules.push_back(ParseRule( 40, {}, {}, {shift_value, P_SHIFT_RIGHT, shift_value}, shift_clause));									// x >> y
 
-	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, T_LESS_THAN, inequality_value}, inequality_clause));						// x < y
-	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, T_GREATER_THAN, inequality_value}, inequality_clause));					// x > y
-	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, T_LESS_THAN_EQUALS, inequality_value}, inequality_clause));				// x <= y
-	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, T_GREATER_THAN_EQUALS, inequality_value}, inequality_clause));			// x >= y
+	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, P_LESS_THAN, inequality_value}, inequality_clause));						// x < y
+	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, P_GREATER_THAN, inequality_value}, inequality_clause));					// x > y
+	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, P_LESS_THAN_EQUALS, inequality_value}, inequality_clause));				// x <= y
+	listOfRules.push_back(ParseRule( 50, {}, {}, {inequality_value, P_GREATER_THAN_EQUALS, inequality_value}, inequality_clause));			// x >= y
 
-	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, T_EQUAL_EQUALS, equality_value}, equality_clause));							// x == y
-	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, T_EXCLAMATION_POINT_EQUALS, equality_value}, equality_clause));				// x != y
-	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, T_EQUAL_EQUAL_EQUALS, equality_value}, equality_clause));					// x === y
-	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, T_EXCLAMATION_POINT_EQUAL_EQUALS, equality_value}, equality_clause));		// x !== y
+	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, P_EQUAL_EQUALS, equality_value}, equality_clause));							// x == y
+	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, P_EXCLAMATION_POINT_EQUALS, equality_value}, equality_clause));				// x != y
+	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, P_EQUAL_EQUAL_EQUALS, equality_value}, equality_clause));					// x === y
+	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, P_EXCLAMATION_POINT_EQUAL_EQUALS, equality_value}, equality_clause));		// x !== y
 
-	listOfRules.push_back(ParseRule( 70, {}, {}, {bitwise_and_value, T_KEYWORD_AND, bitwise_and_value}, bitwise_and_clause));					// x & y
+	listOfRules.push_back(ParseRule( 70, {}, {}, {bitwise_and_value, P_KEYWORD_AND, bitwise_and_value}, bitwise_and_clause));					// x & y
 
-	listOfRules.push_back(ParseRule( 80, {}, {}, {bitwise_xor_value, T_KEYWORD_XOR, bitwise_xor_value}, bitwise_xor_clause));					// x ^ y
+	listOfRules.push_back(ParseRule( 80, {}, {}, {bitwise_xor_value, P_KEYWORD_XOR, bitwise_xor_value}, bitwise_xor_clause));					// x ^ y
 
-	listOfRules.push_back(ParseRule( 90, {}, {}, {bitwise_or_value, T_KEYWORD_OR, bitwise_or_value}, bitwise_or_clause));						// x | y
+	listOfRules.push_back(ParseRule( 90, {}, {}, {bitwise_or_value, P_KEYWORD_OR, bitwise_or_value}, bitwise_or_clause));						// x | y
 
-	listOfRules.push_back(ParseRule(100, {}, {}, {ternary_value, T_QUESTION_MARK, ternary_value, T_COLON, ternary_value}, ternary_clause));	// x ? y : z
+	listOfRules.push_back(ParseRule(100, {}, {}, {ternary_value, P_QUESTION_MARK, ternary_value, P_COLON, ternary_value}, ternary_clause));	// x ? y : z
 
-	listOfRules.push_back(ParseRule(105, {}, {}, {setting_value, T_COLON, setting_value}, colon_clause));											// x : z
-	listOfRules.push_back(ParseRule(105, {}, {}, {comma_value, T_COMMA, comma_value}, comma_clause));											// x, y
-	listOfRules.push_back(ParseRule(107, {}, {}, {colon_clause, T_COMMA, colon_clause}, colon_list));										// a : b, c : d
+	listOfRules.push_back(ParseRule(105, {}, {}, {setting_value, P_COLON, setting_value}, colon_clause));											// x : z
+	listOfRules.push_back(ParseRule(105, {}, {}, {comma_value, P_COMMA, comma_value}, comma_clause));											// x, y
+	listOfRules.push_back(ParseRule(107, {}, {}, {colon_clause, P_COMMA, colon_clause}, colon_list));										// a : b, c : d
 
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_EQUALS, setting_value}, setting_clause));									// x = y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_PLUS_EQUALS, setting_value}, setting_clause));								// x += y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_MINUS_EQUALS, setting_value}, setting_clause));							// x -= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_ASTERISK_EQUALS, setting_value}, setting_clause));							// x *= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_SLASH_EQUALS, setting_value}, setting_clause));							// x /= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_PERCENT_EQUALS, setting_value}, setting_clause));							// x %= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_AMPERSAND_EQUALS, setting_value}, setting_clause));						// x &= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_CARROT_EQUALS, setting_value}, setting_clause));							// x ^= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_VERTICAL_BAR_EQUALS, setting_value}, setting_clause));						// x |= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_EQUAL_EQUALS, setting_value}, setting_clause));							// x <- y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, T_KEYWORD_IS, setting_value}, setting_clause));								// x is y
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, T_IDENTIFIER, T_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, template_block, T_IDENTIFIER, T_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, setting_value, T_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, template_block, setting_value, T_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {T_KEYWORD_RETURN, setting_value, T_SEMI_COLON}, return_statement));
-	listOfRules.push_back(ParseRule(110, {}, {}, {T_KEYWORD_CASE, setting_value, T_COLON}, case_statement));
-	listOfRules.push_back(ParseRule(110, {}, {}, {T_KEYWORD_DEFAULT, T_COLON}, case_statement));
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_EQUALS, setting_value}, setting_clause));									// x = y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_PLUS_EQUALS, setting_value}, setting_clause));								// x += y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_MINUS_EQUALS, setting_value}, setting_clause));							// x -= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_ASTERISK_EQUALS, setting_value}, setting_clause));							// x *= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SLASH_EQUALS, setting_value}, setting_clause));							// x /= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_PERCENT_EQUALS, setting_value}, setting_clause));							// x %= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_AMPERSAND_EQUALS, setting_value}, setting_clause));						// x &= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_CARROT_EQUALS, setting_value}, setting_clause));							// x ^= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_VERTICAL_BAR_EQUALS, setting_value}, setting_clause));						// x |= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_EQUAL_EQUALS, setting_value}, setting_clause));							// x <- y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_KEYWORD_IS, setting_value}, setting_clause));								// x is y
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, template_block, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, setting_value, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, template_block, setting_value, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_RETURN, setting_value, P_SEMI_COLON}, return_statement));
+	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_CASE, setting_value, P_COLON}, case_statement));
+	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_DEFAULT, P_COLON}, case_statement));
 	
-	listOfRules.push_back(ParseRule(120, {}, {}, {setting_value, T_SEMI_COLON}, statement));													// x;
-	listOfRules.push_back(ParseRule(120, {}, {}, {T_KEYWORD_BREAK, T_SEMI_COLON}, break_statement));
-	listOfRules.push_back(ParseRule(120, {}, {}, {T_KEYWORD_CONTINUE, T_SEMI_COLON}, continue_statement));
+	listOfRules.push_back(ParseRule(120, {}, {}, {setting_value, P_SEMI_COLON}, statement));													// x;
+	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_BREAK, P_SEMI_COLON}, break_statement));
+	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_CONTINUE, P_SEMI_COLON}, continue_statement));
 
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_IF, parenthesis_block, structure, T_KEYWORD_ELSE, structure}, if_else_statement));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_IF, parenthesis_block, structure}, if_statement));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_WHILE, parenthesis_block, structure}, while_loop));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_DO, structure, T_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_SWITCH, parenthesis_block, curly_brace_block}, switch_statement));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_TRY, curly_brace_block}, try_block));
-	listOfRules.push_back(ParseRule(130, {}, {}, {T_KEYWORD_CATCH, parenthesis_block, curly_brace_block}, catch_block));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis_block, structure, P_KEYWORD_ELSE, structure}, if_else_statement));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis_block, structure}, if_statement));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_WHILE, parenthesis_block, structure}, while_loop));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_DO, structure, P_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_SWITCH, parenthesis_block, curly_brace_block}, switch_statement));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_TRY, curly_brace_block}, try_block));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_CATCH, parenthesis_block, curly_brace_block}, catch_block));
 }
 
 

@@ -5,30 +5,30 @@ ParserVerifier::ParserVerifier(Parser *par) {
 	parser = par;
 
 	
-	keywords_are_in_structures.insert({T_KEYWORD_CATCH, std::set<int>({catch_block})});
-	keywords_are_in_structures.insert({T_KEYWORD_CLASS, std::set<int>({class_implementation})});
-	keywords_are_in_structures.insert({T_KEYWORD_DELETE, std::set<int>({unary2_clause})});
-	keywords_are_in_structures.insert({T_KEYWORD_DO, std::set<int>({do_while_loop})});
-	keywords_are_in_structures.insert({T_KEYWORD_ELSE, std::set<int>({if_else_statement})});
-	keywords_are_in_structures.insert({T_KEYWORD_ENUM, std::set<int>({enum_implementation})});
-	keywords_are_in_structures.insert({T_KEYWORD_FOR, std::set<int>({for_loop})});
-	keywords_are_in_structures.insert({T_KEYWORD_IF, std::set<int>({if_statement, if_else_statement})});
-	keywords_are_in_structures.insert({T_KEYWORD_NAMESPACE, std::set<int>({namespace_implementation})});
-	keywords_are_in_structures.insert({T_KEYWORD_NEW, std::set<int>({unary2_clause})});
-	keywords_are_in_structures.insert({T_KEYWORD_SWITCH, std::set<int>({switch_statement})});
-	keywords_are_in_structures.insert({T_KEYWORD_TRY, std::set<int>({try_block})});
-	keywords_are_in_structures.insert({T_KEYWORD_WHILE, std::set<int>({do_while_loop})});
+	keywords_are_in_structures.insert({P_KEYWORD_CATCH, std::set<int>({catch_block})});
+	keywords_are_in_structures.insert({P_KEYWORD_CLASS, std::set<int>({class_implementation})});
+	keywords_are_in_structures.insert({P_KEYWORD_DELETE, std::set<int>({unary2_clause})});
+	keywords_are_in_structures.insert({P_KEYWORD_DO, std::set<int>({do_while_loop})});
+	keywords_are_in_structures.insert({P_KEYWORD_ELSE, std::set<int>({if_else_statement})});
+	keywords_are_in_structures.insert({P_KEYWORD_ENUM, std::set<int>({enum_implementation})});
+	keywords_are_in_structures.insert({P_KEYWORD_FOR, std::set<int>({for_loop})});
+	keywords_are_in_structures.insert({P_KEYWORD_IF, std::set<int>({if_statement, if_else_statement})});
+	keywords_are_in_structures.insert({P_KEYWORD_NAMESPACE, std::set<int>({namespace_implementation})});
+	keywords_are_in_structures.insert({P_KEYWORD_NEW, std::set<int>({unary2_clause})});
+	keywords_are_in_structures.insert({P_KEYWORD_SWITCH, std::set<int>({switch_statement})});
+	keywords_are_in_structures.insert({P_KEYWORD_TRY, std::set<int>({try_block})});
+	keywords_are_in_structures.insert({P_KEYWORD_WHILE, std::set<int>({do_while_loop})});
 	
-	// keywords_are_in_structures.insert({T_KEYWORD_NOT, std::set<int>({unary2_clause})});
-	// keywords_are_in_structures.insert({T_KEYWORD_AND, std::set<int>({unary2_clause})});
-	// keywords_are_in_structures.insert({T_KEYWORD_XOR, std::set<int>({unary2_clause})});
-	// keywords_are_in_structures.insert({T_KEYWORD_OR, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({P_KEYWORD_NOT, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({P_KEYWORD_AND, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({P_KEYWORD_XOR, std::set<int>({unary2_clause})});
+	// keywords_are_in_structures.insert({P_KEYWORD_OR, std::set<int>({unary2_clause})});
 
-	keywords_are_eventually_in_structures.insert({T_KEYWORD_BREAK, std::set<int>({for_loop, do_while_loop})});
-	keywords_are_eventually_in_structures.insert({T_KEYWORD_CASE, std::set<int>({switch_statement})});
-	keywords_are_eventually_in_structures.insert({T_KEYWORD_CONTINUE, std::set<int>({if_statement, if_else_statement})});
-	keywords_are_eventually_in_structures.insert({T_KEYWORD_DEFAULT, std::set<int>({switch_statement})});
-	keywords_are_eventually_in_structures.insert({T_KEYWORD_RETURN, std::set<int>({function_implementation})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_BREAK, std::set<int>({for_loop, do_while_loop})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_CASE, std::set<int>({switch_statement})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_CONTINUE, std::set<int>({if_statement, if_else_statement})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_DEFAULT, std::set<int>({switch_statement})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_RETURN, std::set<int>({function_implementation})});
 
 	structures_with_blocks_of_statements = {
 		function_implementation,
