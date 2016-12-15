@@ -1,8 +1,7 @@
 
 #include "../include/ParserVerifier.hpp"
 
-
-ParserVerifier::ParserVerifier(ThomasParser *par) {
+ParserVerifier::ParserVerifier(Parser *par) {
 	parser = par;
 
 	
@@ -43,7 +42,7 @@ ParserVerifier::ParserVerifier(ThomasParser *par) {
 	};
 };
 
-void ParserVerifier::verify(ThomasNode* tree) {
+void ParserVerifier::verify(ParseNode* tree) {
 	// verify current node is legal
 	verify_children_recursively(tree);
 	bool has_been_verified = false;
@@ -62,7 +61,7 @@ void ParserVerifier::verify(ThomasNode* tree) {
 		std::unordered_map<int, std::set<int>>::iterator valid_ancestors_it = keywords_are_eventually_in_structures.find(tree->type);
 		if (valid_parents_it != keywords_are_eventually_in_structures.end()) {
 			bool found_valid_ancestor = false;
-			for (std::list<ThomasNode*>::reverse_iterator it = ancestors.rbegin(); it != ancestors.rend(); --it) {
+			for (std::list<ParseNode*>::reverse_iterator it = ancestors.rbegin(); it != ancestors.rend(); --it) {
 				if (valid_ancestors_it->second.find((*it)->type) != valid_parents_it->second.end()) {
 					found_valid_ancestor = true;
 					break;
@@ -76,9 +75,9 @@ void ParserVerifier::verify(ThomasNode* tree) {
 	}
 };
 
-void ParserVerifier::verify_children_recursively(ThomasNode* tree) {
+void ParserVerifier::verify_children_recursively(ParseNode* tree) {
 	ancestors.push_back(tree);
-	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 		verify(*it);
 	}
 	ancestors.pop_back();
@@ -88,8 +87,8 @@ void ParserVerifier::verify_children_recursively(ThomasNode* tree) {
  * returns nullptr if input is proper
  * otherwise returns the first improper token
  */
-ThomasNode* ParserVerifier::is_proper_map(ThomasNode* tree) {
-	std::list<ThomasNode*>::iterator it = tree->children.begin();
+ParseNode* ParserVerifier::is_proper_map(ParseNode* tree) {
+	std::list<ParseNode*>::iterator it = tree->children.begin();
 	if ((*it)->type != colon_clause)
 		return *it;
 	++it;
@@ -106,11 +105,11 @@ ThomasNode* ParserVerifier::is_proper_map(ThomasNode* tree) {
  * returns nullptr if input is proper
  * otherwise returns the first improper token
  */
-ThomasNode* ParserVerifier::is_proper_set_or_list(ThomasNode* tree) {
+ParseNode* ParserVerifier::is_proper_set_or_list(ParseNode* tree) {
 	std::cout << "\n\n";
 	tree->print();
 	std::cout << "\n\n";
-	std::list<ThomasNode*>::iterator it = tree->children.begin();
+	std::list<ParseNode*>::iterator it = tree->children.begin();
 	if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
 		return *it;
 	++it;
@@ -128,14 +127,14 @@ ThomasNode* ParserVerifier::is_proper_set_or_list(ThomasNode* tree) {
  * otherwise returns the first improper token
  */
 
-void ParserVerifier::verify_block_contains_only_statements(ThomasNode* tree) {
-	for (std::list<ThomasNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+void ParserVerifier::verify_block_contains_only_statements(ParseNode* tree) {
+	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 		if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end())
 			error("block contains invalid line", *it);
 	}
 }
 
-void ParserVerifier::error(std::string message, ThomasNode* tree) {
+void ParserVerifier::error(std::string message, ParseNode* tree) {
 	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
 	exit(0);
 }

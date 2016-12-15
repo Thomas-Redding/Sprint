@@ -8,7 +8,7 @@
 
 #include "../include/Tokenizer.hpp"
 #include "../include/Sweetener.hpp"
-#include "../include/ThomasParser.hpp"
+#include "../include/Parser.hpp"
 #include "../include/FindModifiedFiles.hpp"
 #include "../include/ParserVerifier.hpp"
 #include "ParseRules.cpp"
@@ -71,14 +71,14 @@ int main(int argc, const char * argv[]) {
 		std::cout << tokenizedList[i] << "\n";
 
 	std::vector<bool> leftToRight;
-	std::vector<ThomasParseRule> listOfRules;
+	std::vector<ParseRule> listOfRules;
 	addParseRules(leftToRight, listOfRules);
 
-	ThomasParser foo(leftToRight, listOfRules);
+	Parser foo(leftToRight, listOfRules);
 
 	auto timeParseRules = std::chrono::high_resolution_clock::now();
 
-	ThomasNode* bar = foo.getParseTree(&tokenizedList[0], tokenizedList.size());
+	ParseNode* bar = foo.getParseTree(&tokenizedList[0], tokenizedList.size());
 
 	// timeStart, timeOpenedFile, timeTokenized, timeListToVector, timeAsteriskPtr, timeParsed
 	auto timeParsed = std::chrono::high_resolution_clock::now();
