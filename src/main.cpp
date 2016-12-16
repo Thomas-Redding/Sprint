@@ -32,7 +32,9 @@ int main(int argc, const char * argv[]) {
 	std::string fileLine;
 	std::string contents = "";
 	std::string pathToFile = argv[1];
-	
+
+
+	auto start_open_file = std::chrono::high_resolution_clock::now();
 	std::ifstream myfile(pathToFile);
 	if (myfile.is_open()) {
 		while(getline(myfile, fileLine)) {
@@ -45,58 +47,57 @@ int main(int argc, const char * argv[]) {
 		std::cout << "Error: could not open file" << std::endl;
 		return 0;
 	}
+	auto end_open_file = std::chrono::high_resolution_clock::now();
 
-	auto timeOpenedFile = std::chrono::high_resolution_clock::now();
-	
+
+
+	auto start_tokenize = std::chrono::high_resolution_clock::now();
 	Tokenizer tokenizer;
-	std::list<Token> list = tokenizer.process(contents);
+	std::list<Token> tokenizedList = tokenizer.process(contents);
+	auto end_tokenize = std::chrono::high_resolution_clock::now();
 
-	auto timeTokenized = std::chrono::high_resolution_clock::now();
-
-	auto timeFindingClasses = std::chrono::high_resolution_clock::now();
-
+	// auto timeFindingClasses = std::chrono::high_resolution_clock::now();
 	// syntatic sugar to switch a.b(c) to b(a,c)
 	// if (!addFunctionSugar(tokenizedList)) {
 	// 	return 0;
 	// }
+	// auto timeAsteriskPtr = std::chrono::high_resolution_clock::now();
 
-	auto timeAsteriskPtr = std::chrono::high_resolution_clock::now();
-
+	/*
+	auto start_vectorization = std::chrono::high_resolution_clock::now();
 	// http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
 	std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
+	auto end_vectorization = std::chrono::high_resolution_clock::now();
+	*/
 
-	auto timeListToVector = std::chrono::high_resolution_clock::now();
+	for (std::list<Token>::iterator it = tokenizedList.begin(); it != tokenizedList.end(); ++it)
+		std::cout << *it << "\n";
 
-	for (int i = 0; i < tokenizedList.size(); ++i)
-		std::cout << tokenizedList[i] << "\n";
-
+	auto start_parse_rules = std::chrono::high_resolution_clock::now();
 	std::vector<bool> leftToRight;
 	std::vector<ParseRule> listOfRules;
 	addParseRules(leftToRight, listOfRules);
-
 	Parser foo(leftToRight, listOfRules);
+	auto end_parse_rules = std::chrono::high_resolution_clock::now();
 
-	auto timeParseRules = std::chrono::high_resolution_clock::now();
-
-	ParseNode* bar = foo.getParseTree(&tokenizedList[0], tokenizedList.size());
-
-	// timeStart, timeOpenedFile, timeTokenized, timeListToVector, timeAsteriskPtr, timeParsed
-	auto timeParsed = std::chrono::high_resolution_clock::now();
+	auto start_parse = std::chrono::high_resolution_clock::now();
+	ParseNode* bar = foo.getParseTree(&tokenizedList);
+	auto end_parse = std::chrono::high_resolution_clock::now();
 
 	std::cout << "\n\n\n";
 	bar->print();
 
+	auto start_verification = std::chrono::high_resolution_clock::now();
 	ParserVerifier pv(&foo);
 	pv.verify(bar);
+	auto end_verification = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Reading File(s): " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeOpenedFile - timeStart).count() / 1000 << " µs\n";
-	std::cout << "Tokenizing: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeTokenized - timeOpenedFile).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(timeTokenized - timeOpenedFile).count() / list.size() << " ns per token)\n";
-	std::cout << "Finding Classes: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeFindingClasses - timeTokenized).count() / 1000 << " µs\n";
-	std::cout << "List-to-Vector: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeListToVector - timeFindingClasses).count() / 1000 << " µs\n";
-	std::cout << "Asterisk-Ptr: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeAsteriskPtr - timeListToVector).count() / 1000 << " µs\n";
-	std::cout << "Parse Rules: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeParseRules - timeAsteriskPtr).count() / 1000 << " µs\n";
-	std::cout << "Parsing: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeParsed - timeParseRules).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(timeParsed - timeParseRules).count() / list.size() << " ns per token)\n";
-	std::cout << "Tokens: " << list.size() << "\n";
-
+	std::cout << "Read Files : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / tokenizedList.size() << " ns per token)\n";
+	std::cout << "Tokenizing : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / tokenizedList.size() << " ns per token)\n";
+	// std::cout << "List->Vect : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_vectorization - start_vectorization).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_vectorization - start_vectorization).count() / tokenizedList.size() << " ns per token)\n";
+	std::cout << "Parse Rules: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / tokenizedList.size() << " ns per token)\n";
+	std::cout << "Parser     : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / tokenizedList.size() << " ns per token)\n";
+	std::cout << "Parse Ver. : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / tokenizedList.size() << " ns per token)\n";
+	std::cout << "Total Time : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / tokenizedList.size() << " ns per token)\n";
 	return 0;
 }
