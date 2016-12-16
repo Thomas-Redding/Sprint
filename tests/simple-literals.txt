@@ -1,4 +1,13 @@
 
+string a;
+int b;
+float c;
+
+[int] d;
+[int:int] e;
+{int} f;
+{int:int} g;
+
 string a	= "fizz";
 int b		= 123;
 float c		= 456.7;

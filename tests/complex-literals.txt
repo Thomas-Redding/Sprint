@@ -1,4 +1,8 @@
 
+[{int:int}]			alpha;
+[[int:int]:{int}]	beta;
+{[int]}				gamma;
+{int:[int:int]}		delta;
 [{int:int}]			alpha	= [{a:b}, {c:d}, {e:f}];
 [[int:int]:{int}]	beta	= [[a:b]:{c}, [d:e]:{f}, [g:h]:{i}];
 {[int]}				gamma	= {[j, k, l], [m, n, o], [p, q, r]};

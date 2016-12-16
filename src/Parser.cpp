@@ -183,6 +183,9 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == ordered_map_literal) return "ordered_map_literal";
 	else if (t == unordered_map_literal) return "unordered_map_literal";
 	else if (t == colon_list) return "colon_list";
+	else if (t == colon_type_clause) return "colon_type_clause";
+	else if (t == parenthesis) return "parenthesis";
+	else if (t == templates) return "templates";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -336,6 +339,7 @@ ParseNode* Parser::getParseTree(std::list<Token> *tokens) {
 		if (is_first) {
 			is_first = true;
 		}
+		--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 		mainTree->children.push_back(new ParseNode(it, behind_it));
 		++behind_it;
 	}
@@ -395,11 +399,15 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				// {1: 2}
 				tree->type = unordered_map_literal;
 			}
+			else if (child->type == colon_type_clause) {
+				// {1: 2}
+				tree->type = unordered_map_literal;
+			}
 			else if (child->type == comma_clause) {
 				// {1, 2}
 				tree->type = set_literal;
 			}
-			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end()) {
+			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end() || shortcuts[raw_type].find(child->type) != shortcuts[raw_type].end() || child->type == set_literal || child->type == unordered_map_literal || child->type == list_literal || child->type == ordered_map_literal) {
 				// {1}
 				tree->type = set_literal;
 			}
@@ -408,11 +416,10 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 			}
 		}
 		else {
+			tree->print();
 			for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end()) {
-					mainTree->print();
+				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end())
 					error("Poorly formated block of statements.", tree);
-				}
 			}
 			tree->type = block_of_statements;
 		}
@@ -432,11 +439,15 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				// [1: 2]
 				tree->type = ordered_map_literal;
 			}
+			else if (child->type == colon_type_clause) {
+				// [1: 2]
+				tree->type = ordered_map_literal;
+			}
 			else if (child->type == comma_clause) {
 				// [1, 2]
 				tree->type = list_literal;
 			}
-			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end()) {
+			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end() || shortcuts[raw_type].find(child->type) != shortcuts[raw_type].end() || child->type == set_literal || child->type == unordered_map_literal || child->type == list_literal || child->type == ordered_map_literal) {
 				// [1] - list literal or bracket-accessor
 				if (getPreviousToken(tree).type == IDENTIFIER)
 					tree->type = bracket_access;
@@ -453,9 +464,11 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 	}
 	else if (tree->type == parenthesis_block) {
 		// do nothing for now
+		tree->type = parenthesis;
 	}
 	else if (tree->type == template_block) {
 		// do nothing for now
+		tree->type = templates;
 	}
 	else {
 		error("Error 413. Please contact tfredding@gmail.com", tree);
@@ -480,6 +493,9 @@ void Parser::parseLeftRight(ParseNode *tree, int from, int to) {
 	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end();) {
 		if ((*it)->children.size() > 0 && !skipRecursion) {
 			if ((*it)->type == bracket_block || (*it)->type == curly_brace_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
+				// do nothing
+			}
+			else if ((*it)->type == block_of_statements || (*it)->type == list_literal || (*it)->type == set_literal || (*it)->type == ordered_map_literal || (*it)->type == unordered_map_literal || (*it)->type == bracket_access || (*it)->type == parenthesis || (*it)->type == templates) {
 				// do nothing
 			}
 			else {
@@ -521,12 +537,14 @@ void Parser::parseLeftRight(ParseNode *tree, int from, int to) {
 			std::list<ParseNode*>::iterator it2 = it;
 			ParseNode *newTree = new ParseNode(rules[ruleToApply].to, (*it2)->token.lineNum, (*it2)->token.charNum);
 			for (int i= 0; i < ruleSize; ++i) {
+				--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 				newTree->children.push_back(*it2);
 				++it2;
 			}
 			std::list<ParseNode*>::iterator before = it;
 			--before;
 			tree->children.erase(it, it2);
+			--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 			tree->children.insert(++before, newTree);
 			it = before;
 			--it;
@@ -556,6 +574,9 @@ void Parser::parseRightLeft(ParseNode *tree, int from, int to) {
 	for (std::list<ParseNode*>::iterator it = --tree->children.end(); true; --it) {
 		if ((*it)->children.size() > 0) {
 			if ((*it)->type == bracket_block || (*it)->type == curly_brace_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
+				// do nothing
+			}
+			else if ((*it)->type == block_of_statements || (*it)->type == list_literal || (*it)->type == set_literal || (*it)->type == ordered_map_literal || (*it)->type == unordered_map_literal || (*it)->type == bracket_access || (*it)->type == parenthesis || (*it)->type == templates) {
 				// do nothing
 			}
 			else {
@@ -598,12 +619,14 @@ void Parser::parseRightLeft(ParseNode *tree, int from, int to) {
 			std::list<ParseNode*>::iterator it2 = it;
 			ParseNode *newTree = new ParseNode(rules[ruleToApply].to, (*it)->token.lineNum, (*it)->token.charNum);
 			for (int i= 0; i < ruleSize; ++i) {
+				--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 				newTree->children.push_back(*it2);
 				++it2;
 			}
 			std::list<ParseNode*>::iterator before = it;
 			--before;
 			tree->children.erase(it, it2);
+			--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 			tree->children.insert(++before, newTree);
 			it = before;
 			--it;
@@ -644,8 +667,11 @@ void Parser::doCurlyBracePass(ParseNode* tree) {
 				--it;
 				st.pop();
 				ParseNode* newTree = new ParseNode(curly_brace_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
-				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
+				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2) {
+					--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 					newTree->children.push_back(*it2);
+				}
+				--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 				tree->children.insert(leftPar, newTree);
 				tree->children.erase(leftPar, end);
 			}
@@ -675,8 +701,11 @@ void Parser::doTemplatePass(ParseNode* tree) {
 				--it;
 				st.pop();
 				ParseNode* newTree = new ParseNode(template_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
-				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
+				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2) {
+					--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 					newTree->children.push_back(*it2);
+				}
+				--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 				tree->children.insert(leftPar, newTree);
 				tree->children.erase(leftPar, end);
 			}
@@ -707,8 +736,11 @@ void Parser::doParenthesesPass(ParseNode* tree) {
 				--it;
 				st.pop();
 				ParseNode* newTree = new ParseNode(parenthesis_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
-				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
+				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2) {
+					--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 					newTree->children.push_back(*it2);
+				}
+				--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 				tree->children.insert(leftPar, newTree);
 				tree->children.erase(leftPar, end);
 			}
@@ -717,6 +749,7 @@ void Parser::doParenthesesPass(ParseNode* tree) {
 }
 
 void Parser::error(std::string message, ParseNode* tree) {
+	mainTree->print();
 	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
 	exit(0);
 }
@@ -743,8 +776,11 @@ void Parser::doBracketPass(ParseNode* tree) {
 				--it;
 				st.pop();
 				ParseNode* newTree = new ParseNode(bracket_block, (*leftPar)->token.lineNum, (*leftPar)->token.charNum);
-				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2)
+				for (std::list<ParseNode*>::iterator it2=leftNonPar; it2 != rightPar; ++it2) {
+					--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 					newTree->children.push_back(*it2);
+				}
+				--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
 				tree->children.insert(leftPar, newTree);
 				tree->children.erase(leftPar, end);
 			}

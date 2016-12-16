@@ -12,14 +12,14 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		P_KEYWORD_CLASS,
 		P_IDENTIFIER,
-		curly_brace_block
+		block_of_statements
 	}, class_implementation));
 	// class Foo <T> { ... 
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		P_KEYWORD_CLASS,
 		P_IDENTIFIER,
-		template_block,
-		curly_brace_block
+		templates,
+		block_of_statements
 	},class_implementation));
 	// class Foo<T> : Bar
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -27,17 +27,17 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_IDENTIFIER,
 		P_COLON,
 		P_IDENTIFIER,
-		curly_brace_block
+		block_of_statements
 	}, class_implementation));
 	// class Foo<T> : Bar<U>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		P_KEYWORD_CLASS,
 		P_IDENTIFIER,
-		template_block,
+		templates,
 		P_COLON,
 		P_IDENTIFIER,
-		template_block,
-		curly_brace_block
+		templates,
+		block_of_statements
 	}, class_implementation));
 	// class Foo: Bar<S>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -45,57 +45,57 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_IDENTIFIER,
 		P_COLON,
 		P_IDENTIFIER,
-		template_block,
-		curly_brace_block
+		templates,
+		block_of_statements
 	}, class_implementation));
 	// class Foo<T, S> : Bar<T>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		P_KEYWORD_CLASS,
 		P_IDENTIFIER,
-		template_block,
+		templates,
 		P_EXTENDS,
 		P_IDENTIFIER,
-		template_block,
-		curly_brace_block								
+		templates,
+		block_of_statements
 	}, class_implementation));
 
 	// function_head
 	// foo(...) -> int
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		function_name_candidate,
-		parenthesis_block,
+		parenthesis,
 		P_ARROW,
 	}, function_head));
 	// foo<...>(...) ->
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		function_name_candidate,
-		template_block,
-		parenthesis_block,
+		templates,
+		parenthesis,
 		P_ARROW,
 	}, function_head));
 	
 	// function declaration
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, P_SEMI_COLON }, function_declaration));
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, P_SEMI_COLON }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, template_block, P_SEMI_COLON }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, curly_brace_block, P_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, templates, P_SEMI_COLON }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, block_of_statements, P_SEMI_COLON }, function_declaration));
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, P_SEMI_COLON }, function_declaration));
 
 	// function implementation
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, curly_brace_block }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, curly_brace_block }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, template_block, curly_brace_block }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, curly_brace_block, curly_brace_block }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, curly_brace_block }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, block_of_statements }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, block_of_statements }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, templates, block_of_statements }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, block_of_statements, block_of_statements }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, block_of_statements }, function_declaration));
 
 	// enum Foo {...}
-	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, curly_brace_block}, enum_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, block_of_statements}, enum_implementation));
 	// namespaces Foo {...}
-	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_NAMESPACE, P_IDENTIFIER, curly_brace_block}, namespace_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_NAMESPACE, P_IDENTIFIER, block_of_statements}, namespace_implementation));
 
 	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, P_PLUS_PLUS}, unary1_clause));													// x++
 	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, P_MINUS_MINUS}, unary1_clause));													// x--
-	listOfRules.push_back(ParseRule(  0, {}, {function_head}, {unary1_value, parenthesis_block}, unary1_clause));												// x(y)
+	listOfRules.push_back(ParseRule(  0, {}, {function_head}, {unary1_value, parenthesis}, unary1_clause));												// x(y)
 	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, bracket_block}, unary1_clause));													// x[y]
 	listOfRules.push_back(ParseRule(  0, {}, {}, {unary1_value, P_PERIOD}, unary1_clause));														// x.y
 
@@ -139,9 +139,16 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 
 	listOfRules.push_back(ParseRule(100, {}, {}, {ternary_value, P_QUESTION_MARK, ternary_value, P_COLON, ternary_value}, ternary_clause));	// x ? y : z
 
-	listOfRules.push_back(ParseRule(105, {}, {}, {setting_value, P_COLON, setting_value}, colon_clause));											// x : z
-	listOfRules.push_back(ParseRule(105, {}, {}, {comma_value, P_COMMA, comma_value}, comma_clause));											// x, y
+	
+	listOfRules.push_back(ParseRule(105, {}, {}, {comma_value, P_COLON, comma_value}, colon_clause));											// x : z
+	listOfRules.push_back(ParseRule(105, {}, {}, {raw_type, P_COLON, raw_type}, colon_type_clause));
+	listOfRules.push_back(ParseRule(105, {}, {}, {raw_type, P_COLON, comma_value}, colon_type_clause));
+	listOfRules.push_back(ParseRule(105, {}, {}, {comma_value, P_COLON, raw_type}, colon_type_clause));
+
+	listOfRules.push_back(ParseRule(107, {}, {}, {comma_value, P_COMMA, comma_value}, comma_clause));											// x, y
 	listOfRules.push_back(ParseRule(107, {}, {}, {colon_clause, P_COMMA, colon_clause}, colon_list));										// a : b, c : d
+	listOfRules.push_back(ParseRule(107, {}, {}, {colon_clause, P_COMMA, colon_list}, colon_list));										// a : b, c : d
+
 
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_EQUALS, setting_value}, setting_clause));									// x = y
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_PLUS_EQUALS, setting_value}, setting_clause));								// x += y
@@ -157,9 +164,9 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_KEYWORD_IS, setting_value}, setting_clause));								// x is y
 	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, template_block, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, templates, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, setting_value, P_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, template_block, setting_value, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, templates, setting_value, P_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_RETURN, setting_value, P_SEMI_COLON}, return_statement));
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_CASE, setting_value, P_COLON}, case_statement));
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_DEFAULT, P_COLON}, case_statement));
@@ -168,14 +175,14 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_BREAK, P_SEMI_COLON}, break_statement));
 	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_CONTINUE, P_SEMI_COLON}, continue_statement));
 
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis_block, structure, P_KEYWORD_ELSE, structure}, if_else_statement));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis_block, structure}, if_statement));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_WHILE, parenthesis_block, structure}, while_loop));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_FOR, parenthesis_block, structure}, for_loop));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_DO, structure, P_KEYWORD_WHILE, parenthesis_block}, do_while_loop));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_SWITCH, parenthesis_block, curly_brace_block}, switch_statement));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_TRY, curly_brace_block}, try_block));
-	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_CATCH, parenthesis_block, curly_brace_block}, catch_block));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis, structure, P_KEYWORD_ELSE, structure}, if_else_statement));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis, structure}, if_statement));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_WHILE, parenthesis, structure}, while_loop));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_FOR, parenthesis, structure}, for_loop));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_DO, structure, P_KEYWORD_WHILE, parenthesis}, do_while_loop));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_SWITCH, parenthesis, block_of_statements}, switch_statement));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_TRY, block_of_statements}, try_block));
+	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_CATCH, parenthesis, block_of_statements}, catch_block));
 }
 
 
