@@ -86,11 +86,13 @@ int main(int argc, const char * argv[]) {
 
 	std::cout << "\n\n\n";
 	bar->print();
+	std::cout << "\n\nhash: " << bar->to_hash() << "\n\n";
 
 	auto start_verification = std::chrono::high_resolution_clock::now();
 	ParserVerifier pv(&foo);
 	pv.verify(bar);
 	auto end_verification = std::chrono::high_resolution_clock::now();
+
 
 	std::cout << "Read Files : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / tokenizedList.size() << " ns per token)\n";
 	std::cout << "Tokenizing : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / tokenizedList.size() << " ns per token)\n";

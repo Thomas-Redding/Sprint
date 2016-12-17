@@ -249,6 +249,14 @@ struct ParseNode {
 		for (std::list<ParseNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
 		    (*it)->print(depth+1);
 	}
+
+	uint64_t to_hash() {
+		uint64_t rtn = 0;
+		rtn += 101 * int(type);
+		for (std::list<ParseNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
+			rtn += (*it)->to_hash();
+		return rtn;
+	}
 };
 
 class ParseRule {
