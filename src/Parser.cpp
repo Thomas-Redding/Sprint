@@ -749,6 +749,7 @@ void Parser::doParenthesesPass(ParseNode* tree) {
 }
 
 void Parser::error(std::string message, ParseNode* tree) {
+	// delete me before final release
 	mainTree->print();
 	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
 	exit(0);

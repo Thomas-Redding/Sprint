@@ -162,11 +162,16 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_EQUAL_EQUALS, setting_value}, setting_clause));							// x <- y
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_KEYWORD_IS, setting_value}, setting_clause));								// x is y
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_KEYWORD_IS, setting_value}, setting_clause));	
+
+	//  variable declarations
 	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
-	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, templates, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, setting_value, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {P_IDENTIFIER, setting_value, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, templates, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, templates, setting_value, P_SEMI_COLON}, variable_dec));
+	listOfRules.push_back(ParseRule(110, {}, {}, {P_IDENTIFIER, templates, setting_value, P_SEMI_COLON}, variable_dec));
+
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_RETURN, setting_value, P_SEMI_COLON}, return_statement));
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_CASE, setting_value, P_COLON}, case_statement));
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_DEFAULT, P_COLON}, case_statement));
