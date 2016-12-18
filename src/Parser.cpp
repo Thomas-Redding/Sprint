@@ -186,7 +186,6 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == colon_type_clause) return "colon_type_clause";
 	else if (t == parenthesis) return "parenthesis";
 	else if (t == templates) return "templates";
-	else if (t == class_block) return "class_block";
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else return std::to_string(static_cast<TreeType>(t));
 }
@@ -394,7 +393,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				tree->type = block_of_statements_or_class;
 			}
 			else if (shortcuts[stuff_in_classes].find(child->type) != shortcuts[stuff_in_classes].end()) {
-				tree->type = class_block;
+				tree->type = block_of_statements_or_class;
 			}
 			else if(child->type == colon_list) {
 				// {1 : 2, 3 : 4}
@@ -431,7 +430,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 						}
 					}
 					if (it2 == tree->children.end()) {
-						tree->type = class_block;
+						tree->type = block_of_statements_or_class;
 					}
 					else {
 						error("Poorly formated block of statements.", tree);
