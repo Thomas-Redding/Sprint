@@ -187,6 +187,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == parenthesis) return "parenthesis";
 	else if (t == templates) return "templates";
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
+	else if (t == P_KEYWORD_FUNCTION) return "P_KEYWORD_FUNCTION";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
