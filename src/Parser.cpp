@@ -186,6 +186,8 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == colon_type_clause) return "colon_type_clause";
 	else if (t == parenthesis) return "parenthesis";
 	else if (t == templates) return "templates";
+	else if (t == class_block) return "class_block";
+	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -421,8 +423,20 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 		else {
 			tree->print();
 			for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end())
-					error("Poorly formated block of statements.", tree);
+				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end()) {
+					std::list<ParseNode*>::iterator it2;
+					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
+						if (shortcuts[stuff_in_classes].find((*it)->type) == shortcuts[stuff_in_classes].end()) {
+							error("Poorly formated code block.", tree);
+						}
+					}
+					if (it2 == tree->children.end()) {
+						tree->type = class_block;
+					}
+					else {
+						error("Poorly formated block of statements.", tree);
+					}
+				}
 			}
 			tree->type = block_of_statements_or_class;
 		}
