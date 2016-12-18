@@ -1,19 +1,20 @@
 # Sprint
 Compiler for New Language
+Updated Dec 15, 2016
 
 ## PROGRESS
 1. Tokenizer                            - DONE
 2. Parser                               - DONE
 3. Parse Rules                          - DONE
-4. Verify Parsing                       - IN PROGRESS; finish by Thanksgiving?
-5. Type Checking and Variable Scoping   - IN PROGRESS; finish by Thanksgiving?
-6. Templating                           - TODO: Thanksgiving to Christmas
-7. Translate to C++                     - TODO: Thanksgiving to Christmas
+4. Verify Parsing                       - DONE
+5. Type Checking and Variable Scoping   - TODO: finish by new years
+6. Templating                           - TODO: finish by new years
+7. Translate to C++                     - TODO: finish by new years
 8. Garbage Collection                   - TODO; Jan 2017
 9. Output to C++ Files                  - TODO; expected to take a couple days
 10. Allow Input From Multiples Files    - TODO; expected to take a couple days
-11. Standard Library                    - TODO; Feb 2016 - Apr 2017 (with ongoing development)
-12. Sample Projects                     - TODO; 2017
+11. Standard Library                    - TODO; Feb 2016 - ...
+12. Sample Projects                     - TODO; Feb 2016 - ...
 
 ## FEATURES
 This language is generally similar to C++. Here are it's planned noteworthy features

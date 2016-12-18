@@ -1,0 +1,17 @@
+
+
+function foo(bar baz) -> qux {
+	x y = baz;
+}
+
+function foo<T>(bar baz) -> qux<T> {
+	x y = baz;
+}
+
+function foo<int T>(bar baz) -> qux<T> {
+	x y = baz;
+}
+
+function foo<T, int S>(bar baz) -> qux<T, int S> {
+	x y = baz;
+}

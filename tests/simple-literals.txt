@@ -1,0 +1,17 @@
+
+string a;
+int b;
+float c;
+
+[int] d;
+[int:int] e;
+{int} f;
+{int:int} g;
+
+string a	= "fizz";
+int b		= 123;
+float c		= 456.7;
+[int] d 	= [h, i, j];
+[int:int] e = [k:l, m:n, o:p];
+{int} f 	= {q, r, s};
+{int:int} g = {t:u, v:w, x:y};
