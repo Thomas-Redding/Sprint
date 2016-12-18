@@ -389,7 +389,10 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 			// either (1) a block with one statement, a set literal, or a 
 			ParseNode *child = *(tree->children.begin());
 			if (shortcuts[structure_or_statement].find(child->type) != shortcuts[structure_or_statement].end()) {
-				tree->type = block_of_statements;
+				tree->type = block_of_statements_or_class;
+			}
+			else if (shortcuts[stuff_in_classes].find(child->type) != shortcuts[stuff_in_classes].end()) {
+				tree->type = class_block;
 			}
 			else if(child->type == colon_list) {
 				// {1 : 2, 3 : 4}
@@ -421,7 +424,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end())
 					error("Poorly formated block of statements.", tree);
 			}
-			tree->type = block_of_statements;
+			tree->type = block_of_statements_or_class;
 		}
 	}
 	else if (tree->type == bracket_block) {
@@ -495,7 +498,7 @@ void Parser::parseLeftRight(ParseNode *tree, int from, int to) {
 			if ((*it)->type == bracket_block || (*it)->type == curly_brace_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
 				// do nothing
 			}
-			else if ((*it)->type == block_of_statements || (*it)->type == list_literal || (*it)->type == set_literal || (*it)->type == ordered_map_literal || (*it)->type == unordered_map_literal || (*it)->type == bracket_access || (*it)->type == parenthesis || (*it)->type == templates) {
+			else if ((*it)->type == block_of_statements_or_class || (*it)->type == list_literal || (*it)->type == set_literal || (*it)->type == ordered_map_literal || (*it)->type == unordered_map_literal || (*it)->type == bracket_access || (*it)->type == parenthesis || (*it)->type == templates) {
 				// do nothing
 			}
 			else {
@@ -576,7 +579,7 @@ void Parser::parseRightLeft(ParseNode *tree, int from, int to) {
 			if ((*it)->type == bracket_block || (*it)->type == curly_brace_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
 				// do nothing
 			}
-			else if ((*it)->type == block_of_statements || (*it)->type == list_literal || (*it)->type == set_literal || (*it)->type == ordered_map_literal || (*it)->type == unordered_map_literal || (*it)->type == bracket_access || (*it)->type == parenthesis || (*it)->type == templates) {
+			else if ((*it)->type == block_of_statements_or_class || (*it)->type == list_literal || (*it)->type == set_literal || (*it)->type == ordered_map_literal || (*it)->type == unordered_map_literal || (*it)->type == bracket_access || (*it)->type == parenthesis || (*it)->type == templates) {
 				// do nothing
 			}
 			else {
