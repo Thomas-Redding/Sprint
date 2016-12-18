@@ -124,7 +124,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 		template_block,
 		curly_brace_block
 	}, class_implementation));
-	// class Foo: Bar<S>
+	// class Foo : Bar<S>
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
 		T_KEYWORD_CLASS,
 		T_IDENTIFIER,
@@ -145,20 +145,19 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ThomasParseRule> 
 	}, class_implementation));
 
 	// function_head
-	// foo(...) -> int
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		function_name_candidate,
-		parenthesis_block,
-		T_ARROW,
-	}, function_head));
+	// foo(...) ->f
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { function_name_candidate, parenthesis_block, T_ARROW }, function_head));
 	// foo<...>(...) ->
-	listOfRules.push_back(ThomasParseRule(-10, {}, {}, {
-		function_name_candidate,
-		template_block,
-		parenthesis_block,
-		T_ARROW,
-	}, function_head));
-	
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { function_name_candidate, template_block, parenthesis_block, T_ARROW }, function_head));
+	// virtual foo(...) ->f
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { T_KEYWORD_VIRTUAL, function_name_candidate, parenthesis_block, T_ARROW }, function_head));
+	// virtual foo<...>(...) ->
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { T_KEYWORD_VIRTUAL, function_name_candidate, template_block, parenthesis_block, T_ARROW }, function_head));
+	// abstract foo(...) ->f
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { T_KEYWORD_ABSTRACT, function_name_candidate, parenthesis_block, T_ARROW }, function_head));
+	// abstract foo<...>(...) ->
+	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { T_KEYWORD_ABSTRACT, function_name_candidate, template_block, parenthesis_block, T_ARROW }, function_head));
+
 	// function declaration
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { function_head, raw_type_or_void, T_SEMI_COLON }, function_declaration));
 	listOfRules.push_back(ThomasParseRule(-10, {}, {}, { function_head, T_IDENTIFIER, T_SEMI_COLON }, function_declaration));
