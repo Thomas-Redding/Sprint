@@ -20,12 +20,12 @@ class foo<T, int S> : bar<T, int S> {
 	baz qux;
 };
 
-enum foo {
+/*enum foo {
 	bar, baz,
 	qux = 5,
 	quux = 72,
 	corge
-};
+};*/
 
 namespace foo {
 	bar baz;
