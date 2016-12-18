@@ -388,7 +388,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 		else if (tree->children.size() == 1) {
 			// either (1) a block with one statement, a set literal, or a 
 			ParseNode *child = *(tree->children.begin());
-			if (child->type == statement) {
+			if (shortcuts[structure_or_statement].find(child->type) != shortcuts[structure_or_statement].end()) {
 				tree->type = block_of_statements;
 			}
 			else if(child->type == colon_list) {
