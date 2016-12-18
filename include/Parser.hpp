@@ -166,6 +166,7 @@ enum TreeType {
 
 	enum_implementation,
 	namespace_implementation,
+	class_declaration,
 	class_implementation,
 	constructor_implementation,
 	function_implementation,
@@ -187,7 +188,7 @@ enum TreeType {
 	colon_clause,
 	colon_type_clause,
 	
-	block_of_statements,
+	block_of_statements_or_class,
 	list_literal,
 	set_literal,
 	ordered_map_literal,
@@ -195,6 +196,7 @@ enum TreeType {
 	bracket_access,
 	parenthesis,
 	templates,
+	class_block,
 
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
@@ -217,6 +219,7 @@ enum TreeType {
 	structure,
 	structure_or_statement,
 	op,
+	stuff_in_classes,
 	function_name_candidate,
 	valid_line,
 	comma_value				// make sure I'm the last enum
@@ -333,8 +336,9 @@ public:
 		shortcuts[setting_value] =     {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause};
 		shortcuts[comma_value] =       {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause, comma_clause};
 		shortcuts[any_integer_type] = {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL};
-		shortcuts[structure] =              {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements};
-		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements, statement, variable_dec, return_statement, case_statement, continue_statement, break_statement};
+		shortcuts[structure] =              {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements_or_class};
+		shortcuts[stuff_in_classes] = {variable_dec, class_declaration, class_implementation, function_declaration, function_implementation};
+		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements_or_class, statement, variable_dec, return_statement, case_statement, continue_statement, break_statement};
 		shortcuts[op] = {P_LESS_THAN, P_LESS_THAN_EQUALS, P_GREATER_THAN, P_GREATER_THAN_EQUALS, P_EQUALS, P_EQUAL_EQUALS,
 			P_POSITIVE, P_MINUS, P_SLASH, P_ASTERISK, P_PLUS_PLUS, P_MINUS_MINUS, P_SHIFT_RIGHT, P_SHIFT_LEFT, P_PERCENT,
 			P_PLUS_EQUALS, P_MINUS_EQUALS, P_SLASH_EQUALS, P_ASTERISK_EQUALS, P_SHIFT_RIGHT_EQUALS, P_SHIFT_LEFT_EQUALS, P_PERCENT_EQUALS};
