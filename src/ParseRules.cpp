@@ -95,11 +95,11 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, P_SEMI_COLON }, function_declaration));
 
 	// function implementation
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, block_of_statements }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, block_of_statements }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, templates, block_of_statements }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, block_of_statements, block_of_statements }, function_declaration));
-	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, block_of_statements }, function_declaration));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, raw_type_or_void, block_of_statements }, function_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, block_of_statements }, function_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, P_IDENTIFIER, templates, block_of_statements }, function_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, block_of_statements, block_of_statements }, function_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, block_of_statements }, function_implementation));
 
 	// enum Foo {...}
 	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, block_of_statements}, enum_implementation));
