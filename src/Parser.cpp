@@ -188,6 +188,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == templates) return "templates";
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else if (t == P_KEYWORD_FUNCTION) return "P_KEYWORD_FUNCTION";
+	else if (t == enum_block) return "enum_block";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -358,12 +359,37 @@ bool Parser::thomasParserPrecedenceSorter(ParseRule r1, ParseRule r2) {
 	return r1.precedence < r2.precedence;
 }
 
+void Parser::parse_enum_block(ParseNode* tree) {
+	// todo
+}
+
 void Parser::parse(ParseNode* tree) {
 	int from = 0;
 	int to = 0;
 	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block || (*it)->type == template_block)
-			parse(*it);
+		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
+			if ((*it)->type == curly_brace_block && it != tree->children.begin()) {
+				// check if this is an enum declaration
+				std::list<ParseNode*>::iterator it2 = it;
+				--it2;
+				if ((*it2)->type == P_IDENTIFIER && it2 != tree->children.begin()) {
+					--it2;
+					if ((*it2)->type == P_KEYWORD_ENUM) {
+						(*it)->type = enum_block;
+						parse_enum_block(*it);
+					}
+					else {
+						parse(*it);
+					}
+				}
+				else {
+					parse(*it);
+				}
+			}
+			else {
+				parse(*it);
+			}
+		}
 	}
 	for (int i=0; i<leftRight.size(); ++i) {
 		from = to;

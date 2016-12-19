@@ -102,7 +102,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_head, bracket_block, block_of_statements_or_class }, function_declaration));
 
 	// enum Foo {...}
-	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, block_of_statements_or_class}, enum_implementation));
+	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, enum_block}, enum_implementation));
 	// namespaces Foo {...}
 	listOfRules.push_back(ParseRule(-10, {}, {}, {P_KEYWORD_NAMESPACE, P_IDENTIFIER, block_of_statements_or_class}, namespace_implementation));
 
@@ -175,7 +175,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_EQUAL_EQUALS, setting_value}, setting_clause));							// x <- y
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_LEFT_EQUALS, setting_value}, setting_clause));						// x <<= y
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
-	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_KEYWORD_IS, setting_value}, setting_clause));	
+	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_KEYWORD_IS, setting_value}, setting_clause));
+	listOfRules.push_back(ParseRule(110, {}, {}, {comma_clause, P_EQUALS, setting_value}, setting_clause));									// x, y = z
 
 	//  variable declarations
 	listOfRules.push_back(ParseRule(110, {}, {}, {raw_type, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));

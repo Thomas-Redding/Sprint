@@ -189,6 +189,7 @@ enum TreeType {
 	colon_type_clause,
 	
 	block_of_statements_or_class,
+	enum_block,
 	list_literal,
 	set_literal,
 	ordered_map_literal,
@@ -298,6 +299,7 @@ private:
 	void doTemplatePass(ParseNode* tree);
 	void parseLeftRight(ParseNode *tree, int from, int to);
 	void parseRightLeft(ParseNode *tree, int from, int to);
+	void parse_enum_block(ParseNode* tree);
 	void error(std::string message, ParseNode* tree);
 	void classify_parsed_block(ParseNode *tree);
 	Token getPreviousToken(ParseNode *tree);
