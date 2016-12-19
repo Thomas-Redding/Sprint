@@ -6,11 +6,12 @@
 #include <functional>
 #include <chrono>
 
-#include "../include/Tokenizer.hpp"
-#include "../include/Sweetener.hpp"
-#include "../include/Parser.hpp"
+#include "../include/Compiler.hpp"
 #include "../include/FindModifiedFiles.hpp"
+#include "../include/Parser.hpp"
 #include "../include/ParserVerifier.hpp"
+#include "../include/Sweetener.hpp"
+#include "../include/Tokenizer.hpp"
 #include "ParseRules.cpp"
 
 int main(int argc, const char * argv[]) {
@@ -82,17 +83,20 @@ int main(int argc, const char * argv[]) {
 	auto end_parse_rules = std::chrono::high_resolution_clock::now();
 
 	auto start_parse = std::chrono::high_resolution_clock::now();
-	ParseNode* bar = foo.getParseTree(&tokenizedList);
+	ParseNode* parse_tree = foo.getParseTree(&tokenizedList);
 	auto end_parse = std::chrono::high_resolution_clock::now();
 
 	std::cout << "\n\n\n";
-	bar->print();
-	std::cout << "\n\nhash: " << bar->to_hash() << "\n\n";
+	parse_tree->print();
+	std::cout << "\n\nhash: " << parse_tree->to_hash() << "\n\n";
 
 	auto start_verification = std::chrono::high_resolution_clock::now();
 	ParserVerifier pv(&foo);
-	pv.verify(bar);
+	pv.verify(parse_tree);
 	auto end_verification = std::chrono::high_resolution_clock::now();
+
+	Compiler comp;
+	comp.compile(parse_tree);
 
 	std::cout << "Read Files : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / tokenizedList.size() << " ns per token)\n";
 	std::cout << "Tokenizing : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / tokenizedList.size() << " ns per token)\n";
