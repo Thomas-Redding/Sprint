@@ -33,16 +33,15 @@ void Compiler::compile_tree(ParseNode* tree) {
 		output += "(";
 		compile_children(tree);
 		output += ")";
+		return;
 	}
 
 	if (vanilla_curly_brace_block.find(tree->type) != vanilla_curly_brace_block.end()) {
 		output += "{";
 		compile_children(tree);
 		output += "}";
+		return;
 	}
-
-	tree->print();
-	std::cout << "\n\n====\n\n";
 
 	// todo
 }
