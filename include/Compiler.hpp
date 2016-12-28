@@ -26,6 +26,7 @@ private:
 	void compile_tree(ParseNode* tree);
 	void compile_children(ParseNode* tree);
 	void error(std::string message, ParseNode* tree);
+	ParseNode* at(std::list<ParseNode*> lst, int index);
 	std::map<TreeType, std::string> simple_strings = {
 		{P_KEYWORD_ABSTRACT, "abstract"},
 		{P_KEYWORD_BREAK, "break"},
