@@ -46,16 +46,42 @@ void Compiler::compile_tree(ParseNode* tree) {
 	if (tree->type == class_implementation) {
 		compile_children(tree);
 		output += ";";
+		return;
 	}
 
 	if (tree->type == class_implementation) {
 		compile_children(tree);
 		output += ";";
+		return;
 	}
 
-	if (tree->type == function_declaration) {
-		compile_children(tree);
-		output += ";";
+	if (tree->type == function_implementation) {
+		ParseNode* func_head = tree->children.front();
+		ParseNode* block = tree->children.back();
+		int parts_of_return = tree->children.size() - 2;
+		std::list<ParseNode*>::iterator it = tree->children.begin();
+		++it;
+		for (it = it; it != tree->children.end(); ++it) {
+			compile_tree(*it);
+			--parts_of_return;
+			if (parts_of_return <= 0)
+				break;
+		}
+		output += " ";
+		compile_tree(func_head);
+		compile_tree(block);
+		return;
+	}
+
+	if (tree->type == function_head) {
+		// compile everything except the '->'
+		int counter = tree->children.size();
+		for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
+			--counter;
+			if (counter == 0)
+				return;
+			compile_tree(*it);			
+		}
 	}
 
 	// todo
