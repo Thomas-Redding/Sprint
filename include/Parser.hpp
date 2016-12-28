@@ -199,6 +199,7 @@ enum TreeType {
 	bracket_access,
 	parenthesis,
 	templates,
+	empty_curly_brace_block,
 
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
@@ -253,6 +254,13 @@ struct ParseNode {
 		std::cout << indent << treeTypeToString(type) << " : " << token.str << " (" << token.lineNum << "," << token.charNum << ")\n";
 		for (std::list<ParseNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
 		    (*it)->print(depth+1);
+	}
+
+	ParseNode* deep_copy() {
+		ParseNode *rtn = new ParseNode(type, token.lineNum, token.charNum);
+		for (std::list<ParseNode*>::iterator it = children.begin(); it != children.end(); ++it)
+			rtn->children.push_back((*it)->deep_copy());
+		return rtn;
 	}
 
 	uint64_t to_hash() {
