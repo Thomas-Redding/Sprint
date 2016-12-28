@@ -8,6 +8,11 @@ float c;
 {int} f;
 {int:int} g;
 
+[int] d = [int];
+[int:int] e = [int:int];
+{int} f = {int};
+{int:int} g = {int:int};
+
 string a	= "fizz";
 int b		= 123;
 float c		= 456.7;

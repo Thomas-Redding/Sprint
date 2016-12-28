@@ -1,31 +1,42 @@
 
-
 class foo {
 	baz qux;
-};
+}
 
 class foo : bar {
 	baz qux;
-};
+}
 
 class foo<T> : bar<T> {
 	baz qux;
-};
+}
 
 class foo<int T> : bar<int T> {
 	baz qux;
-};
+}
 
 class foo<T, int S> : bar<T, int S> {
 	baz qux;
-};
+}
 
-/*enum foo {
+enum foo {
+	bar, baz
+}
+
+enum foo {
+	bar, baz = 1
+}
+
+enum foo {
+	bar = 1, baz
+}
+
+enum foo {
 	bar, baz,
 	qux = 5,
 	quux = 72,
 	corge
-};*/
+}
 
 namespace foo {
 	bar baz;

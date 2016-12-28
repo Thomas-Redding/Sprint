@@ -36,6 +36,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_KEYWORD_IF) return "P_KEYWORD_IF";
 	else if (t == P_KEYWORD_IN) return "P_KEYWORD_IN";
 	else if (t == P_KEYWORD_INLINE) return "P_KEYWORD_INLINE";
+	else if (t == P_KEYWORD_MUT) return "P_KEYWORD_MUT";
 	else if (t == P_KEYWORD_NEW) return "P_KEYWORD_NEW";
 	else if (t == P_KEYWORD_NULL) return "P_KEYWORD_NULL";
 	else if (t == P_KEYWORD_PROTECTED) return "P_KEYWORD_PROTECTED";
@@ -119,6 +120,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_CLOSE_TEMPLATE) return "P_CLOSE_TEMPLATE";
 	else if (t == P_KEYWORD_DEFAULT) return "P_KEYWORD_DEFAULT";
 	else if (t == P_LEFT_ARROW) return "P_LEFT_ARROW";
+	else if (t == P_LEFT_RIGHT_ARROW) return "P_LEFT_RIGHT_ARROW";
 	else if (t == P_KEYWORD_IS) return "P_KEYWORD_IS";
 	else if (t == curly_brace_block) return "curly_brace_block";
 	else if (t == parenthesis_block) return "parenthesis_block";
@@ -188,6 +190,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == templates) return "templates";
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else if (t == P_KEYWORD_FUNCTION) return "P_KEYWORD_FUNCTION";
+	else if (t == enum_block) return "enum_block";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -235,6 +238,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_IF) return P_KEYWORD_IF;
 	else if (t == KEYWORD_IN) return P_KEYWORD_IN;
 	else if (t == KEYWORD_INLINE) return P_KEYWORD_INLINE;
+	else if (t == KEYWORD_MUT) return P_KEYWORD_MUT;
 	else if (t == KEYWORD_NEW) return P_KEYWORD_NEW;
 	else if (t == KEYWORD_NULL) return P_KEYWORD_NULL;
 	else if (t == KEYWORD_PROTECTED) return P_KEYWORD_PROTECTED;
@@ -326,6 +330,7 @@ TreeType translateType(TokenType t) {
 	else if (t == CLOSE_TEMPLATE) return P_CLOSE_TEMPLATE;
 	else if (t == EXTENDS) return P_EXTENDS;
 	else if (t == LEFT_ARROW) return P_LEFT_ARROW;
+	else if (t == LEFT_RIGHT_ARROW) return P_LEFT_RIGHT_ARROW;
 	else if (t == KEYWORD_IS) return P_KEYWORD_IS;
 	else if (t == ASTERISK_ASTERISK) return P_ASTERISK_ASTERISK;
 	else if (t == ASTERISK_ASTERISK_EQUALS) return P_ASTERISK_ASTERISK_EQUALS;
@@ -358,12 +363,37 @@ bool Parser::thomasParserPrecedenceSorter(ParseRule r1, ParseRule r2) {
 	return r1.precedence < r2.precedence;
 }
 
+void Parser::parse_enum_block(ParseNode* tree) {
+	// todo
+}
+
 void Parser::parse(ParseNode* tree) {
 	int from = 0;
 	int to = 0;
 	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block || (*it)->type == template_block)
-			parse(*it);
+		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
+			if ((*it)->type == curly_brace_block && it != tree->children.begin()) {
+				// check if this is an enum declaration
+				std::list<ParseNode*>::iterator it2 = it;
+				--it2;
+				if ((*it2)->type == P_IDENTIFIER && it2 != tree->children.begin()) {
+					--it2;
+					if ((*it2)->type == P_KEYWORD_ENUM) {
+						(*it)->type = enum_block;
+						parse_enum_block(*it);
+					}
+					else {
+						parse(*it);
+					}
+				}
+				else {
+					parse(*it);
+				}
+			}
+			else {
+				parse(*it);
+			}
+		}
 	}
 	for (int i=0; i<leftRight.size(); ++i) {
 		from = to;

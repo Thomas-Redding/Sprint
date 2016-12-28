@@ -21,6 +21,7 @@ Tokenizer::Tokenizer() {
 	keywords.insert("if");
 	keywords.insert("in");
 	keywords.insert("inline");
+	keywords.insert("mut");
 	keywords.insert("new");
 	keywords.insert("NULL");
 	keywords.insert("protected");
@@ -589,6 +590,8 @@ TokenType Tokenizer::categorizePunc(const std::string &str) {
 		rtn = ARROW;
 	else if (str == "<-")
 		rtn = LEFT_ARROW;
+	else if (str == "<->")
+		rtn = LEFT_RIGHT_ARROW;
 	else if (str == "**=")
 		rtn = ASTERISK_ASTERISK_EQUALS;
 	else if (str == "**")
@@ -638,6 +641,8 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 		cur.type = KEYWORD_IN;
 	else if(cur.str == "inline")
 		cur.type = KEYWORD_INLINE;
+	else if (cur.str == "mut")
+		cur.type = KEYWORD_MUT;
 	else if(cur.str == "new")
 		cur.type = KEYWORD_NEW;
 	else if(cur.str == "NULL")
@@ -725,11 +730,11 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 }
 
 const bool Tokenizer::isPunc(TokenType t) {
-	return t == PUNCTUATION || t == PERIOD || t == COLON || t == SEMI_COLON || t == PLUS || t == MINUS || t == ASTERISK || t == SLASH || t == AMPERSAND || t == POUND_SIGN || t == LESS_THAN || t == EQUALS || t == GREATER_THAN || t == COMMA || t == VERTICAL_BAR || t == PERCENT || t == EXCLAMATION_POINT || t == CARROT || t == QUESTION_MARK || t == BACK_SLASH || t == AT || t == PLUS_EQUALS || t == MINUS_EQUALS || t == SLASH_EQUALS || t == ASTERISK_EQUALS || t == AMPERSAND_EQUALS || t == CARROT_EQUALS || t == VERTICAL_BAR_EQUALS || t == PLUS_PLUS || t == MINUS_MINUS || t == SHIFT_LEFT || t == SHIFT_RIGHT || t == GREATER_THAN_EQUALS || t == LESS_THAN_EQUALS || t == SHIFT_LEFT_EQUALS || t == SHIFT_RIGHT_EQUALS || t == EXCLAMATION_POINT_EQUALS || t == EQUAL_EQUALS;
+	return t == PUNCTUATION || t == PERIOD || t == COLON || t == SEMI_COLON || t == PLUS || t == MINUS || t == ASTERISK || t == SLASH || t == AMPERSAND || t == POUND_SIGN || t == LESS_THAN || t == EQUALS || t == GREATER_THAN || t == COMMA || t == VERTICAL_BAR || t == PERCENT || t == EXCLAMATION_POINT || t == CARROT || t == QUESTION_MARK || t == BACK_SLASH || t == AT || t == PLUS_EQUALS || t == MINUS_EQUALS || t == SLASH_EQUALS || t == ASTERISK_EQUALS || t == AMPERSAND_EQUALS || t == CARROT_EQUALS || t == VERTICAL_BAR_EQUALS || t == PLUS_PLUS || t == MINUS_MINUS || t == SHIFT_LEFT || t == SHIFT_RIGHT || t == GREATER_THAN_EQUALS || t == LESS_THAN_EQUALS || t == SHIFT_LEFT_EQUALS || t == SHIFT_RIGHT_EQUALS || t == EXCLAMATION_POINT_EQUALS || t == EQUAL_EQUALS || t == LEFT_RIGHT_ARROW || t == LEFT_ARROW;
 }
 
 const bool Tokenizer::isKeyWord(TokenType t) {
-		return t == KEYWORD_ABSTRACT || t == KEYWORD_BREAK || t == KEYWORD_CASE || t == KEYWORD_DEFAULT || t == KEYWORD_CATCH || t == KEYWORD_CLASS || t == KEYWORD_NAMESPACE || t == KEYWORD_CONST || t == KEYWORD_CONTINUE || t == KEYWORD_DELETE || t == KEYWORD_DO || t == KEYWORD_ELSE || t == KEYWORD_ENUM || t == KEYWORD_FALSE || t == KEYWORD_FOR || t == KEYWORD_IF || t == KEYWORD_IN || t == KEYWORD_INLINE || t == KEYWORD_NEW || t == KEYWORD_NULL || t == KEYWORD_PROTECTED || t == KEYWORD_PRIVATE || t == KEYWORD_PTR || t == KEYWORD_REF || t == KEYWORD_RETURN || t == KEYWORD_SIZEOF || t == KEYWORD_STATIC || t == KEYWORD_STRUCT || t == KEYWORD_SWITCH || t == KEYWORD_THIS || t == KEYWORD_THROW || t == KEYWORD_TRUE || t == KEYWORD_TRY || t == KEYWORD_VIRTUAL || t == KEYWORD_WHILE || t == KEYWORD_INT || t == KEYWORD_INT8 || t == KEYWORD_INT16 || t == KEYWORD_INT32 || t == KEYWORD_IMPORT || t == KEYWORD_UINT || t == KEYWORD_UINT8 || t == KEYWORD_UINT16 || t == KEYWORD_UINT32 || t == KEYWORD_AND || t == KEYWORD_OR || t == KEYWORD_NOT || t == KEYWORD_XOR || t == KEYWORD_FLOAT || t == KEYWORD_DOUBLE || t == KEYWORD_FUNCTION || t == KEYWORD_METHOD || t == KEYWORD_PUBLIC || t == KEYWORD_VOID || t == KEYWORD_BOOL || t == KEYWORD_CHAR || t == KEYWORD_VAR || t == KEYWORD_REPEAT;
+		return t == KEYWORD_ABSTRACT || t == KEYWORD_BREAK || t == KEYWORD_CASE || t == KEYWORD_DEFAULT || t == KEYWORD_CATCH || t == KEYWORD_CLASS || t == KEYWORD_NAMESPACE || t == KEYWORD_CONST || t == KEYWORD_CONTINUE || t == KEYWORD_DELETE || t == KEYWORD_DO || t == KEYWORD_ELSE || t == KEYWORD_ENUM || t == KEYWORD_FALSE || t == KEYWORD_FOR || t == KEYWORD_IF || t == KEYWORD_IN || t == KEYWORD_INLINE || t == KEYWORD_MUT || t == KEYWORD_NEW || t == KEYWORD_NULL || t == KEYWORD_PROTECTED || t == KEYWORD_PRIVATE || t == KEYWORD_PTR || t == KEYWORD_REF || t == KEYWORD_RETURN || t == KEYWORD_SIZEOF || t == KEYWORD_STATIC || t == KEYWORD_STRUCT || t == KEYWORD_SWITCH || t == KEYWORD_THIS || t == KEYWORD_THROW || t == KEYWORD_TRUE || t == KEYWORD_TRY || t == KEYWORD_VIRTUAL || t == KEYWORD_WHILE || t == KEYWORD_INT || t == KEYWORD_INT8 || t == KEYWORD_INT16 || t == KEYWORD_INT32 || t == KEYWORD_IMPORT || t == KEYWORD_UINT || t == KEYWORD_UINT8 || t == KEYWORD_UINT16 || t == KEYWORD_UINT32 || t == KEYWORD_AND || t == KEYWORD_OR || t == KEYWORD_NOT || t == KEYWORD_XOR || t == KEYWORD_FLOAT || t == KEYWORD_DOUBLE || t == KEYWORD_FUNCTION || t == KEYWORD_METHOD || t == KEYWORD_PUBLIC || t == KEYWORD_VOID || t == KEYWORD_BOOL || t == KEYWORD_CHAR || t == KEYWORD_VAR || t == KEYWORD_REPEAT;
 }
 
 const std::string Tokenizer::tokenToString2(const Token& t) {
