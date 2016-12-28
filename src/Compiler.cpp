@@ -43,6 +43,21 @@ void Compiler::compile_tree(ParseNode* tree) {
 		return;
 	}
 
+	if (tree->type == class_implementation) {
+		compile_children(tree);
+		output += ";";
+	}
+
+	if (tree->type == class_implementation) {
+		compile_children(tree);
+		output += ";";
+	}
+
+	if (tree->type == function_declaration) {
+		compile_children(tree);
+		output += ";";
+	}
+
 	// todo
 }
 
