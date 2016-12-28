@@ -191,6 +191,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else if (t == P_KEYWORD_FUNCTION) return "P_KEYWORD_FUNCTION";
 	else if (t == enum_block) return "enum_block";
+	else if (t == function_pointer_declaration) return "function_pointer_declaration";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 

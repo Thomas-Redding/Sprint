@@ -189,6 +189,7 @@ enum TreeType {
 	catch_block,
 	colon_clause,
 	colon_type_clause,
+	function_pointer_declaration,
 	
 	block_of_statements_or_class,
 	enum_block,
