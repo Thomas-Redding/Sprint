@@ -416,6 +416,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 	if (tree->type == curly_brace_block) {
 		if (tree->children.size() == 0) {
 			// {}
+			tree->type = empty_curly_brace_block;
 		}
 		else if (tree->children.size() == 1) {
 			// either (1) a block with one statement, a set literal, or a 
@@ -446,6 +447,9 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				// {1}
 				tree->type = set_literal;
 			}
+			else if (child->type == P_COLON) {
+				tree->type = unordered_map_literal;
+			}
 			else {
 				error("Poorly formated curly-brace block", tree);
 			}
@@ -456,15 +460,15 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end()) {
 					std::list<ParseNode*>::iterator it2;
 					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
-						if (shortcuts[stuff_in_classes].find((*it)->type) == shortcuts[stuff_in_classes].end()) {
-							error("Poorly formated code block.", tree);
+						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end()) {
+							error("Poorly formated code block.", *it2);
 						}
 					}
 					if (it2 == tree->children.end()) {
 						tree->type = block_of_statements_or_class;
 					}
 					else {
-						error("Poorly formated block of statements.", tree);
+						error("Poorly formated block of statements.", *it);
 					}
 				}
 			}
@@ -474,6 +478,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 	else if (tree->type == bracket_block) {
 		if (tree->children.size() == 0) {
 			// []
+			tree->type = list_literal;
 		}
 		else if (tree->children.size() == 1) {
 			// either a list literal or a ordered map literal
@@ -500,6 +505,9 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 					tree->type = bracket_access;
 				else
 					tree->type = list_literal;
+			}
+			else if (child->type == P_COLON) {
+				tree->type = ordered_map_literal;
 			}
 			else {
 				error("Poorly formated bracket block", tree);
@@ -797,7 +805,7 @@ void Parser::doParenthesesPass(ParseNode* tree) {
 
 void Parser::error(std::string message, ParseNode* tree) {
 	// delete me before final release
-	mainTree->print();
+	// mainTree->print();
 	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
 	exit(0);
 }

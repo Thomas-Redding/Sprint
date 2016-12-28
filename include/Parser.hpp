@@ -199,6 +199,7 @@ enum TreeType {
 	bracket_access,
 	parenthesis,
 	templates,
+	empty_curly_brace_block,
 
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
