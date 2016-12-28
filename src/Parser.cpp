@@ -36,6 +36,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_KEYWORD_IF) return "P_KEYWORD_IF";
 	else if (t == P_KEYWORD_IN) return "P_KEYWORD_IN";
 	else if (t == P_KEYWORD_INLINE) return "P_KEYWORD_INLINE";
+	else if (t == P_KEYWORD_MUT) return "P_KEYWORD_MUT";
 	else if (t == P_KEYWORD_NEW) return "P_KEYWORD_NEW";
 	else if (t == P_KEYWORD_NULL) return "P_KEYWORD_NULL";
 	else if (t == P_KEYWORD_PROTECTED) return "P_KEYWORD_PROTECTED";
@@ -119,6 +120,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_CLOSE_TEMPLATE) return "P_CLOSE_TEMPLATE";
 	else if (t == P_KEYWORD_DEFAULT) return "P_KEYWORD_DEFAULT";
 	else if (t == P_LEFT_ARROW) return "P_LEFT_ARROW";
+	else if (t == P_LEFT_RIGHT_ARROW) return "P_LEFT_RIGHT_ARROW";
 	else if (t == P_KEYWORD_IS) return "P_KEYWORD_IS";
 	else if (t == curly_brace_block) return "curly_brace_block";
 	else if (t == parenthesis_block) return "parenthesis_block";
@@ -236,6 +238,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_IF) return P_KEYWORD_IF;
 	else if (t == KEYWORD_IN) return P_KEYWORD_IN;
 	else if (t == KEYWORD_INLINE) return P_KEYWORD_INLINE;
+	else if (t == KEYWORD_MUT) return P_KEYWORD_MUT;
 	else if (t == KEYWORD_NEW) return P_KEYWORD_NEW;
 	else if (t == KEYWORD_NULL) return P_KEYWORD_NULL;
 	else if (t == KEYWORD_PROTECTED) return P_KEYWORD_PROTECTED;
@@ -327,6 +330,7 @@ TreeType translateType(TokenType t) {
 	else if (t == CLOSE_TEMPLATE) return P_CLOSE_TEMPLATE;
 	else if (t == EXTENDS) return P_EXTENDS;
 	else if (t == LEFT_ARROW) return P_LEFT_ARROW;
+	else if (t == LEFT_RIGHT_ARROW) return P_LEFT_RIGHT_ARROW;
 	else if (t == KEYWORD_IS) return P_KEYWORD_IS;
 	else if (t == ASTERISK_ASTERISK) return P_ASTERISK_ASTERISK;
 	else if (t == ASTERISK_ASTERISK_EQUALS) return P_ASTERISK_ASTERISK_EQUALS;
