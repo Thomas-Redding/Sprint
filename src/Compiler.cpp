@@ -95,6 +95,7 @@ void Compiler::compile_tree(ParseNode* tree) {
 		output += "<";
 		compile_children(tree);
 		output += ">";
+		return;
 	}
 
 	std::cout << treeTypeToString(tree->type) << "\n";

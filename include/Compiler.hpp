@@ -81,7 +81,7 @@ private:
 		{P_KEYWORD_PUBLIC, "public"},
 		{P_KEYWORD_VOID, "void"},
 		{P_PERIOD, "."},
-		{P_COLON, ","},
+		{P_COLON, ":"},
 		{P_SEMI_COLON, ";"},
 		{P_PLUS, "+"},
 		{P_MINUS, "-"},
@@ -148,7 +148,7 @@ private:
 		mult_clause, plus_clause, shift_clause,
 		inequality_clause, equality_clause, bitwise_and_clause,
 		bitwise_xor_clause, bitwise_or_clause, setting_clause,
-		ternary_clause, comma_clause, statement
+		ternary_clause, comma_clause, statement, colon_clause
 	};
 
 	std::set<TreeType> vanilla_curly_brace_block = {
