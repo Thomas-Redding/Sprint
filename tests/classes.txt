@@ -30,3 +30,13 @@ class foo<T, int S> : bar<T, int S> {
 namespace foo {
 	bar baz;
 };
+
+class foo;
+
+class foo : bar;
+
+class foo<T> : bar<T>;
+
+class foo<int T> : bar<int T>;
+
+class foo<T, int S> : bar<T, int S>;

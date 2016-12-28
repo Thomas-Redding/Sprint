@@ -15,3 +15,11 @@ foo<int T>(bar baz) -> qux<T> {
 foo<T, int S>(bar baz) -> qux<T, int S> {
 	x y = baz;
 }
+
+foo(bar baz) -> qux ;
+
+foo<T>(bar baz) -> qux<T> ;
+
+foo<int T>(bar baz) -> qux<T> ;
+
+foo<T, int S>(bar baz) -> qux<T, int S> ;
