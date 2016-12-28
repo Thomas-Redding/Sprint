@@ -256,6 +256,13 @@ struct ParseNode {
 		    (*it)->print(depth+1);
 	}
 
+	ParseNode* deep_copy() {
+		ParseNode *rtn = new ParseNode(type, token.lineNum, token.charNum);
+		for (std::list<ParseNode*>::iterator it = children.begin(); it != children.end(); ++it)
+			rtn->children.push_back((*it)->deep_copy());
+		return rtn;
+	}
+
 	uint64_t to_hash() {
 		uint64_t rtn = 0;
 		rtn += 101 * int(type);
