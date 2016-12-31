@@ -7,14 +7,12 @@ ParserVerifier::ParserVerifier(Parser *par) {
 	
 	keywords_are_in_structures.insert({P_KEYWORD_CATCH, std::set<int>({catch_block})});
 	keywords_are_in_structures.insert({P_KEYWORD_CLASS, std::set<int>({class_implementation})});
-	keywords_are_in_structures.insert({P_KEYWORD_DELETE, std::set<int>({unary2_clause})});
 	keywords_are_in_structures.insert({P_KEYWORD_DO, std::set<int>({do_while_loop})});
 	keywords_are_in_structures.insert({P_KEYWORD_ELSE, std::set<int>({if_else_statement})});
 	keywords_are_in_structures.insert({P_KEYWORD_ENUM, std::set<int>({enum_implementation})});
 	keywords_are_in_structures.insert({P_KEYWORD_FOR, std::set<int>({for_loop})});
 	keywords_are_in_structures.insert({P_KEYWORD_IF, std::set<int>({if_statement, if_else_statement})});
 	keywords_are_in_structures.insert({P_KEYWORD_NAMESPACE, std::set<int>({namespace_implementation})});
-	keywords_are_in_structures.insert({P_KEYWORD_NEW, std::set<int>({unary2_clause})});
 	keywords_are_in_structures.insert({P_KEYWORD_SWITCH, std::set<int>({switch_statement})});
 	keywords_are_in_structures.insert({P_KEYWORD_TRY, std::set<int>({try_block})});
 	keywords_are_in_structures.insert({P_KEYWORD_WHILE, std::set<int>({do_while_loop})});

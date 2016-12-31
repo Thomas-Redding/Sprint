@@ -18,6 +18,7 @@
 // };
 
 class Compiler {
+	/*
 public:
 	Compiler();
 	std::string compile(ParseNode* tree);
@@ -156,6 +157,7 @@ private:
 		enum_block,
 		bracket_access
 	};
+*/
 };
 
 #endif

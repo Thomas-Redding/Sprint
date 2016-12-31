@@ -53,7 +53,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_KEYWORD_CLASS,
 		P_IDENTIFIER,
 		templates,
-		P_EXTENDS,
+		P_COLON,
 		P_IDENTIFIER,
 		templates,
 		block_of_statements_or_class
@@ -65,13 +65,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	// foo<...>(...) ->
 	listOfRules.push_back(ParseRule(-10, {}, {}, { function_name_candidate, template_block, parenthesis_block, P_ARROW }, function_head));
 	// virtual foo(...) ->f
-	listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_VIRTUAL, function_name_candidate, parenthesis_block, P_ARROW }, function_head));
-	// virtual foo<...>(...) ->
-	listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_VIRTUAL, function_name_candidate, template_block, parenthesis_block, P_ARROW }, function_head));
-	// abstract foo(...) ->f
-	listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_VIRTUAL, function_name_candidate, parenthesis_block, P_ARROW }, function_head));
-	// abstract foo<...>(...) ->
-	listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_VIRTUAL, function_name_candidate, template_block, parenthesis_block, P_ARROW }, function_head));
+
 
 	// foo(...) ->
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -126,7 +120,6 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_MINUS_MINUS, unary2_value}, unary2_clause));												// --x
 	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_TILDE, unary2_value}, unary2_clause));														// ~x
 	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
-	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_KEYWORD_NEW, unary2_value}, unary2_clause));												// new x
 
 	// true
 	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, P_ASTERISK, mult_value}, mult_clause));											// x * y
