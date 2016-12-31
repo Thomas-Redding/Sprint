@@ -139,8 +139,10 @@ enum TreeType {
 	parenthesis_block,
 	bracket_block,
 	template_block,
+
 	unary1_clause,
 	unary2_clause,
+	exp_clause,
 	mult_clause,
 	plus_clause,
 	shift_clause,
@@ -149,12 +151,17 @@ enum TreeType {
 	bitwise_and_clause,
 	bitwise_xor_clause,
 	bitwise_or_clause,
-	setting_clause,
+	logical_and_clause,
+	logical_xor_clause,
+	logical_or_clause,
 	ternary_clause,
+	colon_clause,
+	colon_type_clause,
 	comma_clause,
-	statement,
 	colon_list,
-
+	setting_clause,
+	statement,
+	
 	enum_implementation,
 	namespace_implementation,
 	class_declaration,
@@ -163,6 +170,7 @@ enum TreeType {
 	function_implementation,
 	function_declaration,
 	function_head, // e.g. "foo(...) ->" or "foo<...>(...) ->"
+
 	for_loop,
 	while_loop,
 	do_while_loop,
@@ -176,9 +184,6 @@ enum TreeType {
 	variable_dec,
 	try_block,
 	catch_block,
-	colon_clause,
-	colon_type_clause,
-	function_pointer_declaration,
 	
 	block_of_statements_or_class,
 	enum_block,
@@ -191,6 +196,7 @@ enum TreeType {
 	templates,
 	empty_curly_brace_block,
 
+	function_pointer_declaration,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	raw_type_or_void,
@@ -200,12 +206,16 @@ enum TreeType {
 	unary2_value,
 	plus_value,
 	mult_value,
+	exp_value,
 	shift_value,
 	inequality_value,
 	equality_value,
 	bitwise_and_value,
 	bitwise_xor_value,
 	bitwise_or_value,
+	logical_and_value,
+	logical_xor_value,
+	logical_or_value,
 	ternary_value,
 	setting_value,
 	any_integer_type,
@@ -319,26 +329,27 @@ public:
 		leftRight = lr;
 
 		// shortcuts[value] = {P_IDENTIFIER};
-		shortcuts[raw_type] =         {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_KEYWORD_VAR, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal};
-		shortcuts[raw_type_or_void] = {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_KEYWORD_VAR, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal, P_KEYWORD_VOID};
+		shortcuts[raw_type] =          {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_KEYWORD_VAR, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal};
+		shortcuts[raw_type_or_void] =  {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_KEYWORD_VAR, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal, P_KEYWORD_VOID};
 		// shortcuts[composite_type] = {};
-		shortcuts[int_type] = {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32};
+		shortcuts[int_type] =          {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32};
 		shortcuts[unary1_value] =      {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause};
-		shortcuts[unary2_value] =      {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause};
-		shortcuts[mult_value] =        {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause};
-		shortcuts[plus_value] =        {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause};
-		shortcuts[shift_value] =       {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause};
-		shortcuts[inequality_value] =  {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause};
-		shortcuts[equality_value] =    {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause};
-		shortcuts[bitwise_and_value] = {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause};
-		shortcuts[bitwise_xor_value] = {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause};
-		shortcuts[bitwise_or_value] =  {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause};
-		shortcuts[ternary_value] =     {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause};
-		shortcuts[setting_value] =     {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause};
-		shortcuts[comma_value] =       {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause, comma_clause};
-		shortcuts[any_integer_type] = {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL};
+		shortcuts[unary2_value] =      {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause};
+		shortcuts[exp_value] =         {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause};
+		shortcuts[mult_value] =        {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause};
+		shortcuts[plus_value] =        {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause};
+		shortcuts[shift_value] =       {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause};
+		shortcuts[inequality_value] =  {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause};
+		shortcuts[equality_value] =    {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause};
+		shortcuts[bitwise_and_value] = {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause};
+		shortcuts[bitwise_xor_value] = {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause};
+		shortcuts[bitwise_or_value] =  {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause};
+		shortcuts[ternary_value] =     {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause};
+		shortcuts[setting_value] =     {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause};
+		shortcuts[comma_value] =       {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause, comma_clause};
+		shortcuts[any_integer_type] =  {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL};
 		shortcuts[structure] =              {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements_or_class};
-		shortcuts[stuff_in_classes] = {variable_dec, class_declaration, class_implementation, function_declaration, function_implementation};
+		shortcuts[stuff_in_classes] =  {variable_dec, class_declaration, class_implementation, function_declaration, function_implementation};
 		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements_or_class, statement, variable_dec, return_statement, case_statement, continue_statement, break_statement};
 		shortcuts[op] = {P_LESS_THAN, P_LESS_THAN_EQUALS, P_GREATER_THAN, P_GREATER_THAN_EQUALS, P_EQUALS, P_EQUAL_EQUALS,
 			P_POSITIVE, P_MINUS, P_SLASH, P_ASTERISK, P_PLUS_PLUS, P_MINUS_MINUS, P_SHIFT_RIGHT, P_SHIFT_LEFT, P_PERCENT,

@@ -101,6 +101,12 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == bitwise_xor_clause) return "bitwise_xor_clause";
 	else if (t == bitwise_or_value) return "bitwise_or_value";
 	else if (t == bitwise_or_clause) return "bitwise_or_clause";
+	else if (t == logical_and_value) return "logical_and_value";
+	else if (t == logical_xor_value) return "logical_xor_value";
+	else if (t == logical_or_value) return "logical_or_value";
+	else if (t == logical_and_clause) return "logical_and_clause";
+	else if (t == logical_xor_clause) return "logical_xor_clause";
+	else if (t == logical_or_clause) return "logical_or_clause";
 	else if (t == setting_value) return "setting_value";
 	else if (t == setting_clause) return "setting_clause";
 	else if (t == ternary_clause) return "ternary_clause";

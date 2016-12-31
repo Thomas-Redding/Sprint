@@ -3,8 +3,8 @@
 void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listOfRules) {
 	leftToRight= {
 		// TODO: document what 'true' and 'false' mean... or better yet, use an enum
-		//-10, -5 , 0   , 10   , 20  , 30  , 40  , 50  , 60  , 70  , 80  , 90  , 100 , 105 , 107  , 110  , 115  , 120  , 130
-		true, true, true, false, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
+		//-10, -5 , 0   , 10   , 15  , 20  , 30  , 40  , 50  , 60  , 70  , 80  , 90  , 92  , 95  ,   98, 100 , 105 , 107  , 110  , 115  , 120  , 130
+		true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
 	};
 
 	// class implementations
@@ -121,6 +121,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_TILDE, unary2_value}, unary2_clause));														// ~x
 	listOfRules.push_back(ParseRule( 10, {}, {function_declaration}, {P_KEYWORD_NOT, unary2_value}, unary2_clause));												// not x
 
+	listOfRules.push_back(ParseRule( 15, {}, {}, {exp_value, P_ASTERISK_ASTERISK, exp_value}, exp_clause));											// x ** y
+
 	// true
 	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, P_ASTERISK, mult_value}, mult_clause));											// x * y
 	listOfRules.push_back(ParseRule( 20, {}, {}, {mult_value, P_SLASH, mult_value}, mult_clause));											// x / y
@@ -143,11 +145,15 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, P_EXCLAMATION_POINT_EQUALS, equality_value}, equality_clause));				// x != y
 	listOfRules.push_back(ParseRule( 60, {}, {}, {equality_value, P_LEFT_RIGHT_ARROW, equality_value}, equality_clause));					// x === y
 
-	listOfRules.push_back(ParseRule( 70, {}, {}, {bitwise_and_value, P_KEYWORD_AND, bitwise_and_value}, bitwise_and_clause));					// x & y
+	listOfRules.push_back(ParseRule( 70, {}, {}, {bitwise_and_value, P_AMPERSAND, bitwise_and_value}, bitwise_and_clause));					// x & y
 
-	listOfRules.push_back(ParseRule( 80, {}, {}, {bitwise_xor_value, P_KEYWORD_XOR, bitwise_xor_value}, bitwise_xor_clause));					// x ^ y
+	listOfRules.push_back(ParseRule( 80, {}, {}, {bitwise_xor_value, P_CARROT, bitwise_xor_value}, bitwise_xor_clause));					// x ^ y
 
-	listOfRules.push_back(ParseRule( 90, {}, {}, {bitwise_or_value, P_KEYWORD_OR, bitwise_or_value}, bitwise_or_clause));						// x | y
+	listOfRules.push_back(ParseRule( 90, {}, {}, {bitwise_or_value, P_VERTICAL_BAR, bitwise_or_value}, bitwise_or_clause));						// x | y
+
+	listOfRules.push_back(ParseRule( 92, {}, {}, {logical_and_value, P_VERTICAL_BAR, logical_and_value}, logical_and_clause));						// x and y
+	listOfRules.push_back(ParseRule( 95, {}, {}, {logical_xor_value, P_VERTICAL_BAR, logical_xor_value}, logical_xor_clause));						// x xor y
+	listOfRules.push_back(ParseRule( 98, {}, {}, {logical_or_value, P_VERTICAL_BAR, logical_or_value}, logical_or_clause));						// x or y
 
 	listOfRules.push_back(ParseRule(100, {}, {}, {ternary_value, P_QUESTION_MARK, ternary_value, P_COLON, ternary_value}, ternary_clause));	// x ? y : z
 
