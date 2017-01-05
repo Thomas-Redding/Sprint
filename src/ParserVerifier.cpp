@@ -81,18 +81,6 @@ void ParserVerifier::verify_children_recursively(ParseNode* tree) {
 	ancestors.pop_back();
 }
 
-/*
- * returns nullptr if input is proper
- * otherwise returns the first improper token
- */
-
-void ParserVerifier::verify_block_contains_only_statements(ParseNode* tree) {
-	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-		if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end())
-			error("block contains invalid line", *it);
-	}
-}
-
 void ParserVerifier::error(std::string message, ParseNode* tree) {
 	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
 	exit(0);
