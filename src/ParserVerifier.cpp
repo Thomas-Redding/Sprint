@@ -27,6 +27,7 @@ ParserVerifier::ParserVerifier(Parser *par) {
 	keywords_are_eventually_in_structures.insert({P_KEYWORD_CONTINUE, std::set<int>({if_statement, if_else_statement})});
 	keywords_are_eventually_in_structures.insert({P_KEYWORD_DEFAULT, std::set<int>({switch_statement})});
 	keywords_are_eventually_in_structures.insert({P_KEYWORD_RETURN, std::set<int>({function_implementation})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_MUT, std::set<int>({variable_dec, function_head, templates})});
 
 	structures_with_blocks_of_statements = {
 		function_implementation,
@@ -69,6 +70,11 @@ void ParserVerifier::verify(ParseNode* tree) {
 				error("invalid ancestor", tree);
 			}
 			has_been_verified = true;
+		}
+	}
+
+	if (!has_been_verified) {
+		if (tree->type == P_KEYWORD_MUT) {
 		}
 	}
 };
