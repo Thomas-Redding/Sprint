@@ -92,6 +92,14 @@ void Compiler::compile_tree(ParseNode* tree) {
 		return;
 	}
 
+	if (tree->type == P_STRING_LITERAL) {
+		output += "\"" + tree->token.str + "\"";
+	}
+
+	if (tree->type == P_INTEGER_LITERAL || tree->type == P_FLOAT_LITERAL) {
+		output += tree->token.str;
+	}
+
 	std::cout << treeTypeToString(tree->type) << "\n";
 }
 
