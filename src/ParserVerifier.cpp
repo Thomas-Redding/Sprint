@@ -85,45 +85,6 @@ void ParserVerifier::verify_children_recursively(ParseNode* tree) {
  * returns nullptr if input is proper
  * otherwise returns the first improper token
  */
-ParseNode* ParserVerifier::is_proper_map(ParseNode* tree) {
-	std::list<ParseNode*>::iterator it = tree->children.begin();
-	if ((*it)->type != colon_clause)
-		return *it;
-	++it;
-	++it;
-	if ((*it)->type == comma_clause)
-		return is_proper_map(*it);
-	else if ((*it)->type == colon_clause)
-		return nullptr; // end of literal
-	else
-		return tree;
-}
-
-/*
- * returns nullptr if input is proper
- * otherwise returns the first improper token
- */
-ParseNode* ParserVerifier::is_proper_set_or_list(ParseNode* tree) {
-	std::cout << "\n\n";
-	tree->print();
-	std::cout << "\n\n";
-	std::list<ParseNode*>::iterator it = tree->children.begin();
-	if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
-		return *it;
-	++it;
-	++it;
-	if ((*it)->type == comma_clause)
-		return is_proper_set_or_list(*it);
-	else if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
-		return tree; // something illegal
-	else
-		return nullptr; // end of literal
-}
-
-/*
- * returns nullptr if input is proper
- * otherwise returns the first improper token
- */
 
 void ParserVerifier::verify_block_contains_only_statements(ParseNode* tree) {
 	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
