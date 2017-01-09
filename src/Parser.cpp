@@ -310,6 +310,8 @@ void Parser::parse_enum_block(ParseNode* tree) {
 void Parser::parse(ParseNode* tree) {
 	int from = 0;
 	int to = 0;
+	if (tree->children.size() == 0)
+		return;
 	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
 			if ((*it)->type == curly_brace_block && it != tree->children.begin()) {
@@ -348,6 +350,7 @@ void Parser::parse(ParseNode* tree) {
 		else
 			parseRightLeft(tree, from, to);
 	}
+
 	if (tree->type != general)
 		classify_parsed_block(tree);
 }

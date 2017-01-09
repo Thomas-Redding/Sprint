@@ -251,7 +251,7 @@ struct ParseNode {
 		std::string indent = "";
 		for (int i = 0; i < depth; i++)
 			indent += "   ";
-		std::cout << indent << treeTypeToString(type) << " : " << token.str << " (" << token.lineNum << "," << token.charNum << ")\n";
+		treeTypeToString(type);
 		for (std::list<ParseNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
 		    (*it)->print(depth+1);
 	}
