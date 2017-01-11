@@ -1,5 +1,4 @@
-#ifndef PARSEVERIFIER_HPP
-#define PARSEVERIFIER_HPP
+#pragma once
 
 
 #include <list>
@@ -24,5 +23,3 @@ private:
 	ParseNode* is_proper_set_or_list(ParseNode* tree);
 	void verify_children_recursively(ParseNode* tree);
 };
-
-#endif

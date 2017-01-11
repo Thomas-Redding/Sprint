@@ -12,7 +12,12 @@
 #include "../include/ParserVerifier.hpp"
 #include "../include/Sweetener.hpp"
 #include "../include/Tokenizer.hpp"
+// #include "../include/ScopeVerifier.hpp"
 #include "ParseRules.cpp"
+
+bool is_int(TokenType type) {
+	return type == KEYWORD_INT || type == KEYWORD_INT8 || type == KEYWORD_INT16 || type == KEYWORD_INT32 || type == KEYWORD_UINT || type == KEYWORD_UINT8 || type == KEYWORD_UINT16 || type == KEYWORD_UINT32 || type == KEYWORD_UINT || type == KEYWORD_BOOL || type == KEYWORD_CHAR;
+}
 
 int main(int argc, const char * argv[]) {
 
@@ -90,20 +95,26 @@ int main(int argc, const char * argv[]) {
 	parse_tree->print();
 	std::cout << "\n\nhash: " << parse_tree->to_hash() << "\n\n";
 
-	auto start_verification = std::chrono::high_resolution_clock::now();
-	ParserVerifier pv(&foo);
-	pv.verify(parse_tree);
+	// auto start_verification = std::chrono::high_resolution_clock::now();
+	// ParserVerifier pv(&foo);
+	// pv.verify(parse_tree);
 	auto end_verification = std::chrono::high_resolution_clock::now();
 
-	Compiler comp;
-	comp.compile(parse_tree);
+	// auto start_duplication = std::chrono::high_resolution_clock::now();
+	// ScopeVerifier scoper;
+	// scoper.verify(parse_tree);
+	// auto end_duplication = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Read Files : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / tokenizedList.size() << " ns per token)\n";
-	std::cout << "Tokenizing : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / tokenizedList.size() << " ns per token)\n";
+	// Compiler comp;
+	// comp.compile(parse_tree);
+
+	// std::cout << "Read Files          : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_open_file - start_open_file).count() / tokenizedList.size() << " ns per token)" << std::endl;
+	// std::cout << "Tokenizing          : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_tokenize - start_tokenize).count() / tokenizedList.size() << " ns per token)" << std::endl;
 	// std::cout << "List->Vect : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_vectorization - start_vectorization).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_vectorization - start_vectorization).count() / tokenizedList.size() << " ns per token)\n";
-	std::cout << "Parse Rules: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / tokenizedList.size() << " ns per token)\n";
-	std::cout << "Parser     : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / tokenizedList.size() << " ns per token)\n";
-	std::cout << "Parse Ver. : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / tokenizedList.size() << " ns per token)\n";
-	std::cout << "Total Time : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / tokenizedList.size() << " ns per token)\n";
+	// std::cout << "Parse Rules         : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / tokenizedList.size() << " ns per token)" << std::endl;
+	// std::cout << "Parser              : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / tokenizedList.size() << " ns per token)\n";
+	// std::cout << "Parse Ver.          : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / tokenizedList.size() << " ns per token)" << std::endl;;
+	// std::cout << "Template Duplication: " << std::chrono::duration_cast<std::chrono::nanoseconds>(start_duplication - end_duplication).count() / 1000 << " µs" << std::endl;
+	std::cout << "Total Time          : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / tokenizedList.size() << " ns per token)" << std::endl;;
 	return 0;
 }

@@ -1,5 +1,4 @@
-#ifndef COMPILER_HPP
-#define COMPILER_HPP
+#pragma once
 
 #include <map>
 #include <set>
@@ -156,5 +155,3 @@ private:
 		bracket_access
 	};
 };
-
-#endif

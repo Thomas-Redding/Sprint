@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <unordered_set>
 #include <queue>

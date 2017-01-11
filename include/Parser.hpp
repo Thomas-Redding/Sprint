@@ -1,5 +1,4 @@
-#ifndef PARSER_HPP
-#define PARSER_HPP
+#pragma once
 
 #include <assert.h>
 #include <iostream>
@@ -244,10 +243,10 @@ struct ParseNode {
 	bool is_leaf = false;
 	std::list<Token>::iterator last_token;
 	ParseNode(std::list<Token>::iterator it, std::list<Token>::iterator last);
-	void print() {
+	void print() const {
 		print(0);
 	}
-	void print(int depth) {
+	void print(int depth) const {
 		std::string indent = "";
 		for (int i = 0; i < depth; i++)
 			indent += "   ";
@@ -364,5 +363,3 @@ public:
 	ParseNode* getParseTree(std::list<Token> *tokens);
 	void parse(ParseNode *tree);
 };
-
-#endif

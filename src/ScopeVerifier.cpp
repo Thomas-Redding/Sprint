@@ -5,22 +5,20 @@
 
 #include "../include/ScopeVerifier.hpp"
 
-void ScopeVerifier::verify_scope(ParseNode* root) {
+struct Brace {
+	uint64_t id;
+	uint64_t static number_of_braces;
+};
 
-	/**************************************************
-		1) find global variables/classes/functions
-	**************************************************/
-	fringes.clear();
-	std::map<std::string, TypeDeclaration> globalTypes;
-	std::map<std::string, TypeInstantiation> globalVariables;
+struct Identifier {
+	const char* name;
+};
 
-	// TODO:
-
-	types.push_back(globalTypes);
-	variables.push_back(globalVariables);
+void ScopeVerifier::verify(ParseNode* root) {
+	// TODO
 }
 
-void ScopeVerifier::scope_error(std::string message) {
+void ScopeVerifier::error(std::string message) {
 	std::cout << message << std::endl;
 	exit(0);
 }
