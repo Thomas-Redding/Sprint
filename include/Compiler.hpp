@@ -25,8 +25,8 @@ private:
 	void compile_tree(ParseNode* tree);
 	void compile_children(ParseNode* tree);
 	void error(std::string message, ParseNode* tree);
+	ParseNode* at(std::list<ParseNode*> lst, int index);
 	std::map<TreeType, std::string> simple_strings = {
-		{P_KEYWORD_ABSTRACT, "abstract"},
 		{P_KEYWORD_BREAK, "break"},
 		{P_KEYWORD_DEFAULT, "default"},
 		{P_KEYWORD_CASE, "case"},
@@ -35,7 +35,6 @@ private:
 		{P_KEYWORD_NAMESPACE, "namespace"},
 		{P_KEYWORD_CONST, "const"},
 		{P_KEYWORD_CONTINUE, "continue"},
-		{P_KEYWORD_DELETE, "delete"},
 		{P_KEYWORD_DO, "do"},
 		{P_KEYWORD_ELSE, "else"},
 		{P_KEYWORD_ENUM, "enum"},
@@ -43,23 +42,16 @@ private:
 		{P_KEYWORD_FOR, "for"},
 		{P_KEYWORD_IF, "if"},
 		{P_KEYWORD_IN, "in"},
-		{P_KEYWORD_INLINE, "inline"},
-		{P_KEYWORD_NEW, "new"},
 		{P_KEYWORD_NULL, "null"},
-		{P_KEYWORD_PROTECTED, "protected"},
 		{P_KEYWORD_PRIVATE, "private"},
-		{P_KEYWORD_PTR, "ptr"},
-		{P_KEYWORD_REF, "ref"},
 		{P_KEYWORD_RETURN, "return"},
 		{P_KEYWORD_SIZEOF, "sizeof"},
 		{P_KEYWORD_STATIC, "static"},
-		{P_KEYWORD_STRUCT, "struct"},
 		{P_KEYWORD_SWITCH, "switch"},
 		{P_KEYWORD_THIS, "this"},
 		{P_KEYWORD_THROW, "throw"},
 		{P_KEYWORD_TRUE, "true"},
 		{P_KEYWORD_TRY, "try"},
-		{P_KEYWORD_VIRTUAL, "virtual"},
 		{P_KEYWORD_WHILE, "while"},
 		{P_KEYWORD_INT, "int64_t"},
 		{P_KEYWORD_INT8, "int8_t"},
@@ -79,7 +71,7 @@ private:
 		{P_KEYWORD_PUBLIC, "public"},
 		{P_KEYWORD_VOID, "void"},
 		{P_PERIOD, "."},
-		{P_COLON, ","},
+		{P_COLON, ":"},
 		{P_SEMI_COLON, ";"},
 		{P_PLUS, "+"},
 		{P_MINUS, "-"},
@@ -124,13 +116,10 @@ private:
 		{P_EXCLAMATION_POINT_EQUAL_EQUALS, "!=="},
 		{P_POSITIVE, "+"},
 		{P_NEGATIVE, "-"},
-		{P_PTR, "*"},
 		{P_KEYWORD_BOOL, "bool"},
 		{P_KEYWORD_CHAR, "char"},
 		{P_KEYWORD_VAR, "var"},
-		{P_KEYWORD_FUNCTION, "function"},
 		{P_KEYWORD_REPEAT, "repeat"},
-		{P_EXTENDS, "extends"},
 		{P_LEFT_ARROW, "<-"},
 		{P_KEYWORD_IS, "is"},
 		{P_ASTERISK_ASTERISK, "**"},
@@ -146,7 +135,7 @@ private:
 		mult_clause, plus_clause, shift_clause,
 		inequality_clause, equality_clause, bitwise_and_clause,
 		bitwise_xor_clause, bitwise_or_clause, setting_clause,
-		ternary_clause, comma_clause, statement
+		ternary_clause, comma_clause, statement, colon_clause
 	};
 
 	std::set<TreeType> vanilla_curly_brace_block = {

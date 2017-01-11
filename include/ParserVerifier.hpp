@@ -18,8 +18,5 @@ private:
 
 	std::list<ParseNode*> ancestors;
 	void error(std::string message, ParseNode* tree);
-	void verify_block_contains_only_statements(ParseNode* tree);
-	ParseNode* is_proper_map(ParseNode* tree);
-	ParseNode* is_proper_set_or_list(ParseNode* tree);
 	void verify_children_recursively(ParseNode* tree);
 };

@@ -43,48 +43,75 @@ void Compiler::compile_tree(ParseNode* tree) {
 		return;
 	}
 
-	if (tree->type == class_implementation) {
-		compile_children(tree);
-		output += ";";
-		return;
-	}
-
-	if (tree->type == class_implementation) {
+	if (tree->type == class_implementation || tree->type == enum_implementation || tree->type == namespace_implementation) {
 		compile_children(tree);
 		output += ";";
 		return;
 	}
 
 	if (tree->type == function_implementation) {
-		ParseNode* func_head = tree->children.front();
-		ParseNode* block = tree->children.back();
-		int parts_of_return = tree->children.size() - 2;
-		std::list<ParseNode*>::iterator it = tree->children.begin();
-		++it;
-		for (it = it; it != tree->children.end(); ++it) {
-			compile_tree(*it);
-			--parts_of_return;
-			if (parts_of_return <= 0)
-				break;
+		ParseNode* head = tree->children.front();
+		ParseNode* head_name = head->children.front();
+		ParseNode* head_parentheses = nullptr;
+		ParseNode* head_template = nullptr;
+		if (head->children.size() == 3) {
+			head_parentheses = at(head->children, 1);
 		}
-		output += " ";
-		compile_tree(func_head);
+		else if (head->children.size() == 4) {
+			head_template = at(head->children, 1);
+			head_parentheses = at(head->children, 2);
+		}
+
+		ParseNode* block = tree->children.back();
+
+		ParseNode* return_type = at(tree->children, 1);
+		ParseNode* return_template = nullptr;
+		if (tree->children.size() == 4) {
+			return_template = at(tree->children, 2);
+		}
+
+		if (head_template != nullptr) {
+			output += "\ntemplate ";
+			compile_tree(head_template);
+			output += "\n";
+		}
+		compile_tree(return_type);
+		if (return_template != nullptr) {
+			compile_tree(return_template);
+		}
+		compile_tree(head_name);
+		compile_tree(head_parentheses);
 		compile_tree(block);
 		return;
 	}
 
-	if (tree->type == function_head) {
-		// compile everything except the '->'
-		int counter = tree->children.size();
-		for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-			--counter;
-			if (counter == 0)
-				return;
-			compile_tree(*it);			
-		}
+	if (tree->type == templates) {
+		output += "<";
+		compile_children(tree);
+		output += ">";
+		return;
 	}
 
-	// todo
+	if (tree->type == P_STRING_LITERAL) {
+		output += "\"" + tree->token.str + "\"";
+	}
+
+	if (tree->type == P_INTEGER_LITERAL || tree->type == P_FLOAT_LITERAL) {
+		output += tree->token.str;
+	}
+
+	std::cout << treeTypeToString(tree->type) << "\n";
+}
+
+ParseNode* Compiler::at(std::list<ParseNode*> lst, int index) {
+	if (index >= lst.size())
+		return nullptr;
+	for (std::list<ParseNode*>::iterator it = lst.begin(); it != lst.end(); ++it) {
+		--index;
+		if (index < 0)
+			return *it;
+	}
+	return nullptr;
 }
 
 void Compiler::compile_children(ParseNode* tree) {

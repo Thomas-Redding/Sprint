@@ -20,7 +20,6 @@ bool is_int(TokenType type) {
 }
 
 int main(int argc, const char * argv[]) {
-
 	auto timeStart = std::chrono::high_resolution_clock::now();
 
 	if (argc != 2) {

@@ -7,14 +7,12 @@ ParserVerifier::ParserVerifier(Parser *par) {
 	
 	keywords_are_in_structures.insert({P_KEYWORD_CATCH, std::set<int>({catch_block})});
 	keywords_are_in_structures.insert({P_KEYWORD_CLASS, std::set<int>({class_implementation})});
-	keywords_are_in_structures.insert({P_KEYWORD_DELETE, std::set<int>({unary2_clause})});
 	keywords_are_in_structures.insert({P_KEYWORD_DO, std::set<int>({do_while_loop})});
 	keywords_are_in_structures.insert({P_KEYWORD_ELSE, std::set<int>({if_else_statement})});
 	keywords_are_in_structures.insert({P_KEYWORD_ENUM, std::set<int>({enum_implementation})});
 	keywords_are_in_structures.insert({P_KEYWORD_FOR, std::set<int>({for_loop})});
 	keywords_are_in_structures.insert({P_KEYWORD_IF, std::set<int>({if_statement, if_else_statement})});
 	keywords_are_in_structures.insert({P_KEYWORD_NAMESPACE, std::set<int>({namespace_implementation})});
-	keywords_are_in_structures.insert({P_KEYWORD_NEW, std::set<int>({unary2_clause})});
 	keywords_are_in_structures.insert({P_KEYWORD_SWITCH, std::set<int>({switch_statement})});
 	keywords_are_in_structures.insert({P_KEYWORD_TRY, std::set<int>({try_block})});
 	keywords_are_in_structures.insert({P_KEYWORD_WHILE, std::set<int>({do_while_loop})});
@@ -29,6 +27,7 @@ ParserVerifier::ParserVerifier(Parser *par) {
 	keywords_are_eventually_in_structures.insert({P_KEYWORD_CONTINUE, std::set<int>({if_statement, if_else_statement})});
 	keywords_are_eventually_in_structures.insert({P_KEYWORD_DEFAULT, std::set<int>({switch_statement})});
 	keywords_are_eventually_in_structures.insert({P_KEYWORD_RETURN, std::set<int>({function_implementation})});
+	keywords_are_eventually_in_structures.insert({P_KEYWORD_MUT, std::set<int>({variable_dec, function_head, templates})});
 
 	structures_with_blocks_of_statements = {
 		function_implementation,
@@ -73,6 +72,11 @@ void ParserVerifier::verify(ParseNode* tree) {
 			has_been_verified = true;
 		}
 	}
+
+	if (!has_been_verified) {
+		if (tree->type == P_KEYWORD_MUT) {
+		}
+	}
 };
 
 void ParserVerifier::verify_children_recursively(ParseNode* tree) {
@@ -81,57 +85,6 @@ void ParserVerifier::verify_children_recursively(ParseNode* tree) {
 		verify(*it);
 	}
 	ancestors.pop_back();
-}
-
-/*
- * returns nullptr if input is proper
- * otherwise returns the first improper token
- */
-ParseNode* ParserVerifier::is_proper_map(ParseNode* tree) {
-	std::list<ParseNode*>::iterator it = tree->children.begin();
-	if ((*it)->type != colon_clause)
-		return *it;
-	++it;
-	++it;
-	if ((*it)->type == comma_clause)
-		return is_proper_map(*it);
-	else if ((*it)->type == colon_clause)
-		return nullptr; // end of literal
-	else
-		return tree;
-}
-
-/*
- * returns nullptr if input is proper
- * otherwise returns the first improper token
- */
-ParseNode* ParserVerifier::is_proper_set_or_list(ParseNode* tree) {
-	std::cout << "\n\n";
-	tree->print();
-	std::cout << "\n\n";
-	std::list<ParseNode*>::iterator it = tree->children.begin();
-	if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
-		return *it;
-	++it;
-	++it;
-	if ((*it)->type == comma_clause)
-		return is_proper_set_or_list(*it);
-	else if (parser->shortcuts[comma_value].find((*it)->type) == parser->shortcuts[comma_value].end())
-		return tree; // something illegal
-	else
-		return nullptr; // end of literal
-}
-
-/*
- * returns nullptr if input is proper
- * otherwise returns the first improper token
- */
-
-void ParserVerifier::verify_block_contains_only_statements(ParseNode* tree) {
-	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
-		if (parser->shortcuts[structure_or_statement].find((*it)->type) == parser->shortcuts[structure_or_statement].end())
-			error("block contains invalid line", *it);
-	}
 }
 
 void ParserVerifier::error(std::string message, ParseNode* tree) {
