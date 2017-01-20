@@ -21,7 +21,13 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_CLOSE_TEMPLATE) return "P_CLOSE_TEMPLATE";
 	else if (t == P_COLON_EQUALS) return "P_COLON_EQUALS";
 	else if (t == P_COLON) return "P_COLON";
+    else if (t == P_PLUS) return "P_PLUS";
+    else if (t == P_MINUS) return "P_MINUS";
 	else if (t == P_COMMA) return "P_COMMA";
+    else if (t == P_VERTICAL_BAR) return "P_VERTICAL_BAR";
+    else if (t == P_ASTERISK_ASTERISK) return "P_ASTERISK_ASTERISK";
+    else if (t == P_MINUS_MINUS) return "P_MINUS_MINUS";
+    else if (t == P_SEMI_COLON) return "P_SEMI_COLON";
 	else if (t == P_EQUAL_EQUAL_EQUALS) return "P_EQUAL_EQUAL_EQUALS";
 	else if (t == P_EQUAL_EQUALS) return "P_EQUAL_EQUALS";
 	else if (t == P_EQUALS) return "P_EQUALS";
@@ -279,14 +285,13 @@ TreeType translateType(TokenType t) {
 
 ParseNode* Parser::getParseTree(std::list<Token> *tokens) {
 	mainTree = new ParseNode(general, 0, 0);
-
 	bool is_first = true;
 	std::list<Token>::iterator behind_it = tokens->begin();
 	for (std::list<Token>::iterator it = tokens->begin(); it != tokens->end(); ++it) {
 		if (is_first) {
 			is_first = true;
 		}
-		--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); }
+		--debug_counter; if (debug_counter <= 0) { mainTree->print(); error("", mainTree); exit(0); }
 		mainTree->children.push_back(new ParseNode(it, behind_it));
 		++behind_it;
 	}

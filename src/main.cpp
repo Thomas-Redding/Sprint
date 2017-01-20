@@ -63,16 +63,16 @@ int main(int argc, const char * argv[]) {
 	// }
 	// auto timeAsteriskPtr = std::chrono::high_resolution_clock::now();
 
-	/*
-	auto start_vectorization = std::chrono::high_resolution_clock::now();
-	// http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
-	std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
-	auto end_vectorization = std::chrono::high_resolution_clock::now();
-	*/
+	
+	// auto start_vectorization = std::chrono::high_resolution_clock::now();
+	// // http://stackoverflow.com/questions/5218713/one-liner-to-convert-from-listt-to-vectort
+	// std::vector<Token> tokenizedList{ std::begin(list), std::end(list) };
+	// auto end_vectorization = std::chrono::high_resolution_clock::now();
+	
 
 	// print out tokens
-	// for (std::list<Token>::iterator it = tokenizedList.begin(); it != tokenizedList.end(); ++it)
-	// 	std::cout << *it << "\n";
+	for (std::list<Token>::iterator it = tokenizedList.begin(); it != tokenizedList.end(); ++it)
+		std::cout << *it << "\n";
 
 	auto start_parse_rules = std::chrono::high_resolution_clock::now();
 	std::vector<bool> leftToRight;
@@ -85,9 +85,9 @@ int main(int argc, const char * argv[]) {
 	ParseNode* parse_tree = foo.getParseTree(&tokenizedList);
 	auto end_parse = std::chrono::high_resolution_clock::now();
 
-	std::cout << "\n\n\n";
+	std::cout << "\n\n\n<";
 	parse_tree->print();
-	std::cout << "\n\nhash: " << parse_tree->to_hash() << "\n\n";
+	std::cout << ">\n\nhash: " << parse_tree->to_hash() << "\n\n";
 
 	auto start_verification = std::chrono::high_resolution_clock::now();
 	ParserVerifier pv(&foo);

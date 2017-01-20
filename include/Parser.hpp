@@ -250,8 +250,8 @@ struct ParseNode {
 	void print(int depth) {
 		std::string indent = "";
 		for (int i = 0; i < depth; i++)
-			indent += "   ";
-		treeTypeToString(type);
+			std::cout << " ";
+		std::cout << treeTypeToString(type) << "\n";
 		for (std::list<ParseNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
 		    (*it)->print(depth+1);
 	}
@@ -316,7 +316,7 @@ private:
 	std::vector<ParseRule> rules;
 	std::vector<bool>leftRight;
 
-	int debug_counter = 1000;
+	int debug_counter = 100000000;
 
 	int firstToken = raw_type;
 	int lastToken = comma_value;
