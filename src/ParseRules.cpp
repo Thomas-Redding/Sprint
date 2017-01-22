@@ -20,7 +20,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_IDENTIFIER,
 		templates,
 		block_of_statements_or_class
-	},class_implementation));
+	}, class_implementation));
 	// class Foo<T> : Bar
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
 		P_KEYWORD_CLASS,
@@ -182,6 +182,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_SHIFT_RIGHT_EQUALS, setting_value}, setting_clause));						// x >>= y
 	listOfRules.push_back(ParseRule(110, {}, {}, {comma_clause, P_EQUALS, setting_value}, setting_clause));									// x, y = z
 
+	// TODO: talk to Thomas about how these rule work and figure out a good way to do 'static'
+
 	// variable declarations
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_MUT, raw_type, P_IDENTIFIER, P_SEMI_COLON}, variable_dec));
 	listOfRules.push_back(ParseRule(110, {}, {}, {P_KEYWORD_MUT, raw_type, setting_value, P_SEMI_COLON}, variable_dec));
@@ -204,6 +206,9 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(110, {}, {}, {function_implementation, P_SEMI_COLON}, statement));
 	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_BREAK, P_SEMI_COLON}, break_statement));
 	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_CONTINUE, P_SEMI_COLON}, continue_statement));
+
+	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_STATIC, variable_dec}, static_member));
+	listOfRules.push_back(ParseRule(120, {}, {}, {P_KEYWORD_STATIC, function_implementation}, static_member));
 
 	// structures
 	listOfRules.push_back(ParseRule(130, {}, {}, {P_KEYWORD_IF, parenthesis, structure, P_KEYWORD_ELSE, structure}, if_else_statement));

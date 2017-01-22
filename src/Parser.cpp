@@ -1,5 +1,9 @@
 #include "../include/Parser.hpp"
 
+bool is_int(TreeType type) {
+	return type == P_KEYWORD_INT || type == P_KEYWORD_INT8 || type == P_KEYWORD_INT16 || type == P_KEYWORD_INT32 || type == P_KEYWORD_UINT || type == P_KEYWORD_UINT8 || type == P_KEYWORD_UINT16 || type == P_KEYWORD_UINT32 || type == P_KEYWORD_UINT || type == P_KEYWORD_BOOL || type == P_KEYWORD_CHAR;
+}
+
 std::string treeTypeToString(TreeType t) {
 	if (t == P_AMPERSAND_EQUALS) return "P_AMPERSAND_EQUALS";
 	else if (t == P_AMPERSAND) return "P_AMPERSAND";
@@ -142,6 +146,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else if (t == enum_block) return "enum_block";
 	else if (t == function_pointer_declaration) return "function_pointer_declaration";
+	else if (t == static_member) return "static_member";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
