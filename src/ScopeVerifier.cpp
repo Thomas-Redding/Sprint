@@ -5,6 +5,13 @@
 
 #include "../include/ScopeVerifier.hpp"
 
+/*
+left side of variable declaration
+function arguments (i.e. foo(INT x))
+constructors
+multiple inheritance
+*/
+
 // TODO: implement "static" once the ParseRules are added
 
 ScopeNode* verify_scope(ParseNode* root) {
@@ -14,7 +21,21 @@ ScopeNode* verify_scope(ParseNode* root) {
 		n->add_member(*it);
 	}
 	// TODO: actually *do* stuff with the scope tree!
+
+	// determine if a 'list_literal' is actually a 'list_type'
+	// process_list_literals((ScopeNode*) n, root);
+
+	for (auto it = n->members.begin(); it != n->members.end(); ++it) {
+		std::cout << it->first << "  :  " << it->second << std::endl;
+	}
+
 	return (ScopeNode*) n;
+}
+
+void process_list_literals(ScopeNode* sn, ParseNode* pn) {
+	for (auto it = pn->children.begin(); it != pn->children.end(); ++it) {
+
+	}
 }
 
 void ClassScopeNode::add_member(ParseNode* node) {

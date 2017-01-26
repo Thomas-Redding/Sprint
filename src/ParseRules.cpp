@@ -166,6 +166,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 
 	// operator-equals
 	listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_EQUALS, setting_value}, setting_clause));									// x = y
+    listOfRules.push_back(ParseRule(110, {}, {}, {setting_value, P_COLON_EQUALS, setting_value}, setting_clause));                                    // x := y
 	listOfRules.push_back(ParseRule(110, {}, {}, {function_pointer_declaration, P_EQUALS, unary1_clause}, setting_clause));
 	listOfRules.push_back(ParseRule(110, {}, {}, {function_pointer_declaration, P_EQUALS, unary2_clause}, setting_clause));
 	listOfRules.push_back(ParseRule(110, {}, {}, {function_pointer_declaration, P_EQUALS, P_IDENTIFIER}, setting_clause));
