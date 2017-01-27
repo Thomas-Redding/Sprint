@@ -148,6 +148,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == block_of_statements_or_class) return "block_of_statements_or_class";
 	else if (t == enum_block) return "enum_block";
 	else if (t == function_pointer_declaration) return "function_pointer_declaration";
+    else if (t == bracket_access) return "bracket_access";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -300,7 +301,7 @@ ParseNode* Parser::getParseTree(std::list<Token> *tokens) {
 	doParenthesesPass(mainTree);
 	doBracketPass(mainTree);
 	doTemplatePass(mainTree);
-	parse(mainTree);
+	parse(mainTree, nullptr);
 	return mainTree;
 }
 
@@ -312,7 +313,7 @@ void Parser::parse_enum_block(ParseNode* tree) {
 	// todo
 }
 
-void Parser::parse(ParseNode* tree) {
+void Parser::parse(ParseNode* tree, ParseNode* parent) {
 	int from = 0;
 	int to = 0;
 	if (tree->children.size() == 0)
@@ -330,15 +331,15 @@ void Parser::parse(ParseNode* tree) {
 						parse_enum_block(*it);
 					}
 					else {
-						parse(*it);
+						parse(*it, tree);
 					}
 				}
 				else {
-					parse(*it);
+					parse(*it, tree);
 				}
 			}
 			else {
-				parse(*it);
+				parse(*it, tree);
 			}
 		}
 	}
@@ -357,10 +358,10 @@ void Parser::parse(ParseNode* tree) {
 	}
 
 	if (tree->type != general)
-		classify_parsed_block(tree);
+		classify_parsed_block(tree, parent);
 }
 
-void Parser::classify_parsed_block(ParseNode *tree) {
+void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 	if (tree->type == curly_brace_block) {
 		if (tree->children.size() == 0) {
 			// {}
@@ -399,7 +400,7 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				tree->type = unordered_map_literal;
 			}
 			else {
-				error("Poorly formated curly-brace block", tree);
+				error("Poorly formatted curly-brace block", tree);
 			}
 		}
 		else {
@@ -409,14 +410,14 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 					std::list<ParseNode*>::iterator it2;
 					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
 						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end()) {
-							error("Poorly formated code block.", *it2);
+							error("Poorly formatted code block.", *it2);
 						}
 					}
 					if (it2 == tree->children.end()) {
 						tree->type = block_of_statements_or_class;
 					}
 					else {
-						error("Poorly formated block of statements.", *it);
+						error("Poorly formatted block of statements.", *it);
 					}
 				}
 			}
@@ -449,7 +450,9 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 			}
 			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end() || shortcuts[raw_type].find(child->type) != shortcuts[raw_type].end() || child->type == set_literal || child->type == unordered_map_literal || child->type == list_literal || child->type == ordered_map_literal) {
 				// [1] - list literal or bracket-accessor
-				if (getPreviousToken(tree).type == IDENTIFIER)
+                if (parent->children.front() == tree)
+                    tree->type = list_literal;
+				else if (getPreviousToken(tree).type == IDENTIFIER)
 					tree->type = bracket_access;
 				else
 					tree->type = list_literal;
@@ -458,11 +461,11 @@ void Parser::classify_parsed_block(ParseNode *tree) {
 				tree->type = ordered_map_literal;
 			}
 			else {
-				error("Poorly formated bracket block", tree);
+				error("Poorly formatted bracket block", tree);
 			}
 		}
 		else {
-			error("Poorly formated bracket block", tree);
+			error("Poorly formatted bracket block", tree);
 		}
 	}
 	else if (tree->type == parenthesis_block) {
