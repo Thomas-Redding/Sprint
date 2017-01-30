@@ -18,24 +18,74 @@ ScopeNode* verify_scope(ParseNode* root) {
 	NamespaceScopeNode* n = new NamespaceScopeNode();
 	n->templates = new std::vector<TemplateDec>();
 	for (auto it = root->children.begin(); it != root->children.end(); ++it) {
+		std::cout << "adding member" << std::endl;
 		n->add_member(*it);
 	}
 	// TODO: actually *do* stuff with the scope tree!
 
 	// determine if a 'list_literal' is actually a 'list_type'
-	// process_list_literals((ScopeNode*) n, root);
+	process_list_literals(n);
 
 	for (auto it = n->members.begin(); it != n->members.end(); ++it) {
-		std::cout << it->first << "  :  " << it->second << std::endl;
+		std::cout << "\"" << it->first << "\"  :  " << it->second->name << std::endl;
 	}
 
 	return (ScopeNode*) n;
 }
 
-void process_list_literals(ScopeNode* sn, ParseNode* pn) {
-	for (auto it = pn->children.begin(); it != pn->children.end(); ++it) {
+void process_list_literals(ClassScopeNode* sn) {
+	std::cout << "process_list_literals; cla" << std::endl;
+}
+void process_list_literals(FunctionScopeNode* sn) {
+	std::cout << "process_list_literals; fun" << std::endl;
 
+	auto it = sn->parseNode->children.begin();
+	ParseNode* head = *it;
+	++it;
+	ParseNode* return_type = *it;
+	++it;
+	ParseNode* block = *it;
+
+	process_list_literals(block, sn);
+}
+void process_list_literals(VariableScopeNode* sn) {
+	std::cout << "process_list_literals; var" << std::endl;
+}
+void process_list_literals(NamespaceScopeNode* sn) {
+	for (auto it = sn->members.begin(); it != sn->members.end(); ++it) {
+		switch (it->second->type) {
+			case ScopeType::_class:
+				process_list_literals((ClassScopeNode*)(it->second));
+			break;
+			case ScopeType::_namespace:
+				process_list_literals((NamespaceScopeNode*)(it->second));
+			break;
+			case ScopeType::_function:
+				process_list_literals((FunctionScopeNode*)(it->second));
+			break;
+			case ScopeType::_variable:
+				process_list_literals((VariableScopeNode*)(it->second));
+			break;
+			default: break;
+		}
 	}
+}
+void process_list_literals(ParseNode* n, ScopeNode* sn) {
+	// for (auto it = n->children.begin(); it != n->children.end(); ++it) {
+	// 	if ((*it)->type == TreeType::list_literal) {
+	// 		TreeType type = 
+	// 		if (type == P_KEYWORD_INT || type == P_KEYWORD_INT8 || type == P_KEYWORD_INT16 || type == P_KEYWORD_INT32 || type == P_KEYWORD_UINT || type == P_KEYWORD_UINT8 || type == P_KEYWORD_UINT16 || type == P_KEYWORD_UINT32 || type == P_KEYWORD_CHAR || type == P_KEYWORD_BOOL || type == P_KEYWORD_FLOAT || type == P_KEYWORD_DOUBLE || type == P_KEYWORD_VAR) {
+	// 			(*it)->type = TreeType::list_type;
+	// 		}
+	// 		else if (type == P_IDENTIFIER) {
+	// 			// TODO
+	// 		}
+	// 		else {
+	// 			// TODO
+	// 		}
+	// 	}
+	// 	process_list_literals(*it, sn);
+	// }
 }
 
 void ClassScopeNode::add_member(ParseNode* node) {
@@ -60,6 +110,7 @@ void ClassScopeNode::add_member(ParseNode* node) {
 void NamespaceScopeNode::add_member(ParseNode* node) {
 	ScopeNode* n;
 	if (node->type == TreeType::variable_dec) {
+		std::cout << "variable dec" << std::endl;
 		n = new VariableScopeNode(node, this, templates);
 	}
 	else if (node->type == TreeType::class_implementation) {
@@ -69,9 +120,11 @@ void NamespaceScopeNode::add_member(ParseNode* node) {
 			statics[name] = it->second;
 		}
 		n = _n;
+		std::cout << "class imp \"" << n->name << "\"" << std::endl;
 	}
 	else if (node->type == TreeType::function_implementation) {
 		n = new FunctionScopeNode(node, this, templates);
+		std::cout << "function imp \"" << n->name << "\"" << std::endl;
 	}
 	members[n->name] = n;
 }
@@ -220,21 +273,33 @@ void ScopeNode::error(std::string message) const {
 }
 
 VariableScopeNode::VariableScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates) {
-
+	type = ScopeType::_variable;
+	parseNode = root;
 }
 
 ClassScopeNode::ClassScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates) {
-
+	type = ScopeType::_class;
+	parseNode = root;
+	auto it = ++root->children.begin();
+	name = (*it)->last_token->str;
 }
 
 EnumScopeNode::EnumScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates) {
-
+	type = ScopeType::_enum;
+	parseNode = root;
 }
 
 FunctionScopeNode::FunctionScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates) {
+	type = ScopeType::_function;
+	parseNode = root;
+	auto head = root->children.begin();
+	auto return_type = ++root->children.begin();
+	auto block = ++++root->children.begin();
+	name = (*((*head)->children.begin()))->last_token->str;
 
 }
 
 NamespaceScopeNode::NamespaceScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates) {
-
+	type = ScopeType::_namespace;
+	parseNode = root;
 }

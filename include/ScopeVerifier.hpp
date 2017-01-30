@@ -92,3 +92,16 @@ struct NamespaceScopeNode : ScopeNode {
 
 ScopeNode* verify_scope(ParseNode* root);
 ScopeNode* create_scope_tree(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates);
+
+void process_list_literals(ClassScopeNode*);
+void process_list_literals(FunctionScopeNode*);
+void process_list_literals(NamespaceScopeNode*);
+void process_list_literals(VariableScopeNode*);
+
+// determines wither [...] is a type (e.g. "[int]") or a literal (e.g. "[0, 1, 2, 3]")
+// uses the ScopeNode* argument to search for classes
+void process_list_literals(ParseNode*, ScopeNode*);
+
+
+
+

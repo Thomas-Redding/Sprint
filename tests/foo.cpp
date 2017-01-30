@@ -8,7 +8,7 @@ class MyClass {
 main() -> int {
 
 	[int] x = [3, 1, 4, 1, 5];
-	[double] y = x;
+	[MyClass] y = x;
 
 	return 0;
 }
