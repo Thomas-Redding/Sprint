@@ -315,7 +315,7 @@ private:
 	void parseRightLeft(ParseNode *tree, int from, int to);
 	void parse_enum_block(ParseNode* tree);
 	void error(std::string message, ParseNode* tree);
-	void classify_parsed_block(ParseNode *tree);
+	void classify_parsed_block(ParseNode *tree, ParseNode *parent);
 	Token getPreviousToken(ParseNode *tree);
 	std::vector<ParseRule> rules;
 	std::vector<bool>leftRight;
@@ -367,5 +367,5 @@ public:
 	// listOfRules.push_back(ParseRule(10, general, {P_STRING_LITERAL
 	}
 	ParseNode* getParseTree(std::list<Token> *tokens);
-	void parse(ParseNode *tree);
+	void parse(ParseNode *tree, ParseNode *parent);
 };
