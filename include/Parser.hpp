@@ -187,6 +187,7 @@ enum TreeType {
 	block_of_statements_or_class,
 	enum_block,
 	list_literal,
+	list_type,
 	set_literal,
 	ordered_map_literal,
 	unordered_map_literal,
