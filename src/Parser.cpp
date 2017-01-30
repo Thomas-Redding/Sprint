@@ -161,7 +161,6 @@ std::string treeTypeToString(TreeType t) {
 ParseNode::ParseNode(std::list<Token>::iterator it, std::list<Token>::iterator last) {
 	token = *it;
 	type = translateType(token.type);
-	last_token = last;
 	is_leaf = true;
 }
 
@@ -456,12 +455,23 @@ void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 			}
 			else if (shortcuts[comma_value].find(child->type) != shortcuts[comma_value].end() || shortcuts[raw_type].find(child->type) != shortcuts[raw_type].end() || child->type == set_literal || child->type == unordered_map_literal || child->type == list_literal || child->type == ordered_map_literal) {
 				// [1] - list literal or bracket-accessor
-                if (parent->children.front() == tree)
+                if (parent->children.front() == tree) {
                     tree->type = list_literal;
-				else if (getPreviousToken(tree).type == IDENTIFIER)
-					tree->type = bracket_access;
-				else
-					tree->type = list_literal;
+                    return;
+                }
+
+                for (std::list<ParseNode*>::iterator it = parent->children.begin(); it != parent->children.end(); ++it) {
+                    if (*it == tree) {
+                        --it;
+                        if ((*it)->type == P_IDENTIFIER) {
+                            tree->type = bracket_access;
+                            return;
+                        }
+                        break;
+                    }
+                }
+                
+				tree->type = list_literal;
 			}
 			else if (child->type == P_COLON) {
 				tree->type = ordered_map_literal;
@@ -484,19 +494,6 @@ void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 	}
 	else {
 		error("Error 413. Please contact tfredding@gmail.com", tree);
-	}
-}
-
-Token Parser::getPreviousToken(ParseNode *tree) {
-	if (tree->is_leaf) {
-		return *(tree->last_token);
-	}
-	else if (tree->children.size() > 0) {
-		return getPreviousToken(tree->children.front());
-	}
-	else {
-		error("Error 578. Please contact tfredding@gmail.com", tree);
-		return Token();
 	}
 }
 
