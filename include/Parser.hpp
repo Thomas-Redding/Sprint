@@ -242,7 +242,6 @@ struct ParseNode {
 		type = tt;
 	}
 	bool is_leaf = false;
-	std::list<Token>::iterator last_token;
 	ParseNode(std::list<Token>::iterator it, std::list<Token>::iterator last);
 	void print() {
 		print(0);
@@ -251,7 +250,10 @@ struct ParseNode {
 		std::string indent = "";
 		for (int i = 0; i < depth; i++)
 			std::cout << " ";
-		std::cout << treeTypeToString(type) << "\n";
+		std::cout << treeTypeToString(type);
+        if (token.str != "")
+            std::cout << " : " << token.str;
+        std::cout << "\n";
 		for (std::list<ParseNode*>::const_iterator it = children.begin(), end = children.end(); it != end; ++it)
 		    (*it)->print(depth+1);
 	}
@@ -312,7 +314,6 @@ private:
 	void parse_enum_block(ParseNode* tree);
 	void error(std::string message, ParseNode* tree);
 	void classify_parsed_block(ParseNode *tree, ParseNode *parent);
-	Token getPreviousToken(ParseNode *tree);
 	std::vector<ParseRule> rules;
 	std::vector<bool>leftRight;
 
