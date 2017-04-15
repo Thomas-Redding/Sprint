@@ -201,6 +201,8 @@ enum TreeType {
 	static_member,
 
 	function_pointer_declaration,
+    function_dec_args_block,
+    function_dec_arg,
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	raw_type_or_void,
@@ -319,6 +321,7 @@ private:
 	void parseLeftRight(ParseNode *tree, int from, int to);
 	void parseRightLeft(ParseNode *tree, int from, int to);
 	void parse_enum_block(ParseNode* tree);
+    void parse_function_dec_args(ParseNode **par);
 	void error(std::string message, ParseNode* tree);
 	void classify_parsed_block(ParseNode *tree, ParseNode *parent);
 	std::vector<ParseRule> rules;

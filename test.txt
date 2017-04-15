@@ -1,5 +1,10 @@
 
-
-main(int x) -> int {
-	{int: int} x;
+foo<A, B>(Foo<A, B> x = 2 + 5, int y, Bar<A> z) -> void {
 }
+
+
+/*main(int x, int y, int z) -> int {
+	mut {int: int} x;
+}*/
+
+
