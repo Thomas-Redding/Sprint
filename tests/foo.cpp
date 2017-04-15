@@ -4,12 +4,23 @@ class MyClass {
 	int y;
 }
 
+// class Matrix<T> {
+// 	int y;
+// }
 
-main() -> int {
+int x;
+
+main(int x) -> int {
 
 	[int] x = [3, 1, 4, 1, 5];
-	// {int, MyClass} y = x;
+	// // {int, MyClass} y = x;
 	[MyClass] z = x;
+
+	MyClass a;
+
+	a = b + y;
+
+	// MyClass<int> b;
 
 	return 0;
 }

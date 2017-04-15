@@ -17,6 +17,8 @@ enum ScopeType {
     _global,
 };
 
+std::string scopeTypeToString(ScopeType type);
+
 struct TemplateDec {
     uint8_t integer_size; // use 'zero' for classes
     const char* name;
@@ -24,10 +26,15 @@ struct TemplateDec {
     bool is_int() const { return integer_size > 0; }
 };
 
+std::string pad(uint64_t n);
+
 struct ScopeNode {
+
+    static uint64_t recursion_count;
 
     // ScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates);
     ScopeNode() : parseNode(nullptr), parent(nullptr), type(ScopeType::_null), templates(nullptr), template_owner(false) {};
+    ScopeNode(ParseNode* parseNode, ScopeNode* parent, ScopeType type, std::vector<TemplateDec>* templates) : parseNode(parseNode), parent(parent), type(type), templates(templates) {};
     ~ScopeNode() { if (template_owner) delete templates; }
 
     ScopeNode* search_scope(std::string);
@@ -64,8 +71,6 @@ struct VariableScopeNode : ScopeNode {
 struct ClassScopeNode : ScopeNode {
     ClassScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates);
 
-    void add_member(ParseNode* node);
-
     std::map<std::string, ScopeNode*> members;
     std::map<std::string, ScopeNode*> statics;
 };
@@ -81,10 +86,7 @@ struct EnumScopeNode : ScopeNode {
 };
 
 struct NamespaceScopeNode : ScopeNode {
-    NamespaceScopeNode() {};
     NamespaceScopeNode(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates);
-
-    void add_member(ParseNode* node);
 
     std::map<std::string, ScopeNode*> members;
     std::map<std::string, ScopeNode*> statics;
@@ -93,15 +95,18 @@ struct NamespaceScopeNode : ScopeNode {
 ScopeNode* verify_scope(ParseNode* root);
 ScopeNode* create_scope_tree(ParseNode* root, ScopeNode* parent, std::vector<TemplateDec>* templates);
 
+// determines wither [...] is a type (e.g. "[int]") or a literal (e.g. "[0, 1, 2, 3]")
 void process_list_literals(ClassScopeNode*);
 void process_list_literals(FunctionScopeNode*);
 void process_list_literals(NamespaceScopeNode*);
 void process_list_literals(VariableScopeNode*);
+void process_list_literals(ParseNode*, ScopeNode*); // uses the ScopeNode* argument to search for classes
 
-// determines wither [...] is a type (e.g. "[int]") or a literal (e.g. "[0, 1, 2, 3]")
-// uses the ScopeNode* argument to search for classes
-void process_list_literals(ParseNode*, ScopeNode*);
-
+void process_expressions(ClassScopeNode*);
+void process_expressions(FunctionScopeNode*);
+void process_expressions(NamespaceScopeNode*);
+void process_expressions(VariableScopeNode*);
+void process_expressions(ParseNode*, ScopeNode*);
 
 
 

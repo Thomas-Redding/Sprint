@@ -19,7 +19,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_KEYWORD_CLASS,
 		P_IDENTIFIER,
 		templates,
-		block_of_statements_or_class
+		curly_brace_block
 	}, class_implementation));
 	// class Foo<T> : Bar
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -27,7 +27,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_IDENTIFIER,
 		P_COLON,
 		P_IDENTIFIER,
-		block_of_statements_or_class
+		curly_brace_block
 	}, class_implementation));
 	// class Foo<T> : Bar<U>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -37,7 +37,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_COLON,
 		P_IDENTIFIER,
 		templates,
-		block_of_statements_or_class
+		curly_brace_block
 	}, class_implementation));
 	// class Foo: Bar<S>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -46,7 +46,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_COLON,
 		P_IDENTIFIER,
 		templates,
-		block_of_statements_or_class
+		curly_brace_block
 	}, class_implementation));
 	// class Foo<T, S> : Bar<T>
 	listOfRules.push_back(ParseRule(-10, {}, {}, {
@@ -56,7 +56,7 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		P_COLON,
 		P_IDENTIFIER,
 		templates,
-		block_of_statements_or_class
+		curly_brace_block
 	}, class_implementation));
 
 	// function_head

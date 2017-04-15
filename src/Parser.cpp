@@ -144,8 +144,10 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == list_literal) return "list_literal";
 	else if (t == list_type) return "list_type";
 	else if (t == set_literal) return "set_literal";
+	else if (t == set_type) return "set_type";
 	else if (t == ordered_map_literal) return "ordered_map_literal";
 	else if (t == unordered_map_literal) return "unordered_map_literal";
+	else if (t == unordered_map_type) return "unordered_map_type";
 	else if (t == colon_list) return "colon_list";
 	else if (t == colon_type_clause) return "colon_type_clause";
 	else if (t == parenthesis) return "parenthesis";
