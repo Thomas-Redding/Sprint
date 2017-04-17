@@ -1,5 +1,11 @@
 
-
-main(int x) -> int {
-	{int: int} x;
+identity(double v) -> double {
+	return v;
 }
+
+main() -> int {
+	double x;
+
+	identity(x);
+}
+

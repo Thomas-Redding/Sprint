@@ -100,11 +100,10 @@ int main(int argc, const char * argv[]) {
 	auto end_verification = std::chrono::high_resolution_clock::now();
 
 	auto start_scoping = std::chrono::high_resolution_clock::now();
-	verify_scope(parse_tree);
+	ScopeNode* scope_tree = build_scope_tree(parse_tree);
+	process_list_literals(scope_tree, parse_tree);
+	verify_types(scope_tree, parse_tree);
 	auto end_scoping = std::chrono::high_resolution_clock::now();
-
-
-	std::cout << "size: " << sizeof(ScopeNode) << std::endl;
 
 	// Compiler comp;
 	// comp.compile(parse_tree);
@@ -115,7 +114,7 @@ int main(int argc, const char * argv[]) {
 	std::cout << "Parse Rules: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse_rules - start_parse_rules).count() / tokenizedList.size() << " ns per token)" << std::endl;
 	std::cout << "Parser     : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_parse - start_parse).count() / tokenizedList.size() << " ns per token)\n";
 	std::cout << "Parse Ver. : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_verification).count() / tokenizedList.size() << " ns per token)" << std::endl;;
-	std::cout << "Scoping    : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_scoping - start_scoping).count() / 1000 << " µs" << std::endl;
+	std::cout << "Scoping    : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_scoping - start_scoping).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_scoping - start_scoping).count() / tokenizedList.size() << " ns per token)" << std::endl;;
 	std::cout << "Total Time : " << std::chrono::duration_cast<std::chrono::nanoseconds>(end_scoping - start_open_file).count() / 1000 << " µs (" << std::chrono::duration_cast<std::chrono::nanoseconds>(end_verification - start_open_file).count() / tokenizedList.size() << " ns per token)" << std::endl;;
 	return 0;
 }
