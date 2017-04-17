@@ -84,6 +84,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_KEYWORD_SIZEOF) return "P_KEYWORD_SIZEOF";
 	else if (t == P_KEYWORD_STATIC) return "P_KEYWORD_STATIC";
 	else if (t == P_KEYWORD_SWITCH) return "P_KEYWORD_SWITCH";
+    else if (t == P_KEYWORD_VOID) return "P_KEYWORD_VOID";
 	else if (t == curly_brace_block) return "curly_brace_block";
 	else if (t == parenthesis_block) return "parenthesis_block";
 	else if (t == bracket_block) return "bracket_block";
@@ -157,6 +158,9 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == function_pointer_declaration) return "function_pointer_declaration";
 	else if (t == static_member) return "static_member";
     else if (t == bracket_access) return "bracket_access";
+    else if (t == function_dec_args_block) return "function_dec_args_block";
+    else if (t == function_dec_arg) return "function_dec_arg";
+    else if (t == P_POSITIVE) return "P_POSITIVE";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -320,6 +324,54 @@ void Parser::parse_enum_block(ParseNode* tree) {
 	// todo
 }
 
+void Parser::parse_function_dec_args(ParseNode** tree) {
+    /*
+     * 0 - first thing after comma; expects 'mut' or a type
+     * 1 - expects a type
+     * 2 - expects template or variable name
+     * 3 - expects an variable name
+     * 4 - expects '=', or ','
+     * 5 - expects a default-arg value
+     * 6 - expects a ','
+     */
+    ParseNode* par = *tree;
+    ParseNode* new_tree = new ParseNode(function_dec_args_block, par->token.lineNum, par->token.charNum);
+    if (par->children.size() == 0) {
+        delete par;
+        *tree = new_tree;
+        return;
+    }
+
+    new_tree->children.push_back(new ParseNode(function_dec_arg, par->token.lineNum, par->token.charNum));
+    for (std::list<ParseNode*>::iterator it = par->children.begin(); it != par->children.end(); ++it) {
+        if ((*it)->type == P_COMMA)
+            new_tree->children.push_back(new ParseNode(function_dec_arg, (*it)->token.lineNum, (*it)->token.charNum));
+        else
+            new_tree->children.back()->children.push_back(*it);
+    }
+
+    for (std::list<ParseNode*>::iterator it = new_tree->children.begin(); it != new_tree->children.end(); ++it) {
+        int from = 0;
+        int to = 0;
+        for (int i=0; i<leftRight.size(); ++i) {
+            from = to;
+            int j;
+            for (j=from; j<rules.size(); ++j) {
+                if (rules[j].precedence != rules[from].precedence)
+                    break;
+            }
+            to = j;
+            if (leftRight[i])
+                parseLeftRight(*it, from, to);
+            else
+                parseRightLeft(*it, from, to);
+        }
+    }
+
+    delete par;
+    *tree = new_tree;
+}
+
 void Parser::parse(ParseNode* tree, ParseNode* parent) {
 	int from = 0;
 	int to = 0;
@@ -345,6 +397,16 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 					parse(*it, tree);
 				}
 			}
+            else if ((*it)->type == parenthesis_block) {
+                auto it2 = it;
+                ++it2;
+                if ((*it2)->type == P_ARROW) {
+                    parse_function_dec_args(&(*it));
+                    return;
+                }
+                else
+                    parse(*it, tree);
+            }
 			else {
 				parse(*it, tree);
 			}
