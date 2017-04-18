@@ -158,9 +158,13 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == function_pointer_declaration) return "function_pointer_declaration";
 	else if (t == static_member) return "static_member";
     else if (t == bracket_access) return "bracket_access";
-    else if (t == function_dec_args_block) return "function_dec_args_block";
-    else if (t == function_dec_arg) return "function_dec_arg";
+    else if (t == function_params_block) return "function_params_block";
+    else if (t == function_param) return "function_param";
     else if (t == P_POSITIVE) return "P_POSITIVE";
+    else if (t == empty_curly_brace_block) return "empty_curly_brace_block";
+    else if (t == function_pointer_params_block) return "function_pointer_params_block";
+    else if (t == function_pointer_type) return "function_pointer_type";
+    else if (t == anonymous_function) return "anonymous_function";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -324,28 +328,58 @@ void Parser::parse_enum_block(ParseNode* tree) {
 	// todo
 }
 
-void Parser::parse_function_dec_args(ParseNode** tree) {
-    /*
-     * 0 - first thing after comma; expects 'mut' or a type
-     * 1 - expects a type
-     * 2 - expects template or variable name
-     * 3 - expects an variable name
-     * 4 - expects '=', or ','
-     * 5 - expects a default-arg value
-     * 6 - expects a ','
-     */
+void Parser::parse_function_pointer_args(ParseNode** tree) {
     ParseNode* par = *tree;
-    ParseNode* new_tree = new ParseNode(function_dec_args_block, par->token.lineNum, par->token.charNum);
+    ParseNode* new_tree = new ParseNode(function_pointer_params_block, par->token.lineNum, par->token.charNum);
     if (par->children.size() == 0) {
         delete par;
         *tree = new_tree;
         return;
     }
 
-    new_tree->children.push_back(new ParseNode(function_dec_arg, par->token.lineNum, par->token.charNum));
+    new_tree->children.push_back(new ParseNode(function_pointer_param, par->token.lineNum, par->token.charNum));
     for (std::list<ParseNode*>::iterator it = par->children.begin(); it != par->children.end(); ++it) {
         if ((*it)->type == P_COMMA)
-            new_tree->children.push_back(new ParseNode(function_dec_arg, (*it)->token.lineNum, (*it)->token.charNum));
+            new_tree->children.push_back(new ParseNode(function_pointer_param, (*it)->token.lineNum, (*it)->token.charNum));
+        else
+            new_tree->children.back()->children.push_back(*it);
+    }
+
+    for (std::list<ParseNode*>::iterator it = new_tree->children.begin(); it != new_tree->children.end(); ++it) {
+        int from = 0;
+        int to = 0;
+        for (int i=0; i<leftRight.size(); ++i) {
+            from = to;
+            int j;
+            for (j=from; j<rules.size(); ++j) {
+                if (rules[j].precedence != rules[from].precedence)
+                    break;
+            }
+            to = j;
+            if (leftRight[i])
+                parseLeftRight(*it, from, to);
+            else
+                parseRightLeft(*it, from, to);
+        }
+    }
+
+    delete par;
+    *tree = new_tree;
+}
+
+void Parser::parse_function_params(ParseNode** tree) {
+    ParseNode* par = *tree;
+    ParseNode* new_tree = new ParseNode(function_params_block, par->token.lineNum, par->token.charNum);
+    if (par->children.size() == 0) {
+        delete par;
+        *tree = new_tree;
+        return;
+    }
+
+    new_tree->children.push_back(new ParseNode(function_param, par->token.lineNum, par->token.charNum));
+    for (std::list<ParseNode*>::iterator it = par->children.begin(); it != par->children.end(); ++it) {
+        if ((*it)->type == P_COMMA)
+            new_tree->children.push_back(new ParseNode(function_param, (*it)->token.lineNum, (*it)->token.charNum));
         else
             new_tree->children.back()->children.push_back(*it);
     }
@@ -375,8 +409,12 @@ void Parser::parse_function_dec_args(ParseNode** tree) {
 void Parser::parse(ParseNode* tree, ParseNode* parent) {
 	int from = 0;
 	int to = 0;
-	if (tree->children.size() == 0)
-		return;
+	if (tree->children.size() == 0) {
+        if (tree->type != general)
+            classify_parsed_block(tree, parent);
+        return;
+    }
+
 	for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 		if ((*it)->type == curly_brace_block || (*it)->type == bracket_block || (*it)->type == parenthesis_block || (*it)->type == template_block) {
 			if ((*it)->type == curly_brace_block && it != tree->children.begin()) {
@@ -398,14 +436,37 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 				}
 			}
             else if ((*it)->type == parenthesis_block) {
+                if (it == tree->children.end())
+                    error("Function signature missing arrow", *it);
+                std::cout << "------" << std::endl;
+                (*it)->print();
+                std::cout << "######" << std::endl;
                 auto it2 = it;
                 ++it2;
-                if ((*it2)->type == P_ARROW) {
-                    parse_function_dec_args(&(*it));
-                    return;
+                if (it == tree->children.begin()) {
+                    if ((*it2)->type == P_ARROW) {
+                        parse_function_pointer_args(&(*it));
+                    }
+                    else {
+                        parse(*it, tree);
+                    }
                 }
-                else
-                    parse(*it, tree);
+                else {
+                    auto it3 = it;
+                    --it3;
+                    if ((*it2)->type == P_ARROW) {
+                        ++it2;
+                        ++it2;
+                        if ((*it2)->type == templates) ++it2;
+                        if ((*it2)->type == empty_curly_brace_block || block_of_statements_or_class)
+                            parse_function_params(&(*it));
+                        else
+                            parse_function_pointer_args(&(*it));
+                    }
+                    else {
+                        parse(*it, tree);
+                    }
+                }
             }
 			else {
 				parse(*it, tree);
@@ -425,12 +486,12 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 		else
 			parseRightLeft(tree, from, to);
 	}
-
 	if (tree->type != general)
 		classify_parsed_block(tree, parent);
 }
 
 void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
+    std::cout << "##" << treeTypeToString(tree->type) << " - " << tree->children.size() << std::endl;
 	if (tree->type == curly_brace_block) {
 		if (tree->children.size() == 0) {
 			// {}
@@ -473,12 +534,12 @@ void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 			}
 		}
 		else {
-			tree->print();
 			for (std::list<ParseNode*>::iterator it = tree->children.begin(); it != tree->children.end(); ++it) {
 				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end()) {
 					std::list<ParseNode*>::iterator it2;
 					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
 						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end()) {
+                            tree->print();
 							error("Poorly formatted code block.", *it2);
 						}
 					}

@@ -200,9 +200,14 @@ enum TreeType {
 
 	static_member,
 
-	function_pointer_declaration,
-    function_dec_args_block,
-    function_dec_arg,
+	function_pointer_declaration,      // ???
+    function_params_block,             // (int a, int b)
+    function_param,                    // int a
+    function_pointer_params_block,     // (int, int)
+    function_pointer_param,            // int
+    function_pointer_head,             // f(int a, int b) ->
+    function_pointer_type,             // (int, int) -> int
+    anonymous_function,                // (int a, int b) -> int { ... }
 
 	raw_type,				// make sure I'm the first "shortcut" enum and that all later enums are also "shortcuts"
 	raw_type_or_void,
@@ -229,7 +234,6 @@ enum TreeType {
 	structure_or_statement,
 	op,
 	stuff_in_classes,
-	function_name_candidate,
 	valid_line,
 	comma_value				// make sure I'm the last enum
 };
@@ -321,7 +325,8 @@ private:
 	void parseLeftRight(ParseNode *tree, int from, int to);
 	void parseRightLeft(ParseNode *tree, int from, int to);
 	void parse_enum_block(ParseNode* tree);
-    void parse_function_dec_args(ParseNode **par);
+    void parse_function_pointer_args(ParseNode** tree);
+    void parse_function_params(ParseNode **par);
 	void error(std::string message, ParseNode* tree);
 	void classify_parsed_block(ParseNode *tree, ParseNode *parent);
 	std::vector<ParseRule> rules;
@@ -365,9 +370,6 @@ public:
 		shortcuts[op] = {P_LESS_THAN, P_LESS_THAN_EQUALS, P_GREATER_THAN, P_GREATER_THAN_EQUALS, P_EQUALS, P_EQUAL_EQUALS,
 			P_POSITIVE, P_MINUS, P_SLASH, P_ASTERISK, P_PLUS_PLUS, P_MINUS_MINUS, P_SHIFT_RIGHT, P_SHIFT_LEFT, P_PERCENT,
 			P_PLUS_EQUALS, P_MINUS_EQUALS, P_SLASH_EQUALS, P_ASTERISK_EQUALS, P_SHIFT_RIGHT_EQUALS, P_SHIFT_LEFT_EQUALS, P_PERCENT_EQUALS, P_LEFT_ARROW, P_LEFT_RIGHT_ARROW};
-		shortcuts[function_name_candidate] = {P_IDENTIFIER, P_LESS_THAN, P_LESS_THAN_EQUALS, P_GREATER_THAN, P_GREATER_THAN_EQUALS, P_EQUALS, P_EQUAL_EQUALS,
-			P_POSITIVE, P_MINUS, P_SLASH, P_ASTERISK, P_PLUS_PLUS, P_MINUS_MINUS, P_SHIFT_RIGHT, P_SHIFT_LEFT, P_PERCENT, P_BACK_SLASH, P_ASTERISK_ASTERISK,
-			P_PLUS_EQUALS, P_MINUS_EQUALS, P_SLASH_EQUALS, P_ASTERISK_EQUALS, P_SHIFT_RIGHT_EQUALS, P_SHIFT_LEFT_EQUALS, P_PERCENT_EQUALS, P_BACK_SLASH_EQUALS, P_ASTERISK_ASTERISK_EQUALS};
 
 	// listOfRules.push_back(ParseRule(10, general, {P_FLOAT_LITERAL}, value));
 	// listOfRules.push_back(ParseRule(10, general, {P_IDENTIFIER}, value));

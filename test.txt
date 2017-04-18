@@ -1,5 +1,11 @@
 
 foo<A, B>(Foo<A, B> x = 2 + 5, int y, Bar<A> z) -> void {
+    (Foo<A2, B2>, int, Bar<A2>) -> void f = (Foo<A2, B2> one, int, Bar<A2> two) -> void {
+        // shit
+    };
+    (Foo<A2, B2> one, int, Bar<A2> two) -> void {
+        int x;
+    };
 }
 
 
