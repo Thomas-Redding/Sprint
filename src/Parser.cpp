@@ -438,9 +438,6 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
             else if ((*it)->type == parenthesis_block) {
                 if (it == tree->children.end())
                     error("Function signature missing arrow", *it);
-                std::cout << "------" << std::endl;
-                (*it)->print();
-                std::cout << "######" << std::endl;
                 auto it2 = it;
                 ++it2;
                 if (it == tree->children.begin()) {
@@ -491,7 +488,6 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 }
 
 void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
-    std::cout << "##" << treeTypeToString(tree->type) << " - " << tree->children.size() << std::endl;
 	if (tree->type == curly_brace_block) {
 		if (tree->children.size() == 0) {
 			// {}
@@ -539,7 +535,6 @@ void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 					std::list<ParseNode*>::iterator it2;
 					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
 						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end()) {
-                            tree->print();
 							error("Poorly formatted code block.", *it2);
 						}
 					}
