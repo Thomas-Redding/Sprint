@@ -1,9 +1,15 @@
-identity(double v) -> double {
-    return v;
+
+class Foo {
+public:
+    identity(double v) -> double {
+        return v;
+    }
+private:
+    main() -> int {
+        double x;
+
+        identity(x);
+    }    
 }
 
-main() -> int {
-    double x;
 
-    identity(x);
-}

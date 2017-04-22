@@ -133,6 +133,7 @@ enum TreeType {
 	P_VERTICAL_BAR,
     P_KEYWORD_VIRTUAL,
     P_KEYWORD_UNION,
+    P_KEYWORD_PROTECTED,
 
 	general,				// make sure this is the first non-token type
 	curly_brace_block,
@@ -198,6 +199,7 @@ enum TreeType {
 	parenthesis,
 	templates,
 	empty_curly_brace_block,
+    permissions_line,
 
 	static_member,
 
@@ -366,7 +368,7 @@ public:
 		shortcuts[comma_value] =       {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause, unary2_clause, exp_clause, mult_clause, plus_clause, shift_clause, inequality_clause, equality_clause, bitwise_and_clause, bitwise_xor_clause, bitwise_or_clause, ternary_clause, setting_clause, comma_clause};
 		shortcuts[any_integer_type] =  {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL};
 		shortcuts[structure] =              {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements_or_class};
-		shortcuts[stuff_in_classes] =  {variable_dec, class_declaration, class_implementation, function_declaration, function_implementation, static_member};
+		shortcuts[stuff_in_classes] =  {variable_dec, class_declaration, class_implementation, function_declaration, function_implementation, static_member, permissions_line};
 		shortcuts[structure_or_statement] = {statement, for_loop, while_loop, do_while_loop, if_statement, if_else_statement, block_of_statements_or_class, statement, variable_dec, return_statement, case_statement, continue_statement, break_statement};
 		shortcuts[op] = {P_LESS_THAN, P_LESS_THAN_EQUALS, P_GREATER_THAN, P_GREATER_THAN_EQUALS, P_EQUALS, P_EQUAL_EQUALS,
 			P_POSITIVE, P_MINUS, P_SLASH, P_ASTERISK, P_PLUS_PLUS, P_MINUS_MINUS, P_SHIFT_RIGHT, P_SHIFT_LEFT, P_PERCENT,

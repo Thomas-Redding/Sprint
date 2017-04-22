@@ -79,6 +79,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_KEYWORD_OR) return "P_KEYWORD_OR";
 	else if (t == P_KEYWORD_PRIVATE) return "P_KEYWORD_PRIVATE";
 	else if (t == P_KEYWORD_PUBLIC) return "P_KEYWORD_PUBLIC";
+    else if (t == P_KEYWORD_PROTECTED) return "P_KEYWORD_PROTECTED";
 	else if (t == P_KEYWORD_REPEAT) return "P_KEYWORD_REPEAT";
 	else if (t == P_KEYWORD_RETURN) return "P_KEYWORD_RETURN";
 	else if (t == P_KEYWORD_SIZEOF) return "P_KEYWORD_SIZEOF";
@@ -165,6 +166,7 @@ std::string treeTypeToString(TreeType t) {
     else if (t == function_pointer_params_block) return "function_pointer_params_block";
     else if (t == function_pointer_type) return "function_pointer_type";
     else if (t == anonymous_function) return "anonymous_function";
+    else if (t == permissions_line) return "permissions_line";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -243,6 +245,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_OR) return P_KEYWORD_OR;
 	else if (t == KEYWORD_PRIVATE) return P_KEYWORD_PRIVATE;
 	else if (t == KEYWORD_PUBLIC) return P_KEYWORD_PUBLIC;
+    else if (t == KEYWORD_PROTECTED) return P_KEYWORD_PROTECTED;
 	else if (t == KEYWORD_REPEAT) return P_KEYWORD_REPEAT;
 	else if (t == KEYWORD_RETURN) return P_KEYWORD_RETURN;
 	else if (t == KEYWORD_SIZEOF) return P_KEYWORD_SIZEOF;
@@ -534,6 +537,11 @@ void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 					std::list<ParseNode*>::iterator it2;
 					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
 						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end()) {
+                            std::cout << "----------" << std::endl;
+                            tree->print();
+                            std::cout << "**********" << std::endl;
+                            (*it2)->print();
+                            std::cout << "==========" << std::endl;
 							error("Poorly formatted code block.", *it2);
 						}
 					}

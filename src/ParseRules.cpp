@@ -66,6 +66,10 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(-10, {}, {}, { P_IDENTIFIER, templates, function_params_block, P_ARROW }, function_head));
 	// virtual foo(...) ->
 
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_PROTECTED, P_COLON }, permissions_line));
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_PUBLIC, P_COLON }, permissions_line));
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_PRIVATE, P_COLON }, permissions_line));
+
 
     // function_head
     // foo(...) ->
