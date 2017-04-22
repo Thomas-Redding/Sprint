@@ -65,18 +65,20 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	// foo<...>(...) ->
 	listOfRules.push_back(ParseRule(-10, {}, {}, { P_IDENTIFIER, templates, function_params_block, P_ARROW }, function_head));
 	// virtual foo(...) ->
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_VIRTUAL, P_IDENTIFIER, function_params_block, P_ARROW }, function_head));
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_VIRTUAL, P_IDENTIFIER, templates, function_params_block, P_ARROW }, function_head));
+
 
     listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_PROTECTED, P_COLON }, permissions_line));
     listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_PUBLIC, P_COLON }, permissions_line));
     listOfRules.push_back(ParseRule(-10, {}, {}, { P_KEYWORD_PRIVATE, P_COLON }, permissions_line));
 
 
-    // function_head
+    // function_pointer_head
     // foo(...) ->
-    listOfRules.push_back(ParseRule(-10, {}, {}, { P_IDENTIFIER, function_params_block, P_ARROW, }, function_pointer_head));
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_IDENTIFIER, function_pointer_params_block, P_ARROW, }, function_pointer_head));
     // foo<...>(...) ->
-    listOfRules.push_back(ParseRule(-10, {}, {}, { P_IDENTIFIER, templates, function_params_block, P_ARROW }, function_pointer_head));
-    // virtual foo(...) ->
+    listOfRules.push_back(ParseRule(-10, {}, {}, { P_IDENTIFIER, templates, function_pointer_params_block, P_ARROW }, function_pointer_head));
 
     listOfRules.push_back(ParseRule(-10, {}, {}, { function_pointer_params_block, P_ARROW, raw_type_or_void}, function_pointer_type));
     listOfRules.push_back(ParseRule(-10, {}, {}, { function_pointer_params_block, P_ARROW, P_IDENTIFIER}, function_pointer_type));
