@@ -84,7 +84,8 @@ enum TokenType {
 	KEYWORD_UINT16,
 	KEYWORD_UINT32,
 	KEYWORD_UINT8,
-	KEYWORD_VAR,
+    KEYWORD_UNION,
+    KEYWORD_VIRTUAL,
 	KEYWORD_VOID,
 	KEYWORD_WHILE,
 	KEYWORD_XOR,
@@ -160,7 +161,7 @@ public:
 		return "(" + toString(type) + " '" + str + "' ~ " + std::to_string(lineNum) + "," + std::to_string(charNum) + ")";
 	}
 	bool isPrimitive() const {
-		return is_int(type) || type == KEYWORD_DOUBLE || type == KEYWORD_FLOAT || type == KEYWORD_VAR;
+		return is_int(type) || type == KEYWORD_DOUBLE || type == KEYWORD_FLOAT;
 	}
 	bool isLiteral() const {
 		return type == INTEGER_LITERAL || type == FLOAT_LITERAL || type == FLOAT_LITERAL2 || type == CHARACTER_LITERAL || type == STRING_LITERAL;

@@ -47,13 +47,14 @@ Tokenizer::Tokenizer() {
 	keywords.insert("void");
 	keywords.insert("bool");
 	keywords.insert("char");
-	keywords.insert("var");
 	keywords.insert("repeat");
 	keywords.insert("default");
 	keywords.insert("is");
 	keywords.insert("Infinity");
 	keywords.insert("NaN");
 	keywords.insert("commute");
+    keywords.insert("union");
+    keywords.insert("virtual");
 
 	punctuation.insert('.');
 	punctuation.insert(':');
@@ -691,8 +692,10 @@ void Tokenizer::categorizeIdentifier(Token &cur) {
 		cur.type = KEYWORD_UINT16;
 	else if(cur.str == "uint32")
 		cur.type = KEYWORD_UINT32;
-	else if(cur.str == "var")
-		cur.type = KEYWORD_VAR;
+    else if(cur.str == "union")
+        cur.type = KEYWORD_UNION;
+    else if(cur.str == "virtual")
+        cur.type = KEYWORD_VIRTUAL;
 	else if(cur.str == "void")
 		cur.type = KEYWORD_VOID;
 	else if(cur.str == "while")
@@ -708,7 +711,7 @@ const bool Tokenizer::isPunc(TokenType t) {
 }
 
 const bool Tokenizer::isKeyWord(TokenType t) {
-	return t == KEYWORD_AND || t == KEYWORD_BOOL || t == KEYWORD_BREAK || t == KEYWORD_CASE || t == KEYWORD_CATCH || t == KEYWORD_CHAR || t == KEYWORD_CLASS || t == KEYWORD_COMMUTE || t == KEYWORD_CONST || t == KEYWORD_CONTINUE || t == KEYWORD_DEFAULT || t == KEYWORD_DO || t == KEYWORD_DOUBLE || t == KEYWORD_ELSE || t == KEYWORD_ENUM || t == KEYWORD_FALSE || t == KEYWORD_FLOAT || t == KEYWORD_FOR || t == KEYWORD_IF || t == KEYWORD_IMPORT || t == KEYWORD_IN || t == KEYWORD_INFINITY || t == KEYWORD_INT || t == KEYWORD_INT16 || t == KEYWORD_INT32 || t == KEYWORD_INT8 || t == KEYWORD_IS || t == KEYWORD_MUT || t == KEYWORD_NAMESPACE || t == KEYWORD_NAN || t == KEYWORD_NOT || t == KEYWORD_NULL || t == KEYWORD_OR || t == KEYWORD_PRIVATE || t == KEYWORD_PUBLIC || t == KEYWORD_REPEAT || t == KEYWORD_RETURN || t == KEYWORD_SIZEOF || t == KEYWORD_STATIC || t == KEYWORD_SWITCH || t == KEYWORD_THIS || t == KEYWORD_THROW || t == KEYWORD_TRUE || t == KEYWORD_TRY || t == KEYWORD_UINT || t == KEYWORD_UINT16 || t == KEYWORD_UINT32 || t == KEYWORD_UINT8 || t == KEYWORD_VAR || t == KEYWORD_VOID || t == KEYWORD_WHILE || t == KEYWORD_XOR;
+	return t == KEYWORD_AND || t == KEYWORD_BOOL || t == KEYWORD_BREAK || t == KEYWORD_CASE || t == KEYWORD_CATCH || t == KEYWORD_CHAR || t == KEYWORD_CLASS || t == KEYWORD_COMMUTE || t == KEYWORD_CONST || t == KEYWORD_CONTINUE || t == KEYWORD_DEFAULT || t == KEYWORD_DO || t == KEYWORD_DOUBLE || t == KEYWORD_ELSE || t == KEYWORD_ENUM || t == KEYWORD_FALSE || t == KEYWORD_FLOAT || t == KEYWORD_FOR || t == KEYWORD_IF || t == KEYWORD_IMPORT || t == KEYWORD_IN || t == KEYWORD_INFINITY || t == KEYWORD_INT || t == KEYWORD_INT16 || t == KEYWORD_INT32 || t == KEYWORD_INT8 || t == KEYWORD_IS || t == KEYWORD_MUT || t == KEYWORD_NAMESPACE || t == KEYWORD_NAN || t == KEYWORD_NOT || t == KEYWORD_NULL || t == KEYWORD_OR || t == KEYWORD_PRIVATE || t == KEYWORD_PUBLIC || t == KEYWORD_REPEAT || t == KEYWORD_RETURN || t == KEYWORD_SIZEOF || t == KEYWORD_STATIC || t == KEYWORD_SWITCH || t == KEYWORD_THIS || t == KEYWORD_THROW || t == KEYWORD_TRUE || t == KEYWORD_TRY || t == KEYWORD_UINT || t == KEYWORD_UINT16 || t == KEYWORD_UINT32 || t == KEYWORD_UINT8 || t == KEYWORD_UNION || t == KEYWORD_VIRTUAL || t == KEYWORD_VOID || t == KEYWORD_WHILE || t == KEYWORD_XOR;
 }
 
 const std::string Tokenizer::tokenToString2(const Token& t) {

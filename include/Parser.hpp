@@ -92,7 +92,6 @@ enum TreeType {
 	P_KEYWORD_UINT16,
 	P_KEYWORD_UINT32,
 	P_KEYWORD_UINT8,
-	P_KEYWORD_VAR,
 	P_KEYWORD_VOID,
 	P_KEYWORD_WHILE,
 	P_KEYWORD_XOR,
@@ -132,6 +131,8 @@ enum TreeType {
 	P_UNKNOWN,
 	P_VERTICAL_BAR_EQUALS,
 	P_VERTICAL_BAR,
+    P_KEYWORD_VIRTUAL,
+    P_KEYWORD_UNION,
 
 	general,				// make sure this is the first non-token type
 	curly_brace_block,
@@ -345,8 +346,8 @@ public:
 		leftRight = lr;
 
 		// shortcuts[value] = {P_IDENTIFIER};
-		shortcuts[raw_type] =          {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_KEYWORD_VAR, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal};
-		shortcuts[raw_type_or_void] =  {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_KEYWORD_VAR, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal, P_KEYWORD_VOID};
+		shortcuts[raw_type] =          {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal};
+		shortcuts[raw_type_or_void] =  {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32, P_KEYWORD_CHAR, P_KEYWORD_BOOL, P_KEYWORD_FLOAT, P_KEYWORD_DOUBLE, P_IDENTIFIER, list_literal, set_literal, ordered_map_literal, unordered_map_literal, P_KEYWORD_VOID};
 		// shortcuts[composite_type] = {};
 		shortcuts[int_type] =          {P_KEYWORD_INT, P_KEYWORD_INT8, P_KEYWORD_INT16, P_KEYWORD_INT32, P_KEYWORD_UINT, P_KEYWORD_UINT8, P_KEYWORD_UINT16, P_KEYWORD_UINT32};
 		shortcuts[unary1_value] =      {P_IDENTIFIER, P_INTEGER_LITERAL, P_FLOAT_LITERAL, P_STRING_LITERAL, parenthesis, list_literal, set_literal, ordered_map_literal, unordered_map_literal, unary1_clause};

@@ -21,7 +21,7 @@ ScopeNode* build_scope_tree(ParseNode* root) {
 
 // doesn't include list_literal or unordered_map_literal
 bool is_primitive(TreeType type) {
-    return type == P_KEYWORD_INT || type == P_KEYWORD_INT8 || type == P_KEYWORD_INT16 || type == P_KEYWORD_INT32 || type == P_KEYWORD_UINT || type == P_KEYWORD_UINT8 || type == P_KEYWORD_UINT16 || type == P_KEYWORD_UINT32 || type == P_KEYWORD_CHAR || type == P_KEYWORD_BOOL || type == P_KEYWORD_FLOAT || type == P_KEYWORD_DOUBLE || type == P_KEYWORD_VAR;
+    return type == P_KEYWORD_INT || type == P_KEYWORD_INT8 || type == P_KEYWORD_INT16 || type == P_KEYWORD_INT32 || type == P_KEYWORD_UINT || type == P_KEYWORD_UINT8 || type == P_KEYWORD_UINT16 || type == P_KEYWORD_UINT32 || type == P_KEYWORD_CHAR || type == P_KEYWORD_BOOL || type == P_KEYWORD_FLOAT || type == P_KEYWORD_DOUBLE;
 }
 
 std::string scopeTypeToString(ScopeType type) {

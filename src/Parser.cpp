@@ -256,7 +256,6 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_UINT16) return P_KEYWORD_UINT16;
 	else if (t == KEYWORD_UINT32) return P_KEYWORD_UINT32;
 	else if (t == KEYWORD_UINT8) return P_KEYWORD_UINT8;
-	else if (t == KEYWORD_VAR) return P_KEYWORD_VAR;
 	else if (t == KEYWORD_VOID) return P_KEYWORD_VOID;
 	else if (t == KEYWORD_WHILE) return P_KEYWORD_WHILE;
 	else if (t == KEYWORD_XOR) return P_KEYWORD_XOR;
