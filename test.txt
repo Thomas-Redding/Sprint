@@ -1,4 +1,8 @@
 
+enum {
+    alpha, beta
+}
+
 class Foo {
 public:
     identity(double v) -> double {
