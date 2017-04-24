@@ -1,6 +1,6 @@
 
 enum {
-    alpha, beta
+    alpha = 3, beta
 }
 
 class Foo {

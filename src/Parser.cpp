@@ -327,7 +327,7 @@ bool Parser::thomasParserPrecedenceSorter(ParseRule r1, ParseRule r2) {
 }
 
 void Parser::parse_enum_block(ParseNode* tree) {
-	// todo
+	tree->type = enum_block;
 }
 
 void Parser::parse_function_pointer_args(ParseNode** tree) {
@@ -423,15 +423,8 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 				// check if this is an enum declaration
 				std::list<ParseNode*>::iterator it2 = it;
 				--it2;
-				if ((*it2)->type == P_IDENTIFIER && it2 != tree->children.begin()) {
-					--it2;
-					if ((*it2)->type == P_KEYWORD_ENUM) {
-						(*it)->type = enum_block;
-						parse_enum_block(*it);
-					}
-					else {
-						parse(*it, tree);
-					}
+				if ((*it2)->type == P_KEYWORD_ENUM) {
+					parse_enum_block(*it);
 				}
 				else {
 					parse(*it, tree);
