@@ -164,8 +164,10 @@ enum TreeType {
 	statement,
 	
 	enum_implementation,
+    union_implementation,
 	namespace_implementation,
 	class_declaration,
+    union_block,
 	class_implementation,
 	constructor_implementation,
 	function_implementation,
@@ -328,6 +330,7 @@ private:
 	void parseLeftRight(ParseNode *tree, int from, int to);
 	void parseRightLeft(ParseNode *tree, int from, int to);
 	void parse_enum_block(ParseNode* tree);
+    void parse_union_block(ParseNode* tree);
     void parse_function_pointer_args(ParseNode** tree);
     void parse_function_params(ParseNode **par);
 	void error(std::string message, ParseNode* tree);

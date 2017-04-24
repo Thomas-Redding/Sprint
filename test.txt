@@ -1,4 +1,8 @@
 
+union {
+    int8, int16, int32
+}
+
 enum {
     alpha = 3, beta
 }
@@ -15,5 +19,3 @@ private:
         identity(x);
     }    
 }
-
-

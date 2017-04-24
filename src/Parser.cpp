@@ -86,6 +86,7 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_KEYWORD_STATIC) return "P_KEYWORD_STATIC";
 	else if (t == P_KEYWORD_SWITCH) return "P_KEYWORD_SWITCH";
     else if (t == P_KEYWORD_VOID) return "P_KEYWORD_VOID";
+    else if (t == P_KEYWORD_UNION) return "P_KEYWORD_UNION";
 	else if (t == curly_brace_block) return "curly_brace_block";
 	else if (t == parenthesis_block) return "parenthesis_block";
 	else if (t == bracket_block) return "bracket_block";
@@ -167,6 +168,9 @@ std::string treeTypeToString(TreeType t) {
     else if (t == function_pointer_type) return "function_pointer_type";
     else if (t == anonymous_function) return "anonymous_function";
     else if (t == permissions_line) return "permissions_line";
+    else if (t == P_KEYWORD_UNION) return "P_KEYWORD_UNION";
+    else if (t == union_block) return "union_block";
+    else if (t == union_implementation) return "union_implementation";
 	else return std::to_string(static_cast<TreeType>(t));
 }
 
@@ -260,6 +264,7 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_UINT32) return P_KEYWORD_UINT32;
 	else if (t == KEYWORD_UINT8) return P_KEYWORD_UINT8;
 	else if (t == KEYWORD_VOID) return P_KEYWORD_VOID;
+    else if (t == KEYWORD_UNION) return P_KEYWORD_UNION;
 	else if (t == KEYWORD_WHILE) return P_KEYWORD_WHILE;
 	else if (t == KEYWORD_XOR) return P_KEYWORD_XOR;
 	else if (t == KEYWORD) return P_KEYWORD;
@@ -328,6 +333,10 @@ bool Parser::thomasParserPrecedenceSorter(ParseRule r1, ParseRule r2) {
 
 void Parser::parse_enum_block(ParseNode* tree) {
 	tree->type = enum_block;
+}
+
+void Parser::parse_union_block(ParseNode* tree) {
+    tree->type = union_block;
 }
 
 void Parser::parse_function_pointer_args(ParseNode** tree) {
@@ -426,6 +435,9 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 				if ((*it2)->type == P_KEYWORD_ENUM) {
 					parse_enum_block(*it);
 				}
+                else if ((*it2)->type == P_KEYWORD_UNION) {
+                    parse_union_block(*it);
+                }
 				else {
 					parse(*it, tree);
 				}
@@ -529,21 +541,13 @@ void Parser::classify_parsed_block(ParseNode *tree, ParseNode *parent) {
 				if (shortcuts[structure_or_statement].find((*it)->type) == shortcuts[structure_or_statement].end()) {
 					std::list<ParseNode*>::iterator it2;
 					for (it2 = tree->children.begin(); it2 != tree->children.end(); ++it2) {
-						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end()) {
-                            std::cout << "----------" << std::endl;
-                            tree->print();
-                            std::cout << "**********" << std::endl;
-                            (*it2)->print();
-                            std::cout << "==========" << std::endl;
+						if (shortcuts[stuff_in_classes].find((*it2)->type) == shortcuts[stuff_in_classes].end())
 							error("Poorly formatted code block.", *it2);
-						}
 					}
-					if (it2 == tree->children.end()) {
+					if (it2 == tree->children.end())
 						tree->type = block_of_statements_or_class;
-					}
-					else {
+					else
 						error("Poorly formatted block of statements.", *it);
-					}
 				}
 			}
 			tree->type = block_of_statements_or_class;
@@ -879,7 +883,6 @@ void Parser::doParenthesesPass(ParseNode* tree) {
 
 void Parser::error(std::string message, ParseNode* tree) {
 	// delete me before final release
-	// mainTree->print();
 	std::cout << message << " (" << tree->token.lineNum << ", " << tree->token.charNum << ")\n";
 	exit(0);
 }

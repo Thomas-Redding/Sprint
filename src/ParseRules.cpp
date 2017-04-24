@@ -10,6 +10,10 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
     listOfRules.push_back(ParseRule(-10, {}, {}, {
         P_KEYWORD_ENUM, enum_block
     }, enum_implementation));
+    listOfRules.push_back(ParseRule(-10, {}, {}, {
+        P_KEYWORD_UNION, union_block
+    }, union_implementation));
+    
 
 	// class implementations
 	// class Foo { ... 
