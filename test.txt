@@ -1,21 +1,8 @@
-
-union {
+/*
+union cookie {
     int8, int16, int32
 }
-
-enum {
+*/
+enum fudge {
     alpha = 3, beta
-}
-
-class Foo {
-public:
-    identity(double v) -> double {
-        return v;
-    }
-private:
-    main() -> int {
-        double x;
-
-        identity(x);
-    }    
 }

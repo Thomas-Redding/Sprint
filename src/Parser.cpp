@@ -432,11 +432,17 @@ void Parser::parse(ParseNode* tree, ParseNode* parent) {
 				// check if this is an enum declaration
 				std::list<ParseNode*>::iterator it2 = it;
 				--it2;
-				if ((*it2)->type == P_KEYWORD_ENUM) {
-					parse_enum_block(*it);
-				}
-                else if ((*it2)->type == P_KEYWORD_UNION) {
-                    parse_union_block(*it);
+                if ((*it2)->type == P_IDENTIFIER) {
+                    --it2;
+                    if ((*it2)->type == P_KEYWORD_ENUM) {
+                        parse_enum_block(*it);
+                    }
+                    else if ((*it2)->type == P_KEYWORD_UNION) {
+                        parse_union_block(*it);
+                    }
+                    else {
+                        parse(*it, tree);
+                    }
                 }
 				else {
 					parse(*it, tree);

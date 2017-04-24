@@ -7,13 +7,6 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 		true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false
 	};
 
-    listOfRules.push_back(ParseRule(-10, {}, {}, {
-        P_KEYWORD_ENUM, enum_block
-    }, enum_implementation));
-    listOfRules.push_back(ParseRule(-10, {}, {}, {
-        P_KEYWORD_UNION, union_block
-    }, union_implementation));
-    
 
 	// class implementations
 	// class Foo { ... 
@@ -108,6 +101,8 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
 	listOfRules.push_back(ParseRule(-5, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, enum_block}, enum_implementation));
 	// namespaces Foo {...}
 	listOfRules.push_back(ParseRule(-5, {}, {}, {P_KEYWORD_NAMESPACE, P_IDENTIFIER, block_of_statements_or_class}, namespace_implementation));
+    // union Foo { ... }
+    listOfRules.push_back(ParseRule(-5, {}, {}, {P_KEYWORD_UNION, P_IDENTIFIER, enum_block}, enum_implementation));
 
 	// function pointers
     listOfRules.push_back(ParseRule(-5, {}, {}, {function_params_block, P_ARROW, raw_type_or_void, block_of_statements_or_class} , anonymous_function));
