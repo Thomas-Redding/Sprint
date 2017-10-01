@@ -72,7 +72,6 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == P_KEYWORD_INT8) return "P_KEYWORD_INT8";
 	else if (t == P_KEYWORD_IS) return "P_KEYWORD_IS";
 	else if (t == P_KEYWORD_MUT) return "P_KEYWORD_MUT";
-	else if (t == P_KEYWORD_NAMESPACE) return "P_KEYWORD_NAMESPACE";
 	else if (t == P_KEYWORD_NAN) return "P_KEYWORD_NAN";
 	else if (t == P_KEYWORD_NOT) return "P_KEYWORD_NOT";
 	else if (t == P_KEYWORD_NULL) return "P_KEYWORD_NULL";
@@ -126,7 +125,6 @@ std::string treeTypeToString(TreeType t) {
 	else if (t == comma_value) return "comma_value";
 	else if (t == comma_clause) return "comma_clause";
 	else if (t == enum_implementation) return "enum_implementation";
-	else if (t == namespace_implementation) return "namespace_implementation";
 	else if (t == class_implementation) return "class_implementation";
 	else if (t == function_implementation) return "function_implementation";
 	else if (t == function_declaration) return "function_declaration";
@@ -242,7 +240,6 @@ TreeType translateType(TokenType t) {
 	else if (t == KEYWORD_INT8) return P_KEYWORD_INT8;
 	else if (t == KEYWORD_IS) return P_KEYWORD_IS;
 	else if (t == KEYWORD_MUT) return P_KEYWORD_MUT;
-	else if (t == KEYWORD_NAMESPACE) return P_KEYWORD_NAMESPACE;
 	else if (t == KEYWORD_NAN) return P_KEYWORD_NAN;
 	else if (t == KEYWORD_NOT) return P_KEYWORD_NOT;
 	else if (t == KEYWORD_NULL) return P_KEYWORD_NULL;

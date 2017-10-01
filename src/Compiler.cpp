@@ -43,7 +43,7 @@ void Compiler::compile_tree(ParseNode* tree) {
 		return;
 	}
 
-	if (tree->type == class_implementation || tree->type == enum_implementation || tree->type == namespace_implementation) {
+	if (tree->type == class_implementation || tree->type == enum_implementation) {
 		compile_children(tree);
 		output += ";";
 		return;

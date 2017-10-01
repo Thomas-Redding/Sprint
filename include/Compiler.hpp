@@ -32,7 +32,6 @@ private:
 		{P_KEYWORD_CASE, "case"},
 		{P_KEYWORD_CATCH, "catch"},
 		{P_KEYWORD_CLASS, "class"},
-		{P_KEYWORD_NAMESPACE, "namespace"},
 		{P_KEYWORD_CONST, "const"},
 		{P_KEYWORD_CONTINUE, "continue"},
 		{P_KEYWORD_DO, "do"},

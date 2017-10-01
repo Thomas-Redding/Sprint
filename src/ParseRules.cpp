@@ -99,8 +99,6 @@ void addParseRules(std::vector<bool> &leftToRight, std::vector<ParseRule> &listO
     
 	// enum Foo {...}
 	listOfRules.push_back(ParseRule(-5, {}, {}, {P_KEYWORD_ENUM, P_IDENTIFIER, enum_block}, enum_implementation));
-	// namespaces Foo {...}
-	listOfRules.push_back(ParseRule(-5, {}, {}, {P_KEYWORD_NAMESPACE, P_IDENTIFIER, block_of_statements_or_class}, namespace_implementation));
     // union Foo { ... }
     listOfRules.push_back(ParseRule(-5, {}, {}, {P_KEYWORD_UNION, P_IDENTIFIER, enum_block}, enum_implementation));
 

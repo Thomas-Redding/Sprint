@@ -27,7 +27,6 @@ bool is_primitive(TreeType type) {
 std::string scopeTypeToString(ScopeType type) {
     switch (type) {
         case ScopeType::_class: return "ScopeType::class";
-        case ScopeType::_namespace: return "ScopeType::namespace";
         case ScopeType::_enum: return "ScopeType::enum";
         case ScopeType::_function: return "ScopeType::function";
         case ScopeType::_global: return "ScopeType::global";
@@ -49,7 +48,6 @@ ScopeNode::ScopeNode(ScopeType type, ParseNode* parseNode, ScopeNode* parent, ve
 
 	switch (type) {
 		case ScopeType::_global: construct_global_node(); break;
-		case ScopeType::_namespace: construct_namespace_node(); break;
 		case ScopeType::_function: construct_function_node(); break;
 		case ScopeType::_class: construct_class_node(); break;
 		case ScopeType::_enum: construct_enum_node(); break;
@@ -86,14 +84,6 @@ void ScopeNode::construct_global_node() {
 			std::cout << "adding function \"" << child->name << "\"" << std::endl;
 			children[child->name] = child;
 		}
-		else if (node->type == TreeType::namespace_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_namespace, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate namespace-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding namespace \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
 		else if (node->type == TreeType::enum_implementation) {
 			ScopeNode* child = new ScopeNode(ScopeType::_enum, node, this, templates);
 			if (members.count(child->name) > 0) {
@@ -103,69 +93,7 @@ void ScopeNode::construct_global_node() {
 			children[child->name] = child;
 		}
 		else {
-			user_error("expected a class, function, enum declaration, variable, or namespace while parsing the GLOBAL namespace, but didn't find any.");
-		}
-	}
-
-}
-
-void ScopeNode::construct_namespace_node() {
-
-	auto it = parseNode->children.begin();
-
-	assert((*it)->type == TreeType::P_KEYWORD_NAMESPACE);
-	++it;
-	assert((*it)->type == TreeType::P_IDENTIFIER);
-	name = (*it)->token.str;
-	++it;
-	assert((*it)->type == TreeType::block_of_statements_or_class);
-
-	const auto end = (*it)->children.end();
-
-	for (it = (*it)->children.begin(); it != end; ++it) {
-		ParseNode* node = *it;
-		if (node->type == TreeType::variable_dec) {
-			std::pair<std::string, TypeInst> x = TypeInst::get_variable(this, node);
-			if (members.count(x.first) > 0) {
-				user_error("duplicate member \"" + x.first + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding member variable \"" << x.first << "\"" << std::endl;
-			members[x.first] = x.second;
-		}
-		else if (node->type == TreeType::class_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_class, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate class-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding class \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
-		else if (node->type == TreeType::function_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_function, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate function-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding function \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
-		else if (node->type == TreeType::namespace_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_namespace, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate namespace-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding namespace \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
-		else if (node->type == TreeType::enum_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_enum, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate enum-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding enum \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
-		else {
-			user_error("expected a class, function, enum declaration, variable, or namespace while parsing the \"" + name + "\" namespace, but didn't find any.");
+			user_error("expected a class, function, enum declaration, or variable while parsing the GLOBAL namespace, but didn't find any.");
 		}
 	}
 
@@ -212,14 +140,6 @@ void ScopeNode::construct_function_node() {
 				user_error("duplicate function-member \"" + child->name + "\" found in \"" + name + "\"");
 			}
 			std::cout << "adding function \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
-		else if (node->type == TreeType::namespace_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_namespace, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate namespace-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding namespace \"" << child->name << "\"" << std::endl;
 			children[child->name] = child;
 		}
 		else if (node->type == TreeType::enum_implementation) {
@@ -281,14 +201,6 @@ void ScopeNode::construct_class_node() {
 			std::cout << "adding function \"" << child->name << "\"" << std::endl;
 			children[child->name] = child;
 		}
-		else if (node->type == TreeType::namespace_implementation) {
-			ScopeNode* child = new ScopeNode(ScopeType::_namespace, node, this, templates);
-			if (members.count(child->name) > 0) {
-				user_error("duplicate namespace-member \"" + child->name + "\" found in \"" + name + "\"");
-			}
-			std::cout << "adding namespace \"" << child->name << "\"" << std::endl;
-			children[child->name] = child;
-		}
 		else if (node->type == TreeType::enum_implementation) {
 			ScopeNode* child = new ScopeNode(ScopeType::_enum, node, this, templates);
 			if (members.count(child->name) > 0) {
@@ -298,7 +210,7 @@ void ScopeNode::construct_class_node() {
 			children[child->name] = child;
 		}
 		else {
-			user_error("expected a class, function, enum declaration, variable, or namespace while parsing the class " + name + ", but didn't find any.");
+			user_error("expected a class, function, enum declaration, or variable while parsing the class " + name + ", but didn't find any.");
 		}
 	}
 
@@ -450,7 +362,6 @@ bool process_list_literals(ScopeNode* sn, ParseNode* pn) {
 		ParseNode* node = *it;
 		if (node->type == TreeType::class_implementation
 				|| node->type == TreeType::function_implementation
-				|| node->type == TreeType::namespace_implementation
 				|| node->type == TreeType::enum_implementation) {
 			// these are covered in the loop below
 			continue;

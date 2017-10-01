@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <assert.h>
 #include <iostream>
 #include <stack>
@@ -72,7 +73,6 @@ enum TreeType {
 	P_KEYWORD_INT8,
 	P_KEYWORD_IS,
 	P_KEYWORD_MUT,
-	P_KEYWORD_NAMESPACE,
 	P_KEYWORD_NAN,
 	P_KEYWORD_NOT,
 	P_KEYWORD_NULL,
@@ -165,7 +165,6 @@ enum TreeType {
 	
 	enum_implementation,
     union_implementation,
-	namespace_implementation,
 	class_declaration,
     union_block,
 	class_implementation,

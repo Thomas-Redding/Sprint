@@ -17,7 +17,6 @@ enum Privacy {
 
 enum ScopeType {
     _global,    
-    _namespace,
     _function,
     _class,
     _enum,
@@ -70,7 +69,6 @@ struct ScopeNode {
 
     // these are the "real" constructors for 'ScopeNode'
     void construct_global_node();
-    void construct_namespace_node();
     void construct_function_node();
     void construct_class_node();
     void construct_enum_node();
@@ -91,7 +89,7 @@ struct ScopeNode {
     vector<TemplateDec>* templates; // name of templates currently applying to the scope
     bool template_owner;            // used to garbage-collect 'templates'
 
-    unordered_map     < string, ScopeNode* > children;  // children (classes, functions, enums, and namespaces)
+    unordered_map     < string, ScopeNode* > children;  // children (classes, functions, and enums)
     unordered_map     < string, TypeInst   > members;   // member variables
     set               < string, ScopeNode* > friends;   // only used by classes
 
